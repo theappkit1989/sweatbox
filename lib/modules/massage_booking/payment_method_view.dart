@@ -8,6 +8,7 @@ import 'package:s_box/extras/constant/string_constant.dart';
 import 'package:s_box/modules/commonWidgets/submitBtn.dart';
 import 'package:s_box/modules/massage_booking/massage_controller.dart';
 import 'package:s_box/modules/massage_booking/payment_method_controller.dart';
+import 'package:s_box/modules/massage_booking/testpaymentService/PaymentScreen.dart';
 
 
 import 'package:s_box/themes/colors/color_light.dart';
@@ -237,6 +238,7 @@ class PaymentMethodView extends StatelessWidget {
                   ),
                 ),
                 dense: true,
+                onTap: (){Get.to(PaymentScreen());},
               ),
         ):
         Obx(
