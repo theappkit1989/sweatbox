@@ -19,7 +19,7 @@ class PaymentScreen extends StatelessWidget {
         child: Column(
           children: [
             ApplePayButton(
-              paymentConfigurationAsset: 'assets/apple_pay_config.json',
+              paymentConfigurationAsset: 'apple_pay_config.json',
               onPaymentResult: paymentController.paymentResult,
               paymentItems: [
                 PaymentItem(

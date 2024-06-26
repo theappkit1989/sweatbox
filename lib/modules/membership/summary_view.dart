@@ -20,6 +20,7 @@ class SummaryView extends StatelessWidget {
     final arguments = Get.arguments as Map<String, dynamic>;
     final Membership membership = arguments['membership'];
     summaryController.membership.value=membership;
+    summaryController.totalAmount.value=double.parse(membership.price.toString());
     print('name is ${membership.title}');
     final  card = arguments['card'];
     final cardNumber = card['number'] as String;
@@ -252,86 +253,95 @@ class SummaryView extends StatelessWidget {
         SizedBox(
           height: Get.height * 0.05,
         ),
-        // const Row(
-        //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        //   crossAxisAlignment: CrossAxisAlignment.center,
-        //   children: [
-        //     Text(
-        //       strPromoCode,
-        //       style: TextStyle(
-        //         color: ColorLight.white,
-        //         fontWeight: FontWeight.w700,
-        //         fontFamily: fontType,
-        //         fontSize: 13,
-        //       ),
-        //     ),
-        //     Text(
-        //       strChange,
-        //       style: TextStyle(
-        //         color: yellowF5EA25,
-        //         fontWeight: FontWeight.w500,
-        //         fontFamily: fontType,
-        //         fontSize: 12,
-        //       ),
-        //     ),
-        //   ],
-        // ),
-        // SizedBox(
-        //   height: Get.height * 0.015,
-        // ),
-        // Container(
-        //   decoration: BoxDecoration(
-        //       borderRadius: BorderRadius.circular(40), color: textFieldColor),
-        //   height: Get.height * 0.08,
-        //   alignment: Alignment.center,
-        //   child: ListTile(
-        //     leading: Padding(
-        //       padding: const EdgeInsets.only(left: 12.0),
-        //       child: Image.asset(
-        //         ImageConstant.discountIcon,
-        //         width: Get.width * 0.08,
-        //       ),
-        //     ),
-        //     contentPadding: EdgeInsets.zero,
-        //     shape: RoundedRectangleBorder(
-        //         borderRadius: BorderRadius.circular(40),
-        //         side: const BorderSide(color: textFieldColor, width: 1.0)),
-        //     title: const Text(
-        //       strEnterCode,
-        //       style: TextStyle(
-        //           color: ColorLight.white,
-        //           fontSize: 12.0,
-        //           fontFamily: fontType,
-        //           fontWeight: FontWeight.w400),
-        //     ),
-        //     trailing: Container(
-        //       alignment: Alignment.center,
-        //       height: Get.height * 0.12,
-        //       width: Get.width * 0.25,
-        //       decoration: const BoxDecoration(
-        //           borderRadius: BorderRadius.only(
-        //             bottomLeft: Radius.zero,
-        //             bottomRight: Radius.circular(40),
-        //             topLeft: Radius.zero,
-        //             topRight: Radius.circular(40),
-        //           ),
-        //           color: yellowF5EA25),
-        //       child: Text(
-        //         strApply,
-        //         style: TextStyle(
-        //           color: ColorLight.black,
-        //           fontWeight: FontWeight.w600,
-        //           fontFamily: fontType,
-        //           fontSize: 13.0,
-        //         ),
-        //       ),
-        //     ),
-        //   ),
-        // ),
-        // SizedBox(
-        //   height: Get.height * 0.02,
-        // ),
-         Row(
+        const Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text(
+              strPromoCode,
+              style: TextStyle(
+                color: ColorLight.white,
+                fontWeight: FontWeight.w700,
+                fontFamily: fontType,
+                fontSize: 13,
+              ),
+            ),
+            Text(
+              strChange,
+              style: TextStyle(
+                color: yellowF5EA25,
+                fontWeight: FontWeight.w500,
+                fontFamily: fontType,
+                fontSize: 12,
+              ),
+            ),
+          ],
+        ),
+        SizedBox(
+          height: Get.height * 0.015,
+        ),
+        Container(
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(40), color: textFieldColor),
+          height: Get.height * 0.08,
+          alignment: Alignment.center,
+          child: ListTile(
+            leading: Padding(
+              padding: const EdgeInsets.only(left: 12.0),
+              child: Image.asset(
+                ImageConstant.discountIcon,
+                width: Get.width * 0.08,
+              ),
+            ),
+            contentPadding: EdgeInsets.zero,
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(40),
+                side: const BorderSide(color: textFieldColor, width: 1.0)),
+            title: Obx(() {
+              return TextField(
+
+                controller: summaryController.promoCont.value,
+                style: TextStyle(
+                    color: ColorLight.white,
+                    fontSize: 12.0,
+                    fontFamily: fontType,
+                    fontWeight: FontWeight.w400),
+              );
+            }),
+            trailing: Container(
+              alignment: Alignment.center,
+              height: Get.height * 0.12,
+              width: Get.width * 0.25,
+              decoration: const BoxDecoration(
+                  borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.zero,
+                    bottomRight: Radius.circular(40),
+                    topLeft: Radius.zero,
+                    topRight: Radius.circular(40),
+                  ),
+                  color: yellowF5EA25),
+              child: GestureDetector(
+                onTap: () async {
+                  await summaryController.fetchDiscount() ?? 0.0;
+                  Get.find<MembershipSummaryController>().update();
+                },
+                child: Text(
+                  strApply,
+                  style: TextStyle(
+                    color: ColorLight.black,
+                    fontWeight: FontWeight.w600,
+                    fontFamily: fontType,
+                    fontSize: 13.0,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+        SizedBox(
+          height: Get.height * 0.02,
+        ),
+        Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
@@ -345,7 +355,7 @@ class SummaryView extends StatelessWidget {
               ),
             ),
             Text(
-              '£${membership.price}.00',
+              '£${membership.price.toString()}.00',
               style: TextStyle(
                 color: ColorLight.white,
                 fontWeight: FontWeight.w700,
@@ -358,37 +368,40 @@ class SummaryView extends StatelessWidget {
         SizedBox(
           height: Get.height * 0.02,
         ),
-        // const Row(
-        //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        //   crossAxisAlignment: CrossAxisAlignment.center,
-        //   children: [
-        //     Text(
-        //       strDiscount,
-        //       style: TextStyle(
-        //         color: ColorLight.white,
-        //         fontWeight: FontWeight.w400,
-        //         fontFamily: fontType,
-        //         fontSize: 12,
-        //       ),
-        //     ),
-        //     Text(
-        //       '£9.00',
-        //       style: TextStyle(
-        //         color: ColorLight.white,
-        //         fontWeight: FontWeight.w700,
-        //         fontFamily: fontType,
-        //         fontSize: 14,
-        //       ),
-        //     ),
-        //   ],
-        // ),
-        // SizedBox(
-        //   height: Get.height * 0.02,
-        // ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text(
+              strDiscount,
+              style: TextStyle(
+                color: ColorLight.white,
+                fontWeight: FontWeight.w400,
+                fontFamily: fontType,
+                fontSize: 12,
+              ),
+            ),
+            Obx(() {
+              return Text(
+                '£${summaryController.discount}',
+                style: TextStyle(
+                  color: ColorLight.white,
+                  fontWeight: FontWeight.w700,
+                  fontFamily: fontType,
+                  fontSize: 14,
+                ),
+              );
+            }),
+          ],
+        ),
+        SizedBox(
+          height: Get.height * 0.02,
+        ),
         Row(
           children: List.generate(
               150 ~/ 1,
-              (index) => Expanded(
+                  (index) =>
+                  Expanded(
                     child: Container(
                       color: index % 2 == 0 ? Colors.transparent : Colors.grey,
                       height: 1,
@@ -398,7 +411,7 @@ class SummaryView extends StatelessWidget {
         SizedBox(
           height: Get.height * 0.02,
         ),
-         Row(
+        Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
@@ -411,15 +424,18 @@ class SummaryView extends StatelessWidget {
                 fontSize: 12,
               ),
             ),
-            Text(
-              '£${membership.price}.00',
-              style: TextStyle(
-                color: ColorLight.white,
-                fontWeight: FontWeight.w700,
-                fontFamily: fontType,
-                fontSize: 14,
-              ),
-            ),
+            Obx(() {
+              return Text(
+
+                '£${summaryController.totalAmount}',
+                style: TextStyle(
+                  color: ColorLight.white,
+                  fontWeight: FontWeight.w700,
+                  fontFamily: fontType,
+                  fontSize: 14,
+                ),
+              );
+            }),
           ],
         ),
       ],

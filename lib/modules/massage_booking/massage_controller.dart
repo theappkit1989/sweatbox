@@ -20,12 +20,12 @@ class MassageController extends GetxController{
 }
 
 class Massage {
-  final String title;
-  final String subtitle;
-  final String? date;
-  final String? time;
-  final String? duration;
-  final int price;
+   String title;
+   String subtitle;
+   String? date;
+   String? time;
+   String? duration;
+   int price;
 
   Massage({
     required this.title,

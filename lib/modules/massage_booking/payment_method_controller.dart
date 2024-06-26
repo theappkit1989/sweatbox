@@ -1,8 +1,10 @@
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:pay/pay.dart';
 import 'package:s_box/modules/massage_booking/massage_controller.dart';
 import 'package:s_box/modules/massage_booking/summary_view.dart';
 import 'package:s_box/modules/massage_booking/add_new_card_view.dart';
+import 'package:s_box/modules/massage_booking/testpaymentService/PaymentService.dart';
 
 
 import '../../extras/constant/shared_pref_constant.dart';
@@ -55,10 +57,15 @@ class PaymentMethodController extends GetxController {
 
 
   void goToSummary() {
+    final paymentType = selectedValue.value == -1 ? 'Apple Pay' : selectedValue.value == -2 ? 'Google Pay' : 'Credit Card';
     print("card valu is${cards[selectedValue.value]}");
     final selectedCard = cards[selectedValue.value];
     final Massage _massage=Massage(title: massage.value.title, subtitle: massage.value.subtitle, price: massage.value.price,date: selectedDate.toString(),time: selectedtime.toString(),duration: selectedduration.toString());
     // Pass the membership and card details to the SummaryView
-    Get.to(SummaryView(), arguments: {'massage': _massage, 'card': selectedCard});
+    Get.to(SummaryView(), arguments: {'massage': _massage, 'card': selectedCard,'paymentType': paymentType,});
   }
+
+
+
+
 }

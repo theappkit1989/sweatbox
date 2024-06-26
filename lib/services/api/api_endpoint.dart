@@ -16,6 +16,7 @@ static String baseUrlImage = "http://13.51.255.89/user/";
   static String deleteUser= baseUrl+'deleteUser';
   static String allUser= baseUrl+'allUsers';
   static String freshFaces= baseUrl+'newUsers';
+  static String promo= baseUrl+'promo';
 
   static String propertyList = baseUrl+'listing-properties-type';
   static String basicList = baseUrl+'listing-basic-info';

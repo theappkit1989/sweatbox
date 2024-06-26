@@ -11,6 +11,7 @@ import 'package:s_box/services/commonModels/common_reposne_model.dart';
 import 'package:s_box/services/commonModels/editProfileResponse.dart';
 import 'package:s_box/services/commonModels/freshFacesResponse.dart';
 import 'package:s_box/services/commonModels/membershipModal.dart';
+import 'package:s_box/services/commonModels/promo_code_response.dart';
 import 'package:s_box/services/commonModels/userAllData.dart';
 
 import '../commonModels/LoginResponseEntity.dart';
@@ -609,6 +610,49 @@ class ApiController extends BaseRepository {
       } catch (e) {
         print('Error decoding error response: $e');
         return FreshFacesResponse(
+          status: false,
+          message: 'Error: ${apiResponse.body}',
+        );
+      }
+    }
+  }
+  Future<PromoCodeResponse> getPromoCode(String token,String promoCode) async {
+    var uri =  Uri.parse(ApiEndpoint.promo).replace(queryParameters: {
+      'promo': promoCode,
+
+
+    });
+
+    var apiResponse = await http.get(
+     uri,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    print('Response status: ${apiResponse.statusCode}');
+    print('Response body: ${apiResponse.body}');
+
+    if (apiResponse.statusCode == 200) {
+      try {
+        var decodedResponse = jsonDecode(utf8.decode(apiResponse.bodyBytes));
+        return PromoCodeResponse.fromJson(decodedResponse);
+      } catch (e) {
+        print('Error decoding response: $e');
+        return PromoCodeResponse(status: false, message: 'Error decoding response');
+      }
+    } else {
+      // return CommonResponseEntity(status: false, message: 'Error: ${apiResponse.body}');
+      try {
+        var decodedResponse = jsonDecode(utf8.decode(apiResponse.bodyBytes));
+        return PromoCodeResponse(
+          status: false,
+          message: decodedResponse['error'] ?? 'Unknown error occurred',
+        );
+      } catch (e) {
+        print('Error decoding error response: $e');
+        return PromoCodeResponse(
           status: false,
           message: 'Error: ${apiResponse.body}',
         );

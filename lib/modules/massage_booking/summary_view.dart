@@ -2,40 +2,56 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
+import 'package:pay/pay.dart';
 import 'package:s_box/extras/constant/app_color.dart';
 import 'package:s_box/extras/constant/app_images.dart';
 import 'package:s_box/modules/commonWidgets/common.dart';
 import 'package:s_box/modules/commonWidgets/submitBtn.dart';
 import 'package:s_box/modules/massage_booking/massage_controller.dart';
 import 'package:s_box/modules/massage_booking/summary_controller.dart';
+import 'package:s_box/modules/massage_booking/testpaymentService/PaymentController.dart';
 import '../../extras/constant/app_constant.dart';
 import '../../extras/constant/string_constant.dart';
 import '../../themes/colors/color_light.dart';
 
 class SummaryView extends StatelessWidget {
   final summaryController = Get.put(SummaryController());
+
   SummaryView({super.key});
 
   @override
   Widget build(BuildContext context) {
     final arguments = Get.arguments as Map<String, dynamic>;
     final Massage massage = arguments['massage'];
-    print('name is ${massage.title}');
-    final  card = arguments['card'];
-    final cardNumber = card['number'] as String;
-    final cardname = card['name'] as String;
-    final cardExpiryMonth = card['expiryMonth'] as String;
-    final cardExpiryyear = card['expiryYear'] as String;
-    final cardCvv = card['cvv'] as String;
+    final paymentType = arguments['paymentType'];
+
+    if (paymentType == 'Credit Card') {
+      final card = arguments['card'];
+      final cardNumber = card['number'] as String;
+      final cardname = card['name'] as String;
+      final cardExpiryMonth = card['expiryMonth'] as String;
+      final cardExpiryyear = card['expiryYear'] as String;
+      final cardCvv = card['cvv'] as String;
+      final last4Digits = cardNumber.length >= 4
+          ? cardNumber.substring(cardNumber.length - 4)
+          : '****';
+      summaryController.cardNumber.value = cardNumber;
+      summaryController.cardName.value = cardname;
+      summaryController.cardExpiryMonth.value = cardExpiryMonth;
+      summaryController.cardExpiryYear.value = cardExpiryyear;
+      summaryController.cardCvv.value = cardCvv;
+    }
+    final cardNumber = '';
+    final cardname = '';
+    final cardExpiryMonth = '';
+
+    final cardCvv = '';
     final last4Digits = cardNumber.length >= 4
         ? cardNumber.substring(cardNumber.length - 4)
         : '****';
-    summaryController.massage.value=massage;
-    summaryController.cardNumber.value=cardNumber;
-    summaryController.cardName.value=cardname;
-    summaryController.cardExpiryMonth.value=cardExpiryMonth;
-    summaryController.cardExpiryYear.value=cardExpiryyear;
-    summaryController.cardCvv.value=cardCvv;
+
+    summaryController.massage.value = massage;
+    summaryController.totalAmount.value=double.parse(massage.price.toString());
     return Scaffold(
       backgroundColor: ColorLight.white,
       appBar: AppBar(
@@ -69,7 +85,10 @@ class SummaryView extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   buildServices(massage),
-                  buildPaymentMethod(last4Digits,cardExpiryMonth,cardCvv,cardname),
+
+                  paymentType != 'Credit Card' ? buildPaymentMethod(
+                      last4Digits, cardExpiryMonth, cardCvv, cardname) : Text(
+                      ""),
                   buildPromoCode(massage),
                 ],
               ),
@@ -77,7 +96,20 @@ class SummaryView extends StatelessWidget {
             SizedBox(
               height: Get.height * 0.05,
             ),
-            buildBook()
+            paymentType == 'Apple Pay' ? ApplePayButton(
+              paymentConfigurationAsset: 'apple_pay_config.json',
+              onPaymentResult: summaryController.paymentResult,
+              paymentItems: [
+                PaymentItem(
+                  label: 'Total',
+                  amount: '${massage.price}.00',
+                  status: PaymentItemStatus.final_price,
+                ),
+              ],
+              onError: (e) {
+                Get.snackbar('Error', 'Apple Pay error: $e');
+              },
+            ) : buildBook()
           ],
         ),
       ),
@@ -151,9 +183,12 @@ class SummaryView extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       Image.asset(ImageConstant.timeIcon,
-                        width: 20,height: 20,),
+                        width: 20, height: 20,),
                       const SizedBox(width: 5,),
-                      text(text: "${massage.duration.toString()} min", size: 11, fontWeight: FontWeight.w400, color: ColorLight.white)
+                      text(text: "${massage.duration.toString()} min",
+                          size: 11,
+                          fontWeight: FontWeight.w400,
+                          color: ColorLight.white)
                     ],
                   ),
                   Row(
@@ -163,9 +198,12 @@ class SummaryView extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
                           Image.asset(ImageConstant.dateIcon,
-                            width: 20,height: 20,),
+                            width: 20, height: 20,),
                           const SizedBox(width: 5,),
-                          text(text: massage.date.toString(), size: 11, fontWeight: FontWeight.w400, color: ColorLight.white)
+                          text(text: massage.date.toString(),
+                              size: 11,
+                              fontWeight: FontWeight.w400,
+                              color: ColorLight.white)
                         ],
                       ),
                       SizedBox(width: Get.width * 0.05,),
@@ -173,9 +211,12 @@ class SummaryView extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
                           Image.asset(ImageConstant.timeIcon,
-                            width: 20,height: 20,),
+                            width: 20, height: 20,),
                           const SizedBox(width: 5,),
-                          text(text: massage.time.toString(), size: 11, fontWeight: FontWeight.w400, color: ColorLight.white)
+                          text(text: massage.time.toString(),
+                              size: 11,
+                              fontWeight: FontWeight.w400,
+                              color: ColorLight.white)
                         ],
                       ),
                     ],
@@ -189,7 +230,8 @@ class SummaryView extends StatelessWidget {
     );
   }
 
-  buildPaymentMethod(String last4digits, String cardExpiryMonth, String cardCvv, String cardname) {
+  buildPaymentMethod(String last4digits, String cardExpiryMonth, String cardCvv,
+      String cardname) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -236,7 +278,7 @@ class SummaryView extends StatelessWidget {
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(40),
                 side: const BorderSide(color: textFieldColor, width: 1.0)),
-            title:  Text(
+            title: Text(
               cardname,
               style: TextStyle(
                   color: ColorLight.white,
@@ -244,7 +286,7 @@ class SummaryView extends StatelessWidget {
                   fontFamily: fontType,
                   fontWeight: FontWeight.w700),
             ),
-            subtitle:  Text(
+            subtitle: Text(
               '**** **** **** $last4digits',
               style: TextStyle(
                   color: ColorLight.white,
@@ -267,86 +309,95 @@ class SummaryView extends StatelessWidget {
         SizedBox(
           height: Get.height * 0.05,
         ),
-        // const Row(
-        //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        //   crossAxisAlignment: CrossAxisAlignment.center,
-        //   children: [
-        //     Text(
-        //       strPromoCode,
-        //       style: TextStyle(
-        //         color: ColorLight.white,
-        //         fontWeight: FontWeight.w700,
-        //         fontFamily: fontType,
-        //         fontSize: 13,
-        //       ),
-        //     ),
-        //     Text(
-        //       strChange,
-        //       style: TextStyle(
-        //         color: yellowF5EA25,
-        //         fontWeight: FontWeight.w500,
-        //         fontFamily: fontType,
-        //         fontSize: 12,
-        //       ),
-        //     ),
-        //   ],
-        // ),
-        // SizedBox(
-        //   height: Get.height * 0.015,
-        // ),
-        // Container(
-        //   decoration: BoxDecoration(
-        //       borderRadius: BorderRadius.circular(40), color: textFieldColor),
-        //   height: Get.height * 0.08,
-        //   alignment: Alignment.center,
-        //   child: ListTile(
-        //     leading: Padding(
-        //       padding: const EdgeInsets.only(left: 12.0),
-        //       child: Image.asset(
-        //         ImageConstant.discountIcon,
-        //         width: Get.width * 0.08,
-        //       ),
-        //     ),
-        //     contentPadding: EdgeInsets.zero,
-        //     shape: RoundedRectangleBorder(
-        //         borderRadius: BorderRadius.circular(40),
-        //         side: const BorderSide(color: textFieldColor, width: 1.0)),
-        //     title: const Text(
-        //       strEnterCode,
-        //       style: TextStyle(
-        //           color: ColorLight.white,
-        //           fontSize: 12.0,
-        //           fontFamily: fontType,
-        //           fontWeight: FontWeight.w400),
-        //     ),
-        //     trailing: Container(
-        //       alignment: Alignment.center,
-        //       height: Get.height * 0.12,
-        //       width: Get.width * 0.25,
-        //       decoration: const BoxDecoration(
-        //           borderRadius: BorderRadius.only(
-        //             bottomLeft: Radius.zero,
-        //             bottomRight: Radius.circular(40),
-        //             topLeft: Radius.zero,
-        //             topRight: Radius.circular(40),
-        //           ),
-        //           color: yellowF5EA25),
-        //       child: const Text(
-        //         strApply,
-        //         style: TextStyle(
-        //           color: ColorLight.black,
-        //           fontWeight: FontWeight.w600,
-        //           fontFamily: fontType,
-        //           fontSize: 13.0,
-        //         ),
-        //       ),
-        //     ),
-        //   ),
-        // ),
+        const Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text(
+              strPromoCode,
+              style: TextStyle(
+                color: ColorLight.white,
+                fontWeight: FontWeight.w700,
+                fontFamily: fontType,
+                fontSize: 13,
+              ),
+            ),
+            Text(
+              strChange,
+              style: TextStyle(
+                color: yellowF5EA25,
+                fontWeight: FontWeight.w500,
+                fontFamily: fontType,
+                fontSize: 12,
+              ),
+            ),
+          ],
+        ),
+        SizedBox(
+          height: Get.height * 0.015,
+        ),
+        Container(
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(40), color: textFieldColor),
+          height: Get.height * 0.08,
+          alignment: Alignment.center,
+          child: ListTile(
+            leading: Padding(
+              padding: const EdgeInsets.only(left: 12.0),
+              child: Image.asset(
+                ImageConstant.discountIcon,
+                width: Get.width * 0.08,
+              ),
+            ),
+            contentPadding: EdgeInsets.zero,
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(40),
+                side: const BorderSide(color: textFieldColor, width: 1.0)),
+            title: Obx(() {
+              return TextField(
+
+                controller: summaryController.promoCont.value,
+                style: TextStyle(
+                    color: ColorLight.white,
+                    fontSize: 12.0,
+                    fontFamily: fontType,
+                    fontWeight: FontWeight.w400),
+              );
+            }),
+            trailing: Container(
+              alignment: Alignment.center,
+              height: Get.height * 0.12,
+              width: Get.width * 0.25,
+              decoration: const BoxDecoration(
+                  borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.zero,
+                    bottomRight: Radius.circular(40),
+                    topLeft: Radius.zero,
+                    topRight: Radius.circular(40),
+                  ),
+                  color: yellowF5EA25),
+              child: GestureDetector(
+                onTap: () async {
+                  await summaryController.fetchDiscount() ?? 0.0;
+                  Get.find<SummaryController>().update();
+                },
+                child: Text(
+                  strApply,
+                  style: TextStyle(
+                    color: ColorLight.black,
+                    fontWeight: FontWeight.w600,
+                    fontFamily: fontType,
+                    fontSize: 13.0,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
         SizedBox(
           height: Get.height * 0.02,
         ),
-         Row(
+        Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
@@ -373,37 +424,40 @@ class SummaryView extends StatelessWidget {
         SizedBox(
           height: Get.height * 0.02,
         ),
-        // const Row(
-        //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        //   crossAxisAlignment: CrossAxisAlignment.center,
-        //   children: [
-        //     Text(
-        //       strDiscount,
-        //       style: TextStyle(
-        //         color: ColorLight.white,
-        //         fontWeight: FontWeight.w400,
-        //         fontFamily: fontType,
-        //         fontSize: 12,
-        //       ),
-        //     ),
-        //     Text(
-        //       '£9.00',
-        //       style: TextStyle(
-        //         color: ColorLight.white,
-        //         fontWeight: FontWeight.w700,
-        //         fontFamily: fontType,
-        //         fontSize: 14,
-        //       ),
-        //     ),
-        //   ],
-        // ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text(
+              strDiscount,
+              style: TextStyle(
+                color: ColorLight.white,
+                fontWeight: FontWeight.w400,
+                fontFamily: fontType,
+                fontSize: 12,
+              ),
+            ),
+            Obx(() {
+              return Text(
+                '£${summaryController.discount}',
+                style: TextStyle(
+                  color: ColorLight.white,
+                  fontWeight: FontWeight.w700,
+                  fontFamily: fontType,
+                  fontSize: 14,
+                ),
+              );
+            }),
+          ],
+        ),
         SizedBox(
           height: Get.height * 0.02,
         ),
         Row(
           children: List.generate(
               150 ~/ 1,
-              (index) => Expanded(
+                  (index) =>
+                  Expanded(
                     child: Container(
                       color: index % 2 == 0 ? Colors.transparent : Colors.grey,
                       height: 1,
@@ -413,7 +467,7 @@ class SummaryView extends StatelessWidget {
         SizedBox(
           height: Get.height * 0.02,
         ),
-         Row(
+        Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
@@ -426,15 +480,18 @@ class SummaryView extends StatelessWidget {
                 fontSize: 12,
               ),
             ),
-            Text(
-              '£${massage.price.toString()}.00',
-              style: TextStyle(
-                color: ColorLight.white,
-                fontWeight: FontWeight.w700,
-                fontFamily: fontType,
-                fontSize: 14,
-              ),
-            ),
+            Obx(() {
+              return Text(
+
+                '£${double.parse(massage.price.toString())-summaryController.discount.value}',
+                style: TextStyle(
+                  color: ColorLight.white,
+                  fontWeight: FontWeight.w700,
+                  fontFamily: fontType,
+                  fontSize: 14,
+                ),
+              );
+            }),
           ],
         ),
       ],

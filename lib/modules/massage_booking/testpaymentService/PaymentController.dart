@@ -5,7 +5,7 @@ import 'package:s_box/modules/massage_booking/testpaymentService/PaymentService.
 
 
 class PaymentController extends GetxController {
-  final PaymentService paymentService = PaymentService();
+  final PaymentServiceApplePay paymentService = PaymentServiceApplePay();
   var isLoading = false.obs;
   var paymentResult = {}.obs;
 
