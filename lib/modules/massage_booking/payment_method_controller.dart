@@ -60,11 +60,19 @@ class PaymentMethodController extends GetxController {
     final paymentType = selectedValue.value == -1 ? 'Apple Pay' : selectedValue.value == -2 ? 'Google Pay' : 'Credit Card';
     print('card value is ${selectedValue.value}');
     if(selectedValue.value!=-1){
-      print("card valu is${cards[selectedValue.value]}");
-      final selectedCard = cards[selectedValue.value];
-      final Massage _massage=Massage(title: massage.value.title, subtitle: massage.value.subtitle, price: massage.value.price,date: selectedDate.toString(),time: selectedtime.toString(),duration: selectedduration.toString());
-      // Pass the membership and card details to the SummaryView
-      Get.to(SummaryView(), arguments: {'massage': _massage, 'card': selectedCard,'paymentType': paymentType,});
+      if(selectedValue.value==-2){
+        final selectedCard = '';
+        final Massage _massage=Massage(title: massage.value.title, subtitle: massage.value.subtitle, price: massage.value.price,date: selectedDate.toString(),time: selectedtime.toString(),duration: selectedduration.toString());
+        // Pass the membership and card details to the SummaryView
+        Get.to(SummaryView(), arguments: {'massage': _massage, 'card': selectedCard,'paymentType': paymentType,});
+      }else{
+        print("card valu is${cards[selectedValue.value]}");
+        final selectedCard = cards[selectedValue.value];
+        final Massage _massage=Massage(title: massage.value.title, subtitle: massage.value.subtitle, price: massage.value.price,date: selectedDate.toString(),time: selectedtime.toString(),duration: selectedduration.toString());
+        // Pass the membership and card details to the SummaryView
+        Get.to(SummaryView(), arguments: {'massage': _massage, 'card': selectedCard,'paymentType': paymentType,});
+      }
+
     }else{
       final selectedCard = '';
       final Massage _massage=Massage(title: massage.value.title, subtitle: massage.value.subtitle, price: massage.value.price,date: selectedDate.toString(),time: selectedtime.toString(),duration: selectedduration.toString());

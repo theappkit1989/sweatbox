@@ -48,7 +48,20 @@ class PaymentMethodController extends GetxController {
   }
 
   void goToSummary() {
-    final selectedCard = cards[selectedValue.value];
-    Get.to(SummaryView(), arguments: {'membership': membership.value, 'card': selectedCard});
+    final paymentType = selectedValue.value == -1 ? 'Apple Pay' : selectedValue.value == -2 ? 'Google Pay' : 'Credit Card';
+    if(selectedValue.value!=-1){
+      if(selectedValue.value==-2){
+        final selectedCard = '';
+        Get.to(SummaryView(), arguments: {'membership': membership.value, 'card': selectedCard,'paymentType': paymentType,});
+      }else{
+        final selectedCard = cards[selectedValue.value];
+        Get.to(SummaryView(), arguments: {'membership': membership.value, 'card': selectedCard,'paymentType': paymentType,});
+      }
+    } else{
+      final selectedCard = '';
+      Get.to(SummaryView(), arguments: {'membership': membership.value, 'card': selectedCard,'paymentType': paymentType,});
+
+    }
+
   }
 }

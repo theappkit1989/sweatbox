@@ -15,11 +15,11 @@ import 'package:s_box/themes/colors/color_light.dart';
 
 import '../../extras/constant/app_color.dart';
 
-class PaymentMethodView extends StatelessWidget {
+class MassagePaymentMethodView extends StatelessWidget {
   final paymentMethodController = Get.put(PaymentMethodController());
   // final paymentMethodController = Get.put(PaymentMethodController());
 
-  PaymentMethodView({super.key});
+  MassagePaymentMethodView({super.key});
 
   @override
   Widget build(BuildContext context) {

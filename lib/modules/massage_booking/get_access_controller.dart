@@ -9,7 +9,7 @@ class GetAccessController extends GetxController{
   RxInt selectedValue = 0.obs;
 
   void goToPaymentMethod(){
-    Get.to(PaymentMethodView());
+    Get.to(MassagePaymentMethodView());
   }
 
 

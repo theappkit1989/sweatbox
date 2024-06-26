@@ -18,6 +18,9 @@ class SummaryView extends StatelessWidget {
   final summaryController = Get.put(SummaryController());
 
   SummaryView({super.key});
+  String get defaultGooglePayConfigString => "assets/google_pay_config.json";
+
+  String get defaultApplePayConfigString => 'assets/apple_pay_config.json';
 
   @override
   Widget build(BuildContext context) {
@@ -51,7 +54,8 @@ class SummaryView extends StatelessWidget {
         : '****';
 
     summaryController.massage.value = massage;
-    summaryController.totalAmount.value=double.parse(massage.price.toString());
+    summaryController.totalAmount.value =
+        double.parse(massage.price.toString());
     return Scaffold(
       backgroundColor: ColorLight.white,
       appBar: AppBar(
@@ -68,36 +72,38 @@ class SummaryView extends StatelessWidget {
         ),
       ),
       body: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
             Container(
-              width: Get.width,
-              padding: EdgeInsets.symmetric(
-                  horizontal: Get.width * 0.05, vertical: Get.height * 0.04),
-              decoration: BoxDecoration(
-                color: ColorLight.black,
-                borderRadius: BorderRadius.circular(25),
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  buildServices(massage),
+            width: Get.width,
+            padding: EdgeInsets.symmetric(
+                horizontal: Get.width * 0.05, vertical: Get.height * 0.04),
+            decoration: BoxDecoration(
+              color: ColorLight.black,
+              borderRadius: BorderRadius.circular(25),
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                buildServices(massage),
 
-                  paymentType != 'Credit Card' ? buildPaymentMethod(
-                      last4Digits, cardExpiryMonth, cardCvv, cardname) : Text(
-                      ""),
-                  buildPromoCode(massage),
-                ],
-              ),
+                paymentType != 'Credit Card' ? buildPaymentMethod(
+                    last4Digits, cardExpiryMonth, cardCvv, cardname) : Text(
+                    ""),
+                buildPromoCode(massage),
+              ],
             ),
-            SizedBox(
-              height: Get.height * 0.05,
-            ),
-            paymentType == 'Apple Pay' ? Obx(() {return ApplePayButton(
-              paymentConfigurationAsset: 'apple_pay_config.json',
+          ),
+          SizedBox(
+            height: Get.height * 0.05,
+          ),
+          paymentType == 'Apple Pay' ? Obx(() {
+            return ApplePayButton(
+              paymentConfiguration: PaymentConfiguration.fromJsonString(
+                  defaultApplePayConfigString),
               onPaymentResult: summaryController.paymentResult,
               paymentItems: [
                 PaymentItem(
@@ -108,11 +114,31 @@ class SummaryView extends StatelessWidget {
               ],
               onError: (e) {
                 Get.snackbar('Error', 'Apple Pay error: $e');
+                print('error in google pay$e');
               },
-            );} ): buildBook()
-          ],
-        ),
-      ),
+            );
+          }) :
+          paymentType == 'Google Pay' ? Obx(() {
+            return GooglePayButton(
+              paymentConfiguration: PaymentConfiguration.fromJsonString(
+                  defaultGooglePayConfigString),
+              onPaymentResult: summaryController.paymentResult,
+              paymentItems: [
+                PaymentItem(
+                  label: 'Total',
+                  amount: '${summaryController.totalAmount}',
+                  status: PaymentItemStatus.final_price,
+                ),
+              ],
+              onError: (e) {
+                Get.snackbar('Error', 'Google Pay error: $e');
+                print('error in google pay$e');
+              },
+            );
+          }) :buildBook()
+      ],
+    ),)
+    ,
     );
   }
 
@@ -483,7 +509,8 @@ class SummaryView extends StatelessWidget {
             Obx(() {
               return Text(
 
-                '£${double.parse(massage.price.toString())-summaryController.discount.value}',
+                '£${double.parse(massage.price.toString()) -
+                    summaryController.discount.value}',
                 style: TextStyle(
                   color: ColorLight.white,
                   fontWeight: FontWeight.w700,

@@ -138,6 +138,7 @@ class SummaryController extends GetxController{
       addService();
       paymentResult.value = result;
     } catch (e) {
+      Get.to(PaymentDeclinedView());
       Get.snackbar('Error', 'Payment failed: $e');
     } finally {
       isLoading.value = false;
@@ -150,8 +151,10 @@ class SummaryController extends GetxController{
       final token = await getGooglePayToken(paymentItem);
       final result = await paymentService.makePayment(paymentItem.amount, 'USD', 'GOOGLEPAY', token);
       paymentResult.value = result;
+      addService();
     } catch (e) {
       Get.snackbar('Error', 'Payment failed: $e');
+      Get.to(PaymentDeclinedView());
     } finally {
       isLoading.value = false;
     }

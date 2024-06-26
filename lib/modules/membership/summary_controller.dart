@@ -38,6 +38,51 @@ class MembershipSummaryController extends GetxController {
     userId = storage.read(userid).toString();
 
   }
+  static const String defaultApplePay = '''{
+  "provider": "apple_pay",
+  "data": {
+    "merchantIdentifier": "merchant.com.cc.sweatbox",
+    "merchantCapabilities": ["3DS", "EMV"],
+    "supportedNetworks": ["visa", "masterCard", "amex"],
+    "countryCode": "US",
+    "currencyCode": "USD",
+    "requiredBillingContactFields": [],
+    "requiredShippingContactFields": [],
+    "shippingMethods": []
+  }
+}
+''';
+  static const String defaultGooglePay = '''{
+  "provider": "google_pay",
+  "data": {
+    "environment": "TEST",
+    "apiVersion": 2,
+    "apiVersionMinor": 0,
+    "merchantInfo": {
+      "merchantName": "Example Merchant",
+      "merchantId": "BCR2DN4TWXN6FKA5"
+    },
+    "allowedPaymentMethods": [
+      {
+        "type": "CARD",
+        "parameters": {
+          "allowedAuthMethods": ["PAN_ONLY", "CRYPTOGRAM_3DS"],
+          "allowedCardNetworks": ["MASTERCARD", "VISA"]
+        },
+        "tokenizationSpecification": {
+          "type": "PAYMENT_GATEWAY",
+          "parameters": {
+            "gateway": "example",
+            "gatewayMerchantId": "BCR2DN4TWXN6FKA5"
+          }
+        }
+      }
+    ]
+  }
+}
+''';
+
+
 
   Future<void> goToPaymentSuccessful() async {
     _showLoadingDialog();
@@ -181,8 +226,11 @@ class MembershipSummaryController extends GetxController {
       final token = await getApplePayToken(paymentItem);
       final result = await paymentService.makePayment(paymentItem.amount,'USD', 'APPLEPAY', token);
       paymentResult.value = result;
+      addMembership();
     } catch (e) {
+
       Get.snackbar('Error', 'Payment failed: $e');
+      Get.to(PaymentDeclinedView());
     } finally {
       isLoading.value = false;
     }
@@ -194,8 +242,10 @@ class MembershipSummaryController extends GetxController {
       final token = await getGooglePayToken(paymentItem);
       final result = await paymentService.makePayment(paymentItem.amount, 'USD', 'GOOGLEPAY', token);
       paymentResult.value = result;
+      addMembership();
     } catch (e) {
       Get.snackbar('Error', 'Payment failed: $e');
+      Get.to(PaymentDeclinedView());
     } finally {
       isLoading.value = false;
     }

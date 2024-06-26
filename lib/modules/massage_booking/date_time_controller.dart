@@ -94,7 +94,7 @@ class DateTimeController extends GetxController {
 
   void goToSummary() {
 
-    Get.to(PaymentMethodView(), arguments: [selectedMassage,selectedDate,selectedTime,massage.value.title]);
+    Get.to(MassagePaymentMethodView(), arguments: [selectedMassage,selectedDate,selectedTime,massage.value.title]);
   }
   void gatherDetails(String selectedTime) {
     this.selectedTime = selectedTime;

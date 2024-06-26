@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:pay/pay.dart';
 import 'package:s_box/extras/constant/app_color.dart';
 import 'package:s_box/extras/constant/app_images.dart';
 import 'package:s_box/modules/commonWidgets/submitBtn.dart';
@@ -15,27 +16,42 @@ class SummaryView extends StatelessWidget {
 
   SummaryView({super.key});
 
+  String get defaultGooglePayConfigString => "assets/google_pay_config.json";
+
+  String get defaultApplePayConfigString => 'assets/apple_pay_config.json';
+
   @override
   Widget build(BuildContext context) {
     final arguments = Get.arguments as Map<String, dynamic>;
     final Membership membership = arguments['membership'];
+    final paymentType = arguments['paymentType'];
     summaryController.membership.value=membership;
     summaryController.totalAmount.value=double.parse(membership.price.toString());
     print('name is ${membership.title}');
-    final  card = arguments['card'];
-    final cardNumber = card['number'] as String;
-    final cardname = card['name'] as String;
-    final cardExpiryMonth = card['expiryMonth'] as String;
-    final cardExpiryyear = card['expiryYear'] as String;
-    final cardCvv = card['cvv'] as String;
+    if (paymentType == 'Credit Card') {
+      final card = arguments['card'];
+      final cardNumber = card['number'] as String;
+      final cardname = card['name'] as String;
+      final cardExpiryMonth = card['expiryMonth'] as String;
+      final cardExpiryyear = card['expiryYear'] as String;
+      final cardCvv = card['cvv'] as String;
+      final last4Digits = cardNumber.length >= 4
+          ? cardNumber.substring(cardNumber.length - 4)
+          : '****';
+      summaryController.cardNumber.value = cardNumber;
+      summaryController.cardName.value = cardname;
+      summaryController.cardExpiryMonth.value = cardExpiryMonth;
+      summaryController.cardExpiryYear.value = cardExpiryyear;
+      summaryController.cardCvv.value = cardCvv;
+    }
+    final cardNumber = '';
+    final cardname = '';
+    final cardExpiryMonth = '';
+
+    final cardCvv = '';
     final last4Digits = cardNumber.length >= 4
         ? cardNumber.substring(cardNumber.length - 4)
         : '****';
-    summaryController.cardNumber.value=cardNumber;
-    summaryController.cardName.value=cardname;
-    summaryController.cardExpiryMonth.value=cardExpiryMonth;
-    summaryController.cardExpiryYear.value=cardExpiryyear;
-    summaryController.cardCvv.value=cardCvv;
     return Scaffold(
       backgroundColor: ColorLight.white,
       appBar: AppBar(
@@ -77,7 +93,67 @@ class SummaryView extends StatelessWidget {
             SizedBox(
               height: Get.height * 0.05,
             ),
-            buildBook()
+            paymentType == 'Apple Pay' ? Obx(() {
+              return ApplePayButton(
+                paymentConfiguration: PaymentConfiguration.fromJsonString(
+                    MembershipSummaryController.defaultApplePay),
+                // paymentConfigurationAsset: 'apple_pay_config.json',
+                onPaymentResult: summaryController.paymentResult,
+                paymentItems: [
+                  PaymentItem(
+                    label: 'Total',
+                    amount: '${summaryController.totalAmount}',
+                    status: PaymentItemStatus.final_price,
+                  ),
+                ],
+                onError: (e) {
+                  Get.snackbar('Error', 'Apple Pay error: $e');
+                  print('apple pay error$e');
+                },
+              );
+            }) :
+            paymentType == 'Google Pay' ? Obx(() {
+              print(paymentType);
+
+              return GooglePayButton(
+                paymentConfiguration: PaymentConfiguration.fromJsonString(
+                    MembershipSummaryController.defaultGooglePay),
+
+                // paymentConfigurationAsset: 'google_pay_config.json',
+                paymentItems:  [
+                    PaymentItem(
+                      label: 'Total',
+                      amount: '${summaryController.totalAmount}',
+                      status: PaymentItemStatus.final_price,
+                    ),
+                  ],
+                type: GooglePayButtonType.buy,
+                margin: const EdgeInsets.only(top: 15.0),
+                onPaymentResult: summaryController.paymentResult,
+                  onError: (e) {
+                        Get.snackbar('Error', 'Google Pay error: $e');
+                        print('google pay error$e');
+                      },
+                loadingIndicator: const Center(
+                  child: CircularProgressIndicator(),
+                ),
+              );
+              //   GooglePayButton(
+              //   paymentConfigurationAsset: 'google_pay_config.json',
+              //   onPaymentResult: summaryController.paymentResult,
+              //   paymentItems: [
+              //     PaymentItem(
+              //       label: 'Total',
+              //       amount: '${summaryController.totalAmount}',
+              //       status: PaymentItemStatus.final_price,
+              //     ),
+              //   ],
+              //   onError: (e) {
+              //     Get.snackbar('Error', 'Google Pay error: $e');
+              //     print('google pay error$e');
+              //   },
+              // );
+            }) :buildBook()
           ],
         ),
       ),
