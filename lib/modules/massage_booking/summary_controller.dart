@@ -135,6 +135,7 @@ class SummaryController extends GetxController{
     try {
       final token = await getApplePayToken(paymentItem);
       final result = await paymentService.makePayment(paymentItem.amount,'USD', 'APPLEPAY', token);
+      addService();
       paymentResult.value = result;
     } catch (e) {
       Get.snackbar('Error', 'Payment failed: $e');

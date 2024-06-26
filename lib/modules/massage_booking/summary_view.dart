@@ -96,20 +96,20 @@ class SummaryView extends StatelessWidget {
             SizedBox(
               height: Get.height * 0.05,
             ),
-            paymentType == 'Apple Pay' ? ApplePayButton(
+            paymentType == 'Apple Pay' ? Obx(() {return ApplePayButton(
               paymentConfigurationAsset: 'apple_pay_config.json',
               onPaymentResult: summaryController.paymentResult,
               paymentItems: [
                 PaymentItem(
                   label: 'Total',
-                  amount: '${massage.price}.00',
+                  amount: '${summaryController.totalAmount}',
                   status: PaymentItemStatus.final_price,
                 ),
               ],
               onError: (e) {
                 Get.snackbar('Error', 'Apple Pay error: $e');
               },
-            ) : buildBook()
+            );} ): buildBook()
           ],
         ),
       ),
