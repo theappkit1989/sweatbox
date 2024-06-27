@@ -80,7 +80,7 @@ class EditProfileController extends GetxController {
         // Get.snackbar("Success", _response.message ?? '');
         var homeCont = Get.find<MyProfileController>();
         homeCont.onInit();
-        // Get.back();
+        Get.back();
       } else {
         _dismissDialog();
         Get.snackbar("Error", _response.message ?? 'Something went wrong!');

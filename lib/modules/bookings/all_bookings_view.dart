@@ -264,8 +264,7 @@ class AllBookingsView extends StatelessWidget {
           ),
           SizedBox(height: 20),
           SizedBox(
-            width: Get.width * 0.3,
-            height: Get.width * 0.08,
+
             child: customSubmitBtn(
               voidCallback: () {
                 allBookingsController.goToOrderDetails(service);

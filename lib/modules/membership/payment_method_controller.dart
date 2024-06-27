@@ -49,19 +49,24 @@ class PaymentMethodController extends GetxController {
 
   void goToSummary() {
     final paymentType = selectedValue.value == -1 ? 'Apple Pay' : selectedValue.value == -2 ? 'Google Pay' : 'Credit Card';
-    if(selectedValue.value!=-1){
-      if(selectedValue.value==-2){
+    if(selectedValue.value==0&&cards[selectedValue.value]==null){
+      Get.snackbar("Error", "Select One Payment method");
+    }else{
+      if(selectedValue.value!=-1){
+        if(selectedValue.value==-2){
+          final selectedCard = '';
+          Get.to(SummaryView(), arguments: {'membership': membership.value, 'card': selectedCard,'paymentType': paymentType,});
+        }else{
+          final selectedCard = cards[selectedValue.value];
+          Get.to(SummaryView(), arguments: {'membership': membership.value, 'card': selectedCard,'paymentType': paymentType,});
+        }
+      } else{
         final selectedCard = '';
         Get.to(SummaryView(), arguments: {'membership': membership.value, 'card': selectedCard,'paymentType': paymentType,});
-      }else{
-        final selectedCard = cards[selectedValue.value];
-        Get.to(SummaryView(), arguments: {'membership': membership.value, 'card': selectedCard,'paymentType': paymentType,});
-      }
-    } else{
-      final selectedCard = '';
-      Get.to(SummaryView(), arguments: {'membership': membership.value, 'card': selectedCard,'paymentType': paymentType,});
 
+      }
     }
+
 
   }
 }

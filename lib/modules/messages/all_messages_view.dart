@@ -49,11 +49,12 @@ class AllMessagesView extends StatelessWidget {
             horizontal: Get.width * 0.05,
           ),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               buildFreshFaces(),
-              buildNearby(),
+              Center(child: Text("Under Progress",style: TextStyle(color: Colors.white),))
+              // buildNearby(),
             ],
           ),
         ),
@@ -116,7 +117,7 @@ class AllMessagesView extends StatelessWidget {
             final imageUrl = '${ApiEndpoint.baseUrlImage}${user.image}';
 
             return GestureDetector(
-              onTap: () => allMessagesController.goToChatScreen(user),
+              // onTap: () => allMessagesController.goToChatScreen(user),
               child: Container(
                 width: Get.width * 0.16,
                 height: Get.height * 0.1,

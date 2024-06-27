@@ -28,6 +28,7 @@ class MyProfileView extends StatelessWidget {
   Widget build(BuildContext context) {
     storage.writeIfNull(userToken, '');
     storage.writeIfNull(userid, '');
+    storage.writeIfNull(image, '');
     username = storage.read(userName);
     useremail = storage.read(userEmail);
     userImage = storage.read(image);
@@ -53,6 +54,7 @@ class MyProfileView extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
+                  SizedBox(height: 20,),
                   buildUserDetails(username, useremail),
                   buildMembership(myProfileController.memberships.value),
                   Expanded(
@@ -381,7 +383,7 @@ class MyProfileView extends StatelessWidget {
     if (myProfileController.memberships.isEmpty) {
       return SizedBox(height: Get.height*0.1,); // If no memberships, hide the section
     } else {
-      return Obx(() {
+
         return Container(
           width: Get.width,
           decoration: BoxDecoration(
@@ -398,11 +400,11 @@ class MyProfileView extends StatelessWidget {
               Stack(
                 alignment: Alignment.center,
                 children: [
-                  CircularProgressIndicator(
-                    value: myProfileController.progress.value,
-                    backgroundColor: Colors.grey,
-                    valueColor: AlwaysStoppedAnimation<Color>(appPrimaryColor),
-                  ),
+                  // CircularProgressIndicator(
+                  //   value: myProfileController.progress.value,
+                  //   backgroundColor: Colors.grey,
+                  //   valueColor: AlwaysStoppedAnimation<Color>(appPrimaryColor),
+                  // ),
                   Image.asset(
                     ImageConstant.profileImg,
                     width: Get.width * 0.18,
@@ -440,27 +442,30 @@ class MyProfileView extends StatelessWidget {
                         SizedBox(
                           width: Get.width * 0.03,
                         ),
-                        GestureDetector(
-                          onTap: (){
-                            myProfileController.goToOrderDetails(myProfileController.memberships.last);
-                          },
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: appPrimaryColor,
-                              borderRadius: BorderRadius.circular(15),
-                            ),
-                            padding: EdgeInsets.symmetric(
-                                horizontal: Get.width * 0.03,
-                                vertical: Get.height * 0.01),
-                            child: text(
-                                text: strSeeDetails,
-                                size: 11,
-                                fontWeight: FontWeight.w600,
-                                color: ColorLight.white),
-                          ),
-                        ),
+
                       ],
-                    )
+                    ),
+                    SizedBox(height: 10,),
+                    GestureDetector(
+                      onTap: (){
+                        myProfileController.goToOrderDetails(myProfileController.memberships.last);
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: appPrimaryColor,
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        padding: EdgeInsets.symmetric(
+                            horizontal: Get.width * 0.03,
+                            vertical: Get.height * 0.01),
+                        child: text(
+                            text: strSeeDetails,
+                            size: 11,
+                            fontWeight: FontWeight.w600,
+                            color: ColorLight.white),
+                      ),
+                    ),
+
                   ],
                 ),
               ),
@@ -468,8 +473,8 @@ class MyProfileView extends StatelessWidget {
             ],
           ),
         );
-      });
-    }
+      }
+
   }
 
   buildListTile(

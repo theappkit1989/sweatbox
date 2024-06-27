@@ -10,6 +10,8 @@ import '../../extras/constant/app_constant.dart';
 import '../../extras/constant/string_constant.dart';
 import '../../services/commonModels/cardModal.dart';
 import '../../themes/colors/color_light.dart';
+import '../massage_booking/payment_declined_view.dart';
+import '../massage_booking/testpaymentService/payment_config.dart';
 
 class SummaryView extends StatelessWidget {
   final summaryController = Get.put(MembershipSummaryController());
@@ -94,66 +96,151 @@ class SummaryView extends StatelessWidget {
               height: Get.height * 0.05,
             ),
             paymentType == 'Apple Pay' ? Obx(() {
-              return ApplePayButton(
-                paymentConfiguration: PaymentConfiguration.fromJsonString(
-                    MembershipSummaryController.defaultApplePay),
-                // paymentConfigurationAsset: 'apple_pay_config.json',
-                onPaymentResult: summaryController.paymentResult,
+              return    ApplePayButton(
+
                 paymentItems: [
                   PaymentItem(
                     label: 'Total',
-                    amount: '${summaryController.totalAmount}',
+                    amount: summaryController.totalAmount.value.toStringAsFixed(2),
                     status: PaymentItemStatus.final_price,
-                  ),
+                  )
                 ],
-                onError: (e) {
-                  Get.snackbar('Error', 'Apple Pay error: $e');
-                  print('apple pay error$e');
-                },
-              );
-            }) :
-            paymentType == 'Google Pay' ? Obx(() {
-              print(paymentType);
+                style: ApplePayButtonStyle.whiteOutline,
+                type: ApplePayButtonType.book,
 
-              return GooglePayButton(
-                paymentConfiguration: PaymentConfiguration.fromJsonString(
-                    MembershipSummaryController.defaultGooglePay),
-
-                // paymentConfigurationAsset: 'google_pay_config.json',
-                paymentItems:  [
-                    PaymentItem(
-                      label: 'Total',
-                      amount: '${summaryController.totalAmount}',
-                      status: PaymentItemStatus.final_price,
-                    ),
-                  ],
-                type: GooglePayButtonType.buy,
                 margin: const EdgeInsets.only(top: 15.0),
-                onPaymentResult: summaryController.paymentResult,
-                  onError: (e) {
-                        Get.snackbar('Error', 'Google Pay error: $e');
-                        print('google pay error$e');
-                      },
+                onPaymentResult: (result) {
+
+                  print(result);
+                  if (result['paymentMethod'] == '') {
+                    // Payment was successful
+                    print('Payment failed or cancelled');
+                    summaryController.addMembership();
+                    // You can perform further actions here, such as updating UI or backend
+                  } else {
+                    Get.to(PaymentDeclinedView());
+                    print('Payment successful');
+
+                    // Handle error or show appropriate message to the user
+                  }
+                },
+                // {
+                //   summaryController.makeApplePayPayment(PaymentItem(
+                //     label: 'Total',
+                //     amount: summaryController.totalAmount.value.toStringAsFixed(2),
+                //     status: PaymentItemStatus.final_price,
+                //   ));
+                // },
+                onError: (e){
+                  Get.snackbar("Error", e.toString());
+                  Get.to(PaymentDeclinedView());
+                },
                 loadingIndicator: const Center(
                   child: CircularProgressIndicator(),
-                ),
+                ),  paymentConfiguration: PaymentConfiguration.fromJsonString(
+                  defaultApplePay),
               );
-              //   GooglePayButton(
-              //   paymentConfigurationAsset: 'google_pay_config.json',
-              //   onPaymentResult: summaryController.paymentResult,
-              //   paymentItems: [
-              //     PaymentItem(
-              //       label: 'Total',
-              //       amount: '${summaryController.totalAmount}',
-              //       status: PaymentItemStatus.final_price,
-              //     ),
-              //   ],
-              //   onError: (e) {
-              //     Get.snackbar('Error', 'Google Pay error: $e');
-              //     print('google pay error$e');
-              //   },
-              // );
-            }) :buildBook()
+            }) :
+            paymentType == 'Google Pay' ?
+            Obx(() {
+              return
+                GooglePayButton(
+
+                  paymentItems: [
+                    PaymentItem(
+                      label: 'Total',
+                      amount: summaryController.totalAmount.value.toStringAsFixed(2),
+                      status: PaymentItemStatus.final_price,
+                    )
+                  ],
+
+                  type: GooglePayButtonType.book,
+                  margin: const EdgeInsets.only(top: 15.0),
+                  onPaymentResult: (result)
+                  {
+                    print("result is ${result['paymentMethodData']['tokenizationData']['token']}");
+                    if(result['paymentMethodData']['tokenizationData']['token']=={}){
+                      print("payment failed");
+                      Get.to(PaymentDeclinedView());
+                    }else{
+                      print("payment successful");
+                      summaryController.addMembership();
+
+                    }
+
+                  },
+                  onError: (e){
+                    Get.snackbar("Error", e.toString());
+                    Get.to(PaymentDeclinedView());
+                  },
+                  loadingIndicator: const Center(
+                    child: CircularProgressIndicator(),
+                  ), paymentConfiguration: PaymentConfiguration.fromJsonString(defaultGooglePay),
+                );
+
+            })
+                :buildBook()
+            // paymentType == 'Apple Pay' ? Obx(() {
+            //   return ApplePayButton(
+            //     paymentConfiguration: PaymentConfiguration.fromJsonString(
+            //         MembershipSummaryController.defaultApplePay),
+            //     // paymentConfigurationAsset: 'apple_pay_config.json',
+            //     onPaymentResult: summaryController.paymentResult,
+            //     paymentItems: [
+            //       PaymentItem(
+            //         label: 'Total',
+            //         amount: '${summaryController.totalAmount}',
+            //         status: PaymentItemStatus.final_price,
+            //       ),
+            //     ],
+            //     onError: (e) {
+            //       Get.snackbar('Error', 'Apple Pay error: $e');
+            //       print('apple pay error$e');
+            //     },
+            //   );
+            // }) :
+            // paymentType == 'Google Pay' ? Obx(() {
+            //   print(paymentType);
+            //
+            //   return GooglePayButton(
+            //     paymentConfiguration: PaymentConfiguration.fromJsonString(
+            //         MembershipSummaryController.defaultGooglePay),
+            //
+            //     // paymentConfigurationAsset: 'google_pay_config.json',
+            //     paymentItems:  [
+            //         PaymentItem(
+            //           label: 'Total',
+            //           amount: '${summaryController.totalAmount}',
+            //           status: PaymentItemStatus.final_price,
+            //         ),
+            //       ],
+            //     type: GooglePayButtonType.buy,
+            //     margin: const EdgeInsets.only(top: 15.0),
+            //     onPaymentResult: summaryController.paymentResult,
+            //       onError: (e) {
+            //             Get.snackbar('Error', 'Google Pay error: $e');
+            //             print('google pay error$e');
+            //           },
+            //     loadingIndicator: const Center(
+            //       child: CircularProgressIndicator(),
+            //     ),
+            //   );
+            //   //   GooglePayButton(
+            //   //   paymentConfigurationAsset: 'google_pay_config.json',
+            //   //   onPaymentResult: summaryController.paymentResult,
+            //   //   paymentItems: [
+            //   //     PaymentItem(
+            //   //       label: 'Total',
+            //   //       amount: '${summaryController.totalAmount}',
+            //   //       status: PaymentItemStatus.final_price,
+            //   //     ),
+            //   //   ],
+            //   //   onError: (e) {
+            //   //     Get.snackbar('Error', 'Google Pay error: $e');
+            //   //     print('google pay error$e');
+            //   //   },
+            //   // );
+            // }) :buildBook()
           ],
         ),
       ),

@@ -5,7 +5,10 @@ import 'package:s_box/extras/constant/app_images.dart';
 import 'package:s_box/extras/constant/string_constant.dart';
 import 'package:s_box/modules/commonWidgets/common.dart';
 import 'package:s_box/modules/commonWidgets/submitBtn.dart';
+import 'package:s_box/modules/home_screen/home_view.dart';
+import 'package:s_box/modules/massage_booking/massage_view.dart';
 import 'package:s_box/modules/massage_booking/payment_declined_controller.dart';
+import 'package:s_box/modules/membership/membership_view.dart';
 import 'package:s_box/themes/colors/color_light.dart';
 
 class PaymentDeclinedView extends StatelessWidget {
@@ -32,7 +35,7 @@ class PaymentDeclinedView extends StatelessWidget {
             SizedBox(height: Get.height * 0.02,),
             text(text: strDeclinedSubtitle, size: 14, fontWeight: FontWeight.w400, color: ColorLight.white),
             SizedBox(height: Get.height * 0.02,),
-            customSubmitBtn(text: strTryAgain, voidCallback: (){}, width: Get.width)
+            customSubmitBtn(text: strTryAgain, voidCallback: (){Get.offAll(HomeScreenView());}, width: Get.width)
           ],
         ),
       ),

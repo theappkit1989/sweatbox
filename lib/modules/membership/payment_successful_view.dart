@@ -5,12 +5,15 @@ import 'package:qr_flutter/qr_flutter.dart';
 import 'package:s_box/extras/constant/app_color.dart';
 import 'package:s_box/extras/constant/app_images.dart';
 import 'package:s_box/extras/constant/string_constant.dart';
+import 'package:s_box/modules/home_screen/home_view.dart';
 import 'package:s_box/modules/membership/membership_controller.dart';
 import '../../extras/constant/app_constant.dart';
 import '../../extras/constant/shared_pref_constant.dart';
 import '../../services/commonModels/membershipModal.dart';
 import '../../themes/colors/color_light.dart';
+import '../commonWidgets/submitBtn.dart';
 import '../membership/payment_successful_controller.dart';
+import 'membership_view.dart';
 
 class PaymentSuccessfulView extends StatelessWidget {
   final paymentSuccessfulController = Get.put(PaymentSuccessfulController());
@@ -39,6 +42,7 @@ class PaymentSuccessfulView extends StatelessWidget {
     return Scaffold(
       backgroundColor: ColorLight.white,
       appBar: AppBar(
+
         backgroundColor: ColorLight.white,
         centerTitle: true,
         title: const Text(
@@ -79,6 +83,7 @@ class PaymentSuccessfulView extends StatelessWidget {
             SizedBox(
               height: Get.height * 0.05,
             ),
+            // customSubmitBtn(text: "Home", voidCallback: (){Get.offAll(HomeScreenView());}, width: Get.width)
           ],
         ),
       ),
