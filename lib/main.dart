@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:pay/pay.dart';
 import 'package:s_box/modules/massage_booking/date_time_view.dart';
 import 'package:s_box/modules/massage_booking/get_access_view.dart';
 import 'package:s_box/modules/massage_booking/massage_view.dart';
@@ -103,6 +104,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
  // await Firebase.initializeApp();
   runApp(MyApp());
+  // Pay.instance.initialize(paymentConfigurationAsset: 'payment_profile_google_pay.json');
 }
 
 class Controller extends GetxController {

@@ -1,3 +1,4 @@
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:pay/pay.dart';
@@ -148,13 +149,11 @@ class SummaryController extends GetxController{
   void makeGooglePayPayment(PaymentItem paymentItem) async {
     isLoading.value = true;
     try {
-      final token = await getGooglePayToken(paymentItem);
-      final result = await paymentService.makePayment(paymentItem.amount, 'USD', 'GOOGLEPAY', token);
+      // final token = await getGooglePayToken(paymentItem);
+      final result = await paymentService.makePayment(paymentItem.amount, "USD", 'GOOGLEPAY', "token");
       paymentResult.value = result;
-      addService();
     } catch (e) {
       Get.snackbar('Error', 'Payment failed: $e');
-      Get.to(PaymentDeclinedView());
     } finally {
       isLoading.value = false;
     }
@@ -167,8 +166,23 @@ class SummaryController extends GetxController{
   }
 
   Future<String> getGooglePayToken(PaymentItem paymentItem) async {
-    // Implement the method to get Google Pay token
-    // Refer to the official documentation for details
-    return 'google_pay_token';
+    try {
+      // Initialize the Google Pay environment
+      const MethodChannel _channel = MethodChannel('plugins.flutter.io/pay');
+      final String token = await _channel.invokeMethod('requestPayment', {
+        'gateway': 'paynt', // Replace with your payment gateway name
+        'gatewayMerchantId': '8ac7a4c88feb836d018fed0b84160266', // Replace with your merchant ID
+        'totalPrice': paymentItem.amount,
+        'currencyCode': 'GBP',
+        'countryCode': 'UK', // Replace with your country code
+        'environment': 'TEST', // Use 'PRODUCTION' for the production environment
+      });
+
+      return token;
+    } catch (e) {
+      print('Error getting Google Pay token: $e');
+      throw Exception('Failed to get Google Pay token');
+    }
   }
+
 }

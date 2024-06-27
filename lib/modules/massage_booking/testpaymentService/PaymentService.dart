@@ -20,10 +20,11 @@ class PaymentServiceApplePay {
         'amount': amount,
         'currency': currency,
         'paymentBrand': paymentBrand,
-        'paymentToken': token,
+        'paymentToken': "examplePaymentMethodToken",
       },
     );
 
+    print("payment result code ${response.body}");
     if (response.statusCode == 200) {
       return jsonDecode(response.body);
     } else {

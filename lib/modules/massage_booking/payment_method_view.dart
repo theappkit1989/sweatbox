@@ -9,6 +9,7 @@ import 'package:s_box/modules/commonWidgets/submitBtn.dart';
 import 'package:s_box/modules/massage_booking/massage_controller.dart';
 import 'package:s_box/modules/massage_booking/payment_method_controller.dart';
 import 'package:s_box/modules/massage_booking/testpaymentService/PaymentScreen.dart';
+import 'package:s_box/modules/massage_booking/testpaymentService/home_page.dart';
 
 
 import 'package:s_box/themes/colors/color_light.dart';
@@ -238,7 +239,7 @@ class MassagePaymentMethodView extends StatelessWidget {
                   ),
                 ),
                 dense: true,
-                onTap: (){Get.to(PaymentScreen());},
+                onTap: (){Get.to(HomePage());},
               ),
         ):
         Obx(
@@ -272,6 +273,7 @@ class MassagePaymentMethodView extends StatelessWidget {
                   },
                   activeColor: ColorLight.white,
                 ),
+                onTap: (){Get.to(HomePage());},
               ),
         ),
       ],
