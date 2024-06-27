@@ -8,20 +8,21 @@ import 'package:s_box/extras/constant/app_images.dart';
 import 'package:s_box/modules/commonWidgets/common.dart';
 import 'package:s_box/modules/commonWidgets/submitBtn.dart';
 import 'package:s_box/modules/massage_booking/massage_controller.dart';
-import 'package:s_box/modules/massage_booking/summary_controller.dart';
+import 'package:s_box/modules/massage_booking/payment_declined_view.dart';
+import 'package:s_box/modules/massage_booking/massage_summary_controller.dart';
 import 'package:s_box/modules/massage_booking/testpaymentService/PaymentController.dart';
 import 'package:s_box/modules/massage_booking/testpaymentService/payment_config.dart';
 import '../../extras/constant/app_constant.dart';
 import '../../extras/constant/string_constant.dart';
 import '../../themes/colors/color_light.dart';
 
-class SummaryView extends StatelessWidget {
-  final summaryController = Get.put(SummaryController());
+class MassageSummaryView extends StatelessWidget {
+  final summaryController = Get.put(MassageSummaryController());
 
-  SummaryView({super.key});
-  String get defaultGooglePayConfigString => "assets/google_pay_config.json";
-
-  String get defaultApplePayConfigString => 'assets/apple_pay_config.json';
+  MassageSummaryView({super.key});
+  // String get defaultGooglePayConfigString => "assets/google_pay_config.json";
+  //
+  // String get defaultApplePayConfigString => 'assets/apple_pay_config.json';
 
   @override
   Widget build(BuildContext context) {
@@ -127,7 +128,7 @@ class SummaryView extends StatelessWidget {
                   loadingIndicator: const Center(
                     child: CircularProgressIndicator(),
                   ),  paymentConfiguration: PaymentConfiguration.fromJsonString(
-                    defaultApplePayConfigString),
+                    defaultApplePay),
                 ),
               if (isGooglePay)
                 GooglePayButton(
@@ -144,12 +145,16 @@ class SummaryView extends StatelessWidget {
                   margin: const EdgeInsets.only(top: 15.0),
                   onPaymentResult: (result)
                   {
-                    print(result);
-                    summaryController.makeGooglePayPayment(PaymentItem(
-                      label: 'Total',
-                      amount: summaryController.totalAmount.value.toStringAsFixed(2),
-                      status: PaymentItemStatus.final_price,
-                    ));
+                    print("result is ${result['paymentMethodData']['tokenizationData']['token']}");
+                    if(result['paymentMethodData']['tokenizationData']['token']=={}){
+                      print("payment failed");
+                      Get.to(PaymentDeclinedView());
+                    }else{
+                      print("payment successful");
+                      summaryController.addService();
+
+                    }
+
                   },
                   loadingIndicator: const Center(
                     child: CircularProgressIndicator(),
@@ -158,7 +163,7 @@ class SummaryView extends StatelessWidget {
           paymentType == 'Apple Pay' ? Obx(() {
             return ApplePayButton(
               paymentConfiguration: PaymentConfiguration.fromJsonString(
-                  defaultApplePayConfigString),
+                  defaultApplePay),
               onPaymentResult: summaryController.paymentResult,
               paymentItems: [
                 PaymentItem(
@@ -329,22 +334,7 @@ class SummaryView extends StatelessWidget {
       ],
     );
   }
-  var googlePayButton = GooglePayButton(
-    paymentConfiguration: PaymentConfiguration.fromJsonString(defaultGooglePay),
-    paymentItems: const [
-      PaymentItem(
-        label: 'Total',
-        amount: '0.01',
-        status: PaymentItemStatus.final_price,
-      )
-    ],
-    type: GooglePayButtonType.pay,
-    margin: const EdgeInsets.only(top: 15.0),
-    onPaymentResult: (result) => debugPrint('Payment Result $result'),
-    loadingIndicator: const Center(
-      child: CircularProgressIndicator(),
-    ),
-  );
+
   buildPaymentMethod(String last4digits, String cardExpiryMonth, String cardCvv,
       String cardname) {
     return Column(
@@ -494,7 +484,7 @@ class SummaryView extends StatelessWidget {
               child: GestureDetector(
                 onTap: () async {
                   await summaryController.fetchDiscount() ?? 0.0;
-                  Get.find<SummaryController>().update();
+                  Get.find<MassageSummaryController>().update();
                 },
                 child: Text(
                   strApply,
@@ -622,11 +612,11 @@ class SummaryView extends StatelessWidget {
       child: customSubmitBtn(
           text: strBook,
           voidCallback: () {
-            summaryController.makeGooglePayPayment(PaymentItem(
-                      label: 'Total',
-                      amount: '${summaryController.totalAmount}',
-                      status: PaymentItemStatus.final_price,
-                    ),);
+            // summaryController.makeGooglePayPayment(PaymentItem(
+            //           label: 'Total',
+            //           amount: '${summaryController.totalAmount}',
+            //           status: PaymentItemStatus.final_price,
+            //         ),);
           },
           width: Get.width),
     );

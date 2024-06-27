@@ -2,14 +2,14 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:pay/pay.dart';
 import 'package:s_box/modules/massage_booking/massage_controller.dart';
-import 'package:s_box/modules/massage_booking/summary_view.dart';
+import 'package:s_box/modules/massage_booking/massage_summary_view.dart';
 import 'package:s_box/modules/massage_booking/add_new_card_view.dart';
 import 'package:s_box/modules/massage_booking/testpaymentService/PaymentService.dart';
 
 
 import '../../extras/constant/shared_pref_constant.dart';
 
-class PaymentMethodController extends GetxController {
+class MassagePaymentMethodController extends GetxController {
   RxInt selectedValue = 0.obs;
   var massage = Massage(title: '', subtitle: '', price: 0,).obs;
   RxString selectedDate=''.obs;
@@ -64,20 +64,20 @@ class PaymentMethodController extends GetxController {
         final selectedCard = '';
         final Massage _massage=Massage(title: massage.value.title, subtitle: massage.value.subtitle, price: massage.value.price,date: selectedDate.toString(),time: selectedtime.toString(),duration: selectedduration.toString());
         // Pass the membership and card details to the SummaryView
-        Get.to(SummaryView(), arguments: {'massage': _massage, 'card': selectedCard,'paymentType': paymentType,});
+        Get.to(MassageSummaryView(), arguments: {'massage': _massage, 'card': selectedCard,'paymentType': paymentType,});
       }else{
         print("card valu is${cards[selectedValue.value]}");
         final selectedCard = cards[selectedValue.value];
         final Massage _massage=Massage(title: massage.value.title, subtitle: massage.value.subtitle, price: massage.value.price,date: selectedDate.toString(),time: selectedtime.toString(),duration: selectedduration.toString());
         // Pass the membership and card details to the SummaryView
-        Get.to(SummaryView(), arguments: {'massage': _massage, 'card': selectedCard,'paymentType': paymentType,});
+        Get.to(MassageSummaryView(), arguments: {'massage': _massage, 'card': selectedCard,'paymentType': paymentType,});
       }
 
     }else{
       final selectedCard = '';
       final Massage _massage=Massage(title: massage.value.title, subtitle: massage.value.subtitle, price: massage.value.price,date: selectedDate.toString(),time: selectedtime.toString(),duration: selectedduration.toString());
       // Pass the membership and card details to the SummaryView
-      Get.to(SummaryView(), arguments: {'massage': _massage, 'card': selectedCard,'paymentType': paymentType,});
+      Get.to(MassageSummaryView(), arguments: {'massage': _massage, 'card': selectedCard,'paymentType': paymentType,});
     }
 
 

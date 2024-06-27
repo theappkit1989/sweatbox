@@ -7,7 +7,7 @@ import 'package:s_box/extras/constant/app_images.dart';
 import 'package:s_box/extras/constant/string_constant.dart';
 import 'package:s_box/modules/commonWidgets/submitBtn.dart';
 import 'package:s_box/modules/massage_booking/massage_controller.dart';
-import 'package:s_box/modules/massage_booking/payment_method_controller.dart';
+import 'package:s_box/modules/massage_booking/massage_payment_method_controller.dart';
 import 'package:s_box/modules/massage_booking/testpaymentService/PaymentScreen.dart';
 import 'package:s_box/modules/massage_booking/testpaymentService/home_page.dart';
 
@@ -17,7 +17,7 @@ import 'package:s_box/themes/colors/color_light.dart';
 import '../../extras/constant/app_color.dart';
 
 class MassagePaymentMethodView extends StatelessWidget {
-  final paymentMethodController = Get.put(PaymentMethodController());
+  final paymentMethodController = Get.put(MassagePaymentMethodController());
   // final paymentMethodController = Get.put(PaymentMethodController());
 
   MassagePaymentMethodView({super.key});
@@ -239,7 +239,7 @@ class MassagePaymentMethodView extends StatelessWidget {
                   ),
                 ),
                 dense: true,
-                onTap: (){Get.to(HomePage());},
+                // onTap: (){Get.to(HomePage());},
               ),
         ):
         Obx(
@@ -273,7 +273,7 @@ class MassagePaymentMethodView extends StatelessWidget {
                   },
                   activeColor: ColorLight.white,
                 ),
-                onTap: (){Get.to(HomePage());},
+                // onTap: (){Get.to(HomePage());},
               ),
         ),
       ],

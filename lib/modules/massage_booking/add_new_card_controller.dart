@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:s_box/modules/massage_booking/payment_method_controller.dart';
+import 'package:s_box/modules/massage_booking/massage_payment_method_controller.dart';
 
 class AddNewCardController extends GetxController {
  var nameController = TextEditingController().obs;
@@ -32,7 +32,7 @@ class AddNewCardController extends GetxController {
    cards.add(newCard);
    storage.write('cards', cards);
    // Notify that a new card has been added
-   Get.find<PaymentMethodController>().loadSavedCards();
+   Get.find<MassagePaymentMethodController>().loadSavedCards();
    Get.back();
   }
  }

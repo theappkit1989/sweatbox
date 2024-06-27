@@ -13,7 +13,7 @@ import '../../themes/loading_dialofg.dart';
 import '../membership/TestPaymentScreen.dart';
 
 
-class SummaryController extends GetxController{
+class MassageSummaryController extends GetxController{
 
   var massage = Massage(title: '', subtitle: '', price: 0, date: '', time: '', duration: '').obs;
   var storage = GetStorage();
@@ -149,8 +149,9 @@ class SummaryController extends GetxController{
   void makeGooglePayPayment(PaymentItem paymentItem) async {
     isLoading.value = true;
     try {
+      // final token = result['paymentMethodData']['tokenizationData']['token'];
       // final token = await getGooglePayToken(paymentItem);
-      final result = await paymentService.makePayment(paymentItem.amount, "USD", 'GOOGLEPAY', "token");
+      final result = await paymentService.makePayment(paymentItem.amount, "USD", 'GOOGLEPAY', token);
       paymentResult.value = result;
     } catch (e) {
       Get.snackbar('Error', 'Payment failed: $e');

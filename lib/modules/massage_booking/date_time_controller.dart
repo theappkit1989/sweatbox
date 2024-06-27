@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 
 import 'package:s_box/modules/massage_booking/massage_controller.dart';
-import 'package:s_box/modules/massage_booking/payment_method_view.dart';
+import 'package:s_box/modules/massage_booking/massage_payment_method_view.dart';
 
 
 import 'package:table_calendar/table_calendar.dart';

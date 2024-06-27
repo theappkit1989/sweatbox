@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
 import 'package:s_box/modules/massage_booking/date_time_view.dart';
-import 'package:s_box/modules/massage_booking/payment_method_view.dart';
+import 'package:s_box/modules/massage_booking/massage_payment_method_view.dart';
 
 class MassageController extends GetxController{
 

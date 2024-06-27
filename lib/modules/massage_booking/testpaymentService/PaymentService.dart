@@ -20,7 +20,7 @@ class PaymentServiceApplePay {
         'amount': amount,
         'currency': currency,
         'paymentBrand': paymentBrand,
-        'paymentToken': "examplePaymentMethodToken",
+        'paymentToken': "MEYCIQD4lxMEPzyji8+EruoMDtzTEkMMN2s9niI7Y0CGjTItMwIhAK1ZNFzUozatf/cgVyuGt3uaGDGH1C3uowN2JKDxMDwY",
       },
     );
 
