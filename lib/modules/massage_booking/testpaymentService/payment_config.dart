@@ -73,7 +73,7 @@ const String defaultGooglePay = '''{
         "tokenizationSpecification": {
           "type": "PAYMENT_GATEWAY",
           "parameters": {
-            "gateway": "paynt",
+            "gateway": "example",
             "gatewayMerchantId": "8ac7a4c88feb836d018fed0b84160266"
           }
         },
