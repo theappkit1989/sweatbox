@@ -59,7 +59,7 @@ class MassageSummaryController extends GetxController{
     }
   } catch (e) {
    _dismissDialog();
-   Get.snackbar('Error', 'Payment failed: ${e}');
+   Get.snackbar('Error', 'Payment failed: ${e}',colorText: Colors.white);
    Get.to(PaymentDeclinedView());
 
 
@@ -77,7 +77,7 @@ class MassageSummaryController extends GetxController{
           // Get.back();
         } else {
           _dismissDialog();
-          Get.snackbar("Error", _response.message ?? 'Something went wrong!');
+          Get.snackbar("Sweatbox", _response.message ?? 'Something went wrong!',colorText: Colors.white);
         }
 
 
@@ -113,7 +113,7 @@ class MassageSummaryController extends GetxController{
       _dismissDialog();
       discount.value=0.0;
       totalAmount.value=double.parse(massage.value.price.toString());
-      Get.snackbar("Error", _response.message ?? 'Something went wrong!');
+      Get.snackbar("Sweatbox", _response.message ?? 'Something went wrong!',colorText: Colors.white);
       return 0.0;
     }
   }
@@ -140,7 +140,7 @@ class MassageSummaryController extends GetxController{
       paymentResult.value = result;
     } catch (e) {
       Get.to(PaymentDeclinedView());
-      Get.snackbar('Error', 'Payment failed: $e');
+      Get.snackbar('Error', 'Payment failed: $e',colorText: Colors.white);
     } finally {
       isLoading.value = false;
     }
@@ -154,7 +154,7 @@ class MassageSummaryController extends GetxController{
       final result = await paymentService.makePayment(paymentItem.amount, "USD", 'GOOGLEPAY', token);
       paymentResult.value = result;
     } catch (e) {
-      Get.snackbar('Error', 'Payment failed: $e');
+      Get.snackbar('Error', 'Payment failed: $e',colorText: Colors.white);
     } finally {
       isLoading.value = false;
     }

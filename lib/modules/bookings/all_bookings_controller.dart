@@ -87,11 +87,11 @@ class AllBookingsController extends GetxController {
         servicesList.value = _response.services!;
       } else {
         // Handle error
-        Get.snackbar('Error', _response.message ?? 'Unknown error occurred');
+        Get.snackbar('Error', _response.message ?? 'Unknown error occurred',colorText: Colors.white);
       }
     } else {
       // _dismissDialog();
-      Get.snackbar("Error", _response.message ?? 'Something went wrong!');
+      Get.snackbar("Sweatbox", _response.message ?? 'Something went wrong!',colorText: Colors.white);
     }
   }
 }

@@ -35,10 +35,10 @@ class UpdatePasswordController extends GetxController {
           Get.back();
         } else {
           _dismissDialog();
-          Get.snackbar("Error", _response.message ?? 'Something went wrong!');
+          Get.snackbar("Sweatbox", _response.message ?? 'Something went wrong!');
         }
       } else {
-        Get.snackbar("Error", "Passwords do not match or are less than 8 characters!");
+        Get.snackbar("Sweatbox", "Passwords do not match or are less than 8 characters!");
       }
     }
   }

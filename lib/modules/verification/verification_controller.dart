@@ -46,7 +46,7 @@ class VerificationController extends GetxController{
       // Call your API to verify the code
       verifyOtp(code);
     } else {
-      Get.snackbar("Error", "Please enter all four digits of the code.");
+      Get.snackbar("Sweatbox", "Please enter all four digits of the code.",colorText: Colors.white);
     }
   }
   verifyOtp(String code) async {
@@ -70,7 +70,7 @@ class VerificationController extends GetxController{
         goToCreatePwd( _response.accessToken!,_response.user_id!.toString());
       } else {
         _dismissDialog();
-        Get.snackbar("Error", _response.message??'Something went wrong!');
+        Get.snackbar("Sweatbox", _response.message??'Something went wrong!',colorText: Colors.white);
       }
     }
   }

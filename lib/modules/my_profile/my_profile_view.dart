@@ -54,7 +54,7 @@ class MyProfileView extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  SizedBox(height: 20,),
+
                   buildUserDetails(username, useremail),
                   buildMembership(myProfileController.memberships.value),
                   Expanded(
@@ -95,7 +95,7 @@ class MyProfileView extends StatelessWidget {
             Align(
               alignment: Alignment.topCenter,
               child: SizedBox(
-                  child: Container(
+                  child: userImage!=''? Container(
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       border: Border.all(
@@ -181,7 +181,19 @@ class MyProfileView extends StatelessWidget {
                     //     },),
                     //   backgroundColor: Colors.transparent,
                     // ),
-                  )),
+                  ):Container(
+                    width: 100,
+                    height: 100,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      image: DecorationImage(image: AssetImage(ImageConstant.imgMembership),
+                          fit: BoxFit.cover),
+                      border: Border.all(
+                        color: Colors.white24,
+                        // Set the border color here
+                        width: 1.0, // Set the border width here
+                      ),
+                    ),)),
             ),
           ],
         ));

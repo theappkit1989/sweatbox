@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
+import 'package:get/get_navigation/src/routes/get_transition_mixin.dart';
 import 'package:pay/pay.dart';
 import 'package:s_box/extras/constant/app_color.dart';
 import 'package:s_box/extras/constant/app_images.dart';
@@ -83,6 +84,7 @@ class MassageSummaryView extends StatelessWidget {
             children: [
             Container(
             width: Get.width,
+            height: Get.height,
             padding: EdgeInsets.symmetric(
                 horizontal: Get.width * 0.05, vertical: Get.height * 0.04),
             decoration: BoxDecoration(
@@ -99,12 +101,96 @@ class MassageSummaryView extends StatelessWidget {
                     last4Digits, cardExpiryMonth, cardCvv, cardname) : Text(
                     ""),
                 buildPromoCode(massage),
+                SizedBox(
+                  height: Get.height * 0.05,
+                ),
+                paymentType == 'Apple Pay' ? Obx(() {
+                  return    ApplePayButton(
+
+                    paymentItems: [
+                      PaymentItem(
+                        label: 'Total',
+                        amount: summaryController.totalAmount.value.toStringAsFixed(2),
+                        status: PaymentItemStatus.final_price,
+                      )
+                    ],
+                    style: ApplePayButtonStyle.whiteOutline,
+                    type: ApplePayButtonType.book,
+
+                    margin: const EdgeInsets.only(top: 15.0),
+                    onPaymentResult: (result) {
+
+                      print(result);
+                      if (result['paymentMethod'] == '') {
+                        // Payment was successful
+                        Get.to(PaymentDeclinedView());
+                        print('Payment failed or cancelled');
+
+                        // You can perform further actions here, such as updating UI or backend
+                      } else {
+
+                        print('Payment successful');
+                        summaryController.addService();
+
+                        // Handle error or show appropriate message to the user
+                      }
+                    },
+                    // {
+                    //   summaryController.makeApplePayPayment(PaymentItem(
+                    //     label: 'Total',
+                    //     amount: summaryController.totalAmount.value.toStringAsFixed(2),
+                    //     status: PaymentItemStatus.final_price,
+                    //   ));
+                    // },
+                    onError: (e){
+                      Get.snackbar("Sweatbox", e.toString());
+                      Get.to(PaymentDeclinedView());
+                    },
+                    loadingIndicator: const Center(
+                      child: CircularProgressIndicator(),
+                    ),  paymentConfiguration: PaymentConfiguration.fromJsonString(
+                      defaultApplePay),
+                  );
+                }) :
+                paymentType == 'Google Pay' ?
+                Obx(() {
+                  return
+                    GooglePayButton(
+
+                      paymentItems: [
+                        PaymentItem(
+                          label: 'Total',
+                          amount: summaryController.totalAmount.value.toStringAsFixed(2),
+                          status: PaymentItemStatus.final_price,
+                        )
+                      ],
+
+                      type: GooglePayButtonType.pay,
+                      margin: const EdgeInsets.only(top: 15.0),
+                      onPaymentResult: (result)
+                      {
+                        print("result is ${result['paymentMethodData']['tokenizationData']['token']}");
+                        if(result['paymentMethodData']['tokenizationData']['token']=={}){
+                          print("payment failed");
+                          Get.to(PaymentDeclinedView());
+                        }else{
+                          print("payment successful");
+                          summaryController.addService();
+
+                        }
+
+                      },
+                      loadingIndicator: const Center(
+                        child: CircularProgressIndicator(),
+                      ), paymentConfiguration: PaymentConfiguration.fromJsonString(defaultGooglePay),
+                    );
+
+                })
+                    :buildBook()
               ],
             ),
           ),
-          SizedBox(
-            height: Get.height * 0.05,
-          ),
+
               // if (isApplePay)
               //   ApplePayButton(
               //
@@ -162,89 +248,7 @@ class MassageSummaryView extends StatelessWidget {
               //       child: CircularProgressIndicator(),
               //     ), paymentConfiguration: PaymentConfiguration.fromJsonString(defaultGooglePay),
               //   ),
-          paymentType == 'Apple Pay' ? Obx(() {
-            return    ApplePayButton(
 
-              paymentItems: [
-                PaymentItem(
-                  label: 'Total',
-                  amount: summaryController.totalAmount.value.toStringAsFixed(2),
-                  status: PaymentItemStatus.final_price,
-                )
-              ],
-              style: ApplePayButtonStyle.whiteOutline,
-              type: ApplePayButtonType.book,
-
-              margin: const EdgeInsets.only(top: 15.0),
-              onPaymentResult: (result) {
-
-                    print(result);
-                    if (result['paymentMethod'] == '') {
-                      // Payment was successful
-                      Get.to(PaymentDeclinedView());
-                      print('Payment failed or cancelled');
-
-                      // You can perform further actions here, such as updating UI or backend
-                    } else {
-
-                      print('Payment successful');
-                      summaryController.addService();
-
-                      // Handle error or show appropriate message to the user
-                    }
-              },
-              // {
-              //   summaryController.makeApplePayPayment(PaymentItem(
-              //     label: 'Total',
-              //     amount: summaryController.totalAmount.value.toStringAsFixed(2),
-              //     status: PaymentItemStatus.final_price,
-              //   ));
-              // },
-              onError: (e){
-                Get.snackbar("Error", e.toString());
-                Get.to(PaymentDeclinedView());
-              },
-              loadingIndicator: const Center(
-                child: CircularProgressIndicator(),
-              ),  paymentConfiguration: PaymentConfiguration.fromJsonString(
-                defaultApplePay),
-            );
-          }) :
-          paymentType == 'Google Pay' ?
-          Obx(() {
-            return
-              GooglePayButton(
-
-                paymentItems: [
-                  PaymentItem(
-                    label: 'Total',
-                    amount: summaryController.totalAmount.value.toStringAsFixed(2),
-                    status: PaymentItemStatus.final_price,
-                  )
-                ],
-
-                type: GooglePayButtonType.book,
-                margin: const EdgeInsets.only(top: 15.0),
-                onPaymentResult: (result)
-                {
-                  print("result is ${result['paymentMethodData']['tokenizationData']['token']}");
-                  if(result['paymentMethodData']['tokenizationData']['token']=={}){
-                    print("payment failed");
-                    Get.to(PaymentDeclinedView());
-                  }else{
-                    print("payment successful");
-                    summaryController.addService();
-
-                  }
-
-                },
-                loadingIndicator: const Center(
-                  child: CircularProgressIndicator(),
-                ), paymentConfiguration: PaymentConfiguration.fromJsonString(defaultGooglePay),
-              );
-
-          })
-              :buildBook()
       ],
     ),)
     ,
@@ -256,7 +260,7 @@ class MassageSummaryView extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Row(
+         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
@@ -269,13 +273,16 @@ class MassageSummaryView extends StatelessWidget {
                 fontSize: 13,
               ),
             ),
-            Text(
-              strChange,
-              style: TextStyle(
-                color: yellowF5EA25,
-                fontWeight: FontWeight.w500,
-                fontFamily: fontType,
-                fontSize: 12,
+            GestureDetector(
+              onTap: (){Get.back();Get.back();},
+              child: Text(
+                strChange,
+                style: TextStyle(
+                  color: yellowF5EA25,
+                  fontWeight: FontWeight.w500,
+                  fontFamily: fontType,
+                  fontSize: 12,
+                ),
               ),
             ),
           ],
@@ -374,7 +381,7 @@ class MassageSummaryView extends StatelessWidget {
         SizedBox(
           height: Get.height * 0.05,
         ),
-        const Row(
+         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
@@ -387,13 +394,16 @@ class MassageSummaryView extends StatelessWidget {
                 fontSize: 13,
               ),
             ),
-            Text(
-              strChange,
-              style: TextStyle(
-                color: yellowF5EA25,
-                fontWeight: FontWeight.w500,
-                fontFamily: fontType,
-                fontSize: 12,
+            GestureDetector(
+              onTap: (){Get.back();},
+              child: Text(
+                strChange,
+                style: TextStyle(
+                  color: yellowF5EA25,
+                  fontWeight: FontWeight.w500,
+                  fontFamily: fontType,
+                  fontSize: 12,
+                ),
               ),
             ),
           ],
@@ -457,15 +467,7 @@ class MassageSummaryView extends StatelessWidget {
                 fontSize: 13,
               ),
             ),
-            Text(
-              strChange,
-              style: TextStyle(
-                color: yellowF5EA25,
-                fontWeight: FontWeight.w500,
-                fontFamily: fontType,
-                fontSize: 12,
-              ),
-            ),
+
           ],
         ),
         SizedBox(
@@ -559,32 +561,58 @@ class MassageSummaryView extends StatelessWidget {
         SizedBox(
           height: Get.height * 0.02,
         ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Text(
-              strDiscount,
-              style: TextStyle(
-                color: ColorLight.white,
-                fontWeight: FontWeight.w400,
-                fontFamily: fontType,
-                fontSize: 12,
+        Obx(() {
+          return summaryController.discount!=0.0?Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                strDiscount,
+                style: TextStyle(
+                  color: ColorLight.white,
+                  fontWeight: FontWeight.w400,
+                  fontFamily: fontType,
+                  fontSize: 12,
+                ),
               ),
-            ),
-            Obx(() {
-              return Text(
-                '£${summaryController.discount}',
+              Text(
+                '£${summaryController.discount}0',
                 style: TextStyle(
                   color: ColorLight.white,
                   fontWeight: FontWeight.w700,
                   fontFamily: fontType,
                   fontSize: 14,
                 ),
-              );
-            }),
-          ],
-        ),
+              )
+
+            ],
+          ):Text('');}),
+        // Row(
+        //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        //   crossAxisAlignment: CrossAxisAlignment.center,
+        //   children: [
+        //     Text(
+        //       strDiscount,
+        //       style: TextStyle(
+        //         color: ColorLight.white,
+        //         fontWeight: FontWeight.w400,
+        //         fontFamily: fontType,
+        //         fontSize: 12,
+        //       ),
+        //     ),
+        //     Obx(() {
+        //       return Text(
+        //         '£${summaryController.discount}',
+        //         style: TextStyle(
+        //           color: ColorLight.white,
+        //           fontWeight: FontWeight.w700,
+        //           fontFamily: fontType,
+        //           fontSize: 14,
+        //         ),
+        //       );
+        //     }),
+        //   ],
+        // ),
         SizedBox(
           height: Get.height * 0.02,
         ),
@@ -619,7 +647,7 @@ class MassageSummaryView extends StatelessWidget {
               return Text(
 
                 '£${double.parse(massage.price.toString()) -
-                    summaryController.discount.value}',
+                    summaryController.discount.value}0',
                 style: TextStyle(
                   color: ColorLight.white,
                   fontWeight: FontWeight.w700,

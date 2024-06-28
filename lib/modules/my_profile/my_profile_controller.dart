@@ -91,13 +91,13 @@ class MyProfileController extends GetxController {
        return _response.status;
       } else {
         // Handle error
-        Get.snackbar('Error', _response.message ?? 'Unknown error occurred');
+        Get.snackbar('Error', _response.message ?? 'Unknown error occurred',colorText: Colors.white);
         return _response.status;
       }
     } else {
       // _dismissDialog();
 
-      Get.snackbar("Error", _response.message ?? 'Something went wrong!');
+      Get.snackbar("Sweatbox", _response.message ?? 'Something went wrong!',colorText: Colors.white);
       return _response.status;
     }
   }
@@ -109,7 +109,7 @@ class MyProfileController extends GetxController {
       await storage.erase();
       Get.offAll(LoginView());
     } else {
-      Get.snackbar('Error', 'Failed to delete account');
+      Get.snackbar('Error', 'Failed to delete account',colorText: Colors.white);
     }
   }
   void fetchUserServices() async {
@@ -127,7 +127,7 @@ class MyProfileController extends GetxController {
         startCountdown();
     } else {
       // _dismissDialog();
-      Get.snackbar("Error", _response.message ?? 'Something went wrong!');
+      Get.snackbar("Sweatbox", _response.message ?? 'Something went wrong!',colorText: Colors.white);
     }
   }
 

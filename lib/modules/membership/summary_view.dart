@@ -76,6 +76,7 @@ class SummaryView extends StatelessWidget {
           children: [
             Container(
               width: Get.width,
+              height: Get.height,
               padding: EdgeInsets.symmetric(
                   horizontal: Get.width * 0.05, vertical: Get.height * 0.04),
               decoration: BoxDecoration(
@@ -89,97 +90,98 @@ class SummaryView extends StatelessWidget {
                   buildServices(membership),
                   buildPaymentMethod(last4Digits,cardExpiryMonth,cardCvv,cardname),
                   buildPromoCode(membership),
+                  SizedBox(
+                    height: Get.height * 0.05,
+                  ),
+                  paymentType == 'Apple Pay' ? Obx(() {
+                    return    ApplePayButton(
+
+                      paymentItems: [
+                        PaymentItem(
+                          label: 'Total',
+                          amount: summaryController.totalAmount.value.toStringAsFixed(2),
+                          status: PaymentItemStatus.final_price,
+                        )
+                      ],
+                      style: ApplePayButtonStyle.whiteOutline,
+                      type: ApplePayButtonType.book,
+
+                      margin: const EdgeInsets.only(top: 15.0),
+                      onPaymentResult: (result) {
+
+                        print(result);
+                        if (result['paymentMethod'] == '') {
+                          // Payment was successful
+                          print('Payment failed or cancelled');
+                          summaryController.addMembership();
+                          // You can perform further actions here, such as updating UI or backend
+                        } else {
+                          Get.to(PaymentDeclinedView());
+                          print('Payment successful');
+
+                          // Handle error or show appropriate message to the user
+                        }
+                      },
+                      // {
+                      //   summaryController.makeApplePayPayment(PaymentItem(
+                      //     label: 'Total',
+                      //     amount: summaryController.totalAmount.value.toStringAsFixed(2),
+                      //     status: PaymentItemStatus.final_price,
+                      //   ));
+                      // },
+                      onError: (e){
+                        Get.snackbar("Sweatbox", e.toString(),colorText: Colors.white);
+                        Get.to(PaymentDeclinedView());
+                      },
+                      loadingIndicator: const Center(
+                        child: CircularProgressIndicator(),
+                      ),  paymentConfiguration: PaymentConfiguration.fromJsonString(
+                        defaultApplePay),
+                    );
+                  }) :
+                  paymentType == 'Google Pay' ?
+                  Obx(() {
+                    return
+                      GooglePayButton(
+
+                        paymentItems: [
+                          PaymentItem(
+                            label: 'Total',
+                            amount: summaryController.totalAmount.value.toStringAsFixed(2),
+                            status: PaymentItemStatus.final_price,
+                          )
+                        ],
+
+                        type: GooglePayButtonType.book,
+                        margin: const EdgeInsets.only(top: 15.0),
+                        onPaymentResult: (result)
+                        {
+                          print("result is ${result['paymentMethodData']['tokenizationData']['token']}");
+                          if(result['paymentMethodData']['tokenizationData']['token']=={}){
+                            print("payment failed");
+                            Get.to(PaymentDeclinedView());
+                          }else{
+                            print("payment successful");
+                            summaryController.addMembership();
+
+                          }
+
+                        },
+                        onError: (e){
+                          Get.snackbar("Sweatbox", e.toString(),colorText: Colors.white);
+                          Get.to(PaymentDeclinedView());
+                        },
+                        loadingIndicator: const Center(
+                          child: CircularProgressIndicator(),
+                        ), paymentConfiguration: PaymentConfiguration.fromJsonString(defaultGooglePay),
+                      );
+
+                  })
+                      :buildBook()
                 ],
               ),
             ),
-            SizedBox(
-              height: Get.height * 0.05,
-            ),
-            paymentType == 'Apple Pay' ? Obx(() {
-              return    ApplePayButton(
 
-                paymentItems: [
-                  PaymentItem(
-                    label: 'Total',
-                    amount: summaryController.totalAmount.value.toStringAsFixed(2),
-                    status: PaymentItemStatus.final_price,
-                  )
-                ],
-                style: ApplePayButtonStyle.whiteOutline,
-                type: ApplePayButtonType.book,
-
-                margin: const EdgeInsets.only(top: 15.0),
-                onPaymentResult: (result) {
-
-                  print(result);
-                  if (result['paymentMethod'] == '') {
-                    // Payment was successful
-                    print('Payment failed or cancelled');
-                    summaryController.addMembership();
-                    // You can perform further actions here, such as updating UI or backend
-                  } else {
-                    Get.to(PaymentDeclinedView());
-                    print('Payment successful');
-
-                    // Handle error or show appropriate message to the user
-                  }
-                },
-                // {
-                //   summaryController.makeApplePayPayment(PaymentItem(
-                //     label: 'Total',
-                //     amount: summaryController.totalAmount.value.toStringAsFixed(2),
-                //     status: PaymentItemStatus.final_price,
-                //   ));
-                // },
-                onError: (e){
-                  Get.snackbar("Error", e.toString());
-                  Get.to(PaymentDeclinedView());
-                },
-                loadingIndicator: const Center(
-                  child: CircularProgressIndicator(),
-                ),  paymentConfiguration: PaymentConfiguration.fromJsonString(
-                  defaultApplePay),
-              );
-            }) :
-            paymentType == 'Google Pay' ?
-            Obx(() {
-              return
-                GooglePayButton(
-
-                  paymentItems: [
-                    PaymentItem(
-                      label: 'Total',
-                      amount: summaryController.totalAmount.value.toStringAsFixed(2),
-                      status: PaymentItemStatus.final_price,
-                    )
-                  ],
-
-                  type: GooglePayButtonType.book,
-                  margin: const EdgeInsets.only(top: 15.0),
-                  onPaymentResult: (result)
-                  {
-                    print("result is ${result['paymentMethodData']['tokenizationData']['token']}");
-                    if(result['paymentMethodData']['tokenizationData']['token']=={}){
-                      print("payment failed");
-                      Get.to(PaymentDeclinedView());
-                    }else{
-                      print("payment successful");
-                      summaryController.addMembership();
-
-                    }
-
-                  },
-                  onError: (e){
-                    Get.snackbar("Error", e.toString());
-                    Get.to(PaymentDeclinedView());
-                  },
-                  loadingIndicator: const Center(
-                    child: CircularProgressIndicator(),
-                  ), paymentConfiguration: PaymentConfiguration.fromJsonString(defaultGooglePay),
-                );
-
-            })
-                :buildBook()
             // paymentType == 'Apple Pay' ? Obx(() {
             //   return ApplePayButton(
             //     paymentConfiguration: PaymentConfiguration.fromJsonString(
@@ -252,7 +254,7 @@ class SummaryView extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Row(
+         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
@@ -265,13 +267,16 @@ class SummaryView extends StatelessWidget {
                 fontSize: 13,
               ),
             ),
-            Text(
-              strChange,
-              style: TextStyle(
-                color: yellowF5EA25,
-                fontWeight: FontWeight.w500,
-                fontFamily: fontType,
-                fontSize: 12,
+            GestureDetector(
+              onTap: (){Get.back();Get.back();},
+              child: Text(
+                strChange,
+                style: TextStyle(
+                  color: yellowF5EA25,
+                  fontWeight: FontWeight.w500,
+                  fontFamily: fontType,
+                  fontSize: 12,
+                ),
               ),
             ),
           ],
@@ -304,24 +309,24 @@ class SummaryView extends StatelessWidget {
               SizedBox(
                 width: Get.width * 0.05,
               ),
-              Container(
-                width: Get.width * 0.18,
-                //height: Get.height * 0.05,
-                padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20.0),
-                    color: ColorLight.white),
-                child:  Text(
-                  membership.discount,
-                  style: TextStyle(
-                    color: appPrimaryColor,
-                    fontWeight: FontWeight.w500,
-                    fontFamily: fontType,
-                    fontSize: 12.0,
-                  ),
-                ),
-              ),
+              // Container(
+              //   width: Get.width * 0.18,
+              //   //height: Get.height * 0.05,
+              //   padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
+              //   alignment: Alignment.center,
+              //   decoration: BoxDecoration(
+              //       borderRadius: BorderRadius.circular(20.0),
+              //       color: ColorLight.white),
+              //   child:  Text(
+              //     membership.discount,
+              //     style: TextStyle(
+              //       color: appPrimaryColor,
+              //       fontWeight: FontWeight.w500,
+              //       fontFamily: fontType,
+              //       fontSize: 12.0,
+              //     ),
+              //   ),
+              // ),
             ],
           ),
           subtitle:  Text(
@@ -346,7 +351,7 @@ class SummaryView extends StatelessWidget {
         SizedBox(
           height: Get.height * 0.05,
         ),
-        const Row(
+         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
@@ -359,13 +364,16 @@ class SummaryView extends StatelessWidget {
                 fontSize: 13,
               ),
             ),
-            Text(
-              strChange,
-              style: TextStyle(
-                color: yellowF5EA25,
-                fontWeight: FontWeight.w500,
-                fontFamily: fontType,
-                fontSize: 12,
+            GestureDetector(
+              onTap: (){Get.back();},
+              child: Text(
+                strChange,
+                style: TextStyle(
+                  color: yellowF5EA25,
+                  fontWeight: FontWeight.w500,
+                  fontFamily: fontType,
+                  fontSize: 12,
+                ),
               ),
             ),
           ],
@@ -429,15 +437,15 @@ class SummaryView extends StatelessWidget {
                 fontSize: 13,
               ),
             ),
-            Text(
-              strChange,
-              style: TextStyle(
-                color: yellowF5EA25,
-                fontWeight: FontWeight.w500,
-                fontFamily: fontType,
-                fontSize: 12,
-              ),
-            ),
+            // Text(
+            //   strChange,
+            //   style: TextStyle(
+            //     color: yellowF5EA25,
+            //     fontWeight: FontWeight.w500,
+            //     fontFamily: fontType,
+            //     fontSize: 12,
+            //   ),
+            // ),
           ],
         ),
         SizedBox(
@@ -487,6 +495,7 @@ class SummaryView extends StatelessWidget {
                 onTap: () async {
                   await summaryController.fetchDiscount() ?? 0.0;
                   Get.find<MembershipSummaryController>().update();
+                  print('discount valu is ${summaryController.discount}');
                 },
                 child: Text(
                   strApply,
@@ -531,7 +540,8 @@ class SummaryView extends StatelessWidget {
         SizedBox(
           height: Get.height * 0.02,
         ),
-        Row(
+    Obx(() {
+    return summaryController.discount!=0.0?Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
@@ -544,19 +554,18 @@ class SummaryView extends StatelessWidget {
                 fontSize: 12,
               ),
             ),
-            Obx(() {
-              return Text(
-                '£${summaryController.discount}',
+           Text(
+                '£${summaryController.discount}0',
                 style: TextStyle(
                   color: ColorLight.white,
                   fontWeight: FontWeight.w700,
                   fontFamily: fontType,
                   fontSize: 14,
                 ),
-              );
-            }),
+              )
+
           ],
-        ),
+        ):Text('');}),
         SizedBox(
           height: Get.height * 0.02,
         ),
@@ -590,7 +599,7 @@ class SummaryView extends StatelessWidget {
             Obx(() {
               return Text(
 
-                '£${summaryController.totalAmount}',
+                '£${summaryController.totalAmount}0',
                 style: TextStyle(
                   color: ColorLight.white,
                   fontWeight: FontWeight.w700,

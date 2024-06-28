@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:pay/pay.dart';
@@ -60,7 +61,7 @@ class MassagePaymentMethodController extends GetxController {
     final paymentType = selectedValue.value == -1 ? 'Apple Pay' : selectedValue.value == -2 ? 'Google Pay' : 'Credit Card';
     print('card value is ${selectedValue.value}');
     if(selectedValue.value==0&&cards[selectedValue.value]==null){
-      Get.snackbar("Error", "Select One Payment method");
+      Get.snackbar("Sweatbox", "Select One Payment method",colorText: Colors.white);
     }else {
       if (selectedValue.value != -1) {
         if (selectedValue.value == -2) {

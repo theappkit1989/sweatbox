@@ -72,7 +72,7 @@ class PaymentController extends GetxController {
       );
       // paymentResult.value = result;
     } catch (e) {
-      Get.snackbar('Error', 'Payment failed: ${e}');
+      Get.snackbar('Error', 'Payment failed: ${e}',colorText: Colors.white);
     } finally {
       isLoading.value = false;
     }

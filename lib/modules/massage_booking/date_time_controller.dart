@@ -74,7 +74,7 @@ class DateTimeController extends GetxController {
       timeSelected.value = List.generate(timeSlots.length, (index) => false.obs);
     } else {
       _dismissDialog();
-      Get.snackbar("Error", _response.message ?? 'Something went wrong!');
+      Get.snackbar("", _response.message ?? 'Something went wrong!',colorText: Colors.white);
     }
   }
 

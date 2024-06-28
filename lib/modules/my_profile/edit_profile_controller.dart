@@ -20,6 +20,7 @@ class EditProfileController extends GetxController {
   var emailCont = TextEditingController().obs;
   var passCont = TextEditingController().obs;
   var cPassCont = TextEditingController().obs;
+  RxString userImage=''.obs;
   var emailFocus = FocusNode();
   var passFocus = FocusNode();
   var cPassFocus = FocusNode();
@@ -34,12 +35,14 @@ class EditProfileController extends GetxController {
     storage.writeIfNull(lastName, '');
     storage.writeIfNull(userName, '');
     storage.writeIfNull(userEmail, '');
+    storage.writeIfNull(image, '');
     token = storage.read(userToken);
     user_id = storage.read(userid).toString();
     nameCont.value.text = storage.read(firstName);
     lastNameCont.value.text = storage.read(lastName);
     usernameCont.value.text = storage.read(userName);
     emailCont.value.text = storage.read(userEmail);
+    userImage.value=storage.read(image);
     // print("token is $token and id is $user_id");
     super.onInit();
   }
@@ -83,7 +86,7 @@ class EditProfileController extends GetxController {
         Get.back();
       } else {
         _dismissDialog();
-        Get.snackbar("Error", _response.message ?? 'Something went wrong!');
+        Get.snackbar("Sweatbox", _response.message ?? 'Something went wrong!',colorText: Colors.white);
       }
     }
   }

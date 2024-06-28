@@ -70,7 +70,7 @@ class SignUpController extends GetxController{
   //       storage.write("userType",'');
   //     } else {
   //       _dismissDialog();
-  //       Get.snackbar("Error", 'Wrong Credentials entered!');
+  //       Get.snackbar("Sweatbox", 'Wrong Credentials entered!');
   //     }
   //   }
   // }
@@ -96,15 +96,15 @@ class SignUpController extends GetxController{
           storage.write(firstName, nameCont.value.text);
           storage.write(lastName, lastNameCont.value.text);
           storage.write(userToken, response.accessToken);
-          Get.snackbar("Success", "User is Created");
+
           Get.offAll(() => HomeScreenView());
         } else {
           _dismissDialog();
-          Get.snackbar("Error", 'Failed to register user ${response.message}');
+          Get.snackbar("Sweatbox", 'Failed to register user ${response.message}',colorText: Colors.white);
         }
       } catch (e) {
         _dismissDialog();
-        Get.snackbar("Error", e.toString());
+        Get.snackbar("Sweatbox", e.toString(),colorText: Colors.white);
       }
     }
   }

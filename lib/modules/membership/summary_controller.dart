@@ -138,7 +138,7 @@ class MembershipSummaryController extends GetxController {
       Get.to(PaymentDeclinedView());
       print('Payment failed: ${e}');
 
-      Get.snackbar('Error', 'Payment failed: ${e}');
+      Get.snackbar('Error', 'Payment failed: ${e}',colorText: Colors.white);
     }
   }
 
@@ -194,7 +194,7 @@ class MembershipSummaryController extends GetxController {
       Get.to(PaymentSuccessfulView(), arguments: {'membership': _response});
     } else {
       _dismissDialog();
-      Get.snackbar("Error", _response.message ?? 'Something went wrong!');
+      Get.snackbar("Sweatbox", _response.message ?? 'Something went wrong!',colorText: Colors.white);
     }
   }
 
@@ -229,7 +229,7 @@ class MembershipSummaryController extends GetxController {
       _dismissDialog();
       discount.value=0.0;
       totalAmount.value=double.parse(membership.value.price.toString());
-      Get.snackbar("Error", _response.message ?? 'Something went wrong!');
+      Get.snackbar("Sweatbox", _response.message ?? 'Something went wrong!',colorText: Colors.white);
       return 0.0;
     }
   }
@@ -256,7 +256,7 @@ class MembershipSummaryController extends GetxController {
       addMembership();
     } catch (e) {
 
-      Get.snackbar('Error', 'Payment failed: $e');
+      Get.snackbar('Error', 'Payment failed: $e',colorText: Colors.white);
       Get.to(PaymentDeclinedView());
     } finally {
       isLoading.value = false;
@@ -271,7 +271,7 @@ class MembershipSummaryController extends GetxController {
       paymentResult.value = result;
       addMembership();
     } catch (e) {
-      Get.snackbar('Error', 'Payment failed: $e');
+      Get.snackbar('Error', 'Payment failed: $e',colorText: Colors.white);
       Get.to(PaymentDeclinedView());
     } finally {
       isLoading.value = false;

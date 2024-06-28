@@ -52,7 +52,7 @@ class ForgotController extends GetxController{
       } else {
         _dismissDialog();
         print(_response.message);
-        Get.snackbar("Error", _response.message??'Something went wrong!');
+        Get.snackbar("", _response.message??'Something went wrong!',colorText: Colors.white);
       }
     }
   }

@@ -57,7 +57,7 @@ class LoginController extends GetxController{
       } else {
         _dismissDialog();
         print("Error ${_response.message}");
-        Get.snackbar("Error", _response.message??'Something went wrong!');
+        Get.snackbar("Sweatbox", 'Incorrect Email or Password',colorText: Colors.white);
       }
     }
   }

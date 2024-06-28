@@ -9,7 +9,7 @@ import 'package:s_box/modules/commonWidgets/submitBtn.dart';
 import 'package:s_box/modules/membership/add_new_card_controller.dart';
 import 'package:s_box/services/commonModels/card_number.dart';
 import 'package:s_box/themes/colors/color_light.dart';
-
+import 'package:flutter/services.dart';
 import '../../extras/constant/app_color.dart';
 
 class AddNewCardView extends StatelessWidget {
@@ -223,8 +223,8 @@ class AddNewCardView extends StatelessWidget {
           TextFormField(
             controller: addNewCardController.cardNumberController.value,
             validator: (value) {
-              RegExp visaRegex = RegExp(r'^4[0-9]{12}(?:[0-9]{3})?$');
-              RegExp mastercardRegex = RegExp(r'^5[1-5][0-9]{14}$');
+              RegExp visaRegex = RegExp(r'^4[0-9]{3}\s?[0-9]{4}\s?[0-9]{4}\s?[0-9]{4}$');
+              RegExp mastercardRegex = RegExp(r'^5[1-5][0-9]{2}\s?[0-9]{4}\s?[0-9]{4}\s?[0-9]{4}$');
 
               if (!visaRegex.hasMatch(value!) &&
                   !mastercardRegex.hasMatch(value)) {
@@ -233,6 +233,11 @@ class AddNewCardView extends StatelessWidget {
               return null;
             },
             keyboardType: TextInputType.number,
+            inputFormatters: [
+              FilteringTextInputFormatter.digitsOnly,
+              LengthLimitingTextInputFormatter(16),
+              CardNumberInputFormatter(),
+            ],
             style: TextStyle(
                 fontSize: Get.height * 0.017,
                 color: ColorLight.white,
@@ -318,6 +323,11 @@ class AddNewCardView extends StatelessWidget {
               return null;
             },
             keyboardType: TextInputType.datetime,
+            inputFormatters: [
+              FilteringTextInputFormatter.digitsOnly,
+              LengthLimitingTextInputFormatter(4),
+              ExpiryDateInputFormatter(),
+            ],
             style: TextStyle(
                 fontSize: Get.height * 0.017,
                 color: ColorLight.white,
@@ -359,6 +369,10 @@ class AddNewCardView extends StatelessWidget {
               return null;
             },
             keyboardType: TextInputType.number,
+            inputFormatters: [
+              FilteringTextInputFormatter.digitsOnly,
+              LengthLimitingTextInputFormatter(3),
+            ],
             style: TextStyle(
                 fontSize: Get.height * 0.017,
                 color: ColorLight.white,
@@ -431,6 +445,58 @@ class AddNewCardView extends StatelessWidget {
               text: strAddCard, voidCallback: () {addNewCardController.saveCard();}, width: Get.width)
         ],
       ),
+    );
+  }
+}
+
+class CardNumberInputFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+      TextEditingValue oldValue, TextEditingValue newValue) {
+    if (newValue.selection.baseOffset == 0) {
+      return newValue;
+    }
+
+    String newText = newValue.text;
+    newText = newText.replaceAll(RegExp(r'\D'), '');
+    final buffer = StringBuffer();
+    for (int i = 0; i < newText.length; i++) {
+      buffer.write(newText[i]);
+      int nonZeroIndex = i + 1;
+      if (nonZeroIndex % 4 == 0 && nonZeroIndex != newText.length) {
+        buffer.write(' ');
+      }
+    }
+
+    return newValue.copyWith(
+      text: buffer.toString(),
+      selection: TextSelection.collapsed(offset: buffer.length),
+    );
+  }
+}
+
+
+class ExpiryDateInputFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+      TextEditingValue oldValue, TextEditingValue newValue) {
+    if (newValue.selection.baseOffset == 0) {
+      return newValue;
+    }
+
+    String newText = newValue.text;
+    newText = newText.replaceAll(RegExp(r'\D'), '');
+    final buffer = StringBuffer();
+    for (int i = 0; i < newText.length; i++) {
+      if (i == 2) {
+        buffer.write('/');
+      }
+      buffer.write(newText[i]);
+    }
+
+    return newValue.copyWith(
+      text: buffer.toString(),
+      selection: TextSelection.collapsed(offset: buffer.length),
     );
   }
 }

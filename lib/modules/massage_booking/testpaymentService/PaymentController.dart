@@ -16,7 +16,7 @@ class PaymentController extends GetxController {
       final result = await paymentService.makePayment(paymentItem.amount,'USD', 'APPLEPAY', token);
       paymentResult.value = result;
     } catch (e) {
-      Get.snackbar('Error', 'Payment failed: $e');
+      Get.snackbar('Error', 'Payment failed: $e',colorText: Colors.white);
     } finally {
       isLoading.value = false;
     }
@@ -29,7 +29,7 @@ class PaymentController extends GetxController {
       final result = await paymentService.makePayment(paymentItem.amount, 'USD', 'GOOGLEPAY', token);
       paymentResult.value = result;
     } catch (e) {
-      Get.snackbar('Error', 'Payment failed: $e');
+      Get.snackbar('Error', 'Payment failed: $e',colorText: Colors.white);
     } finally {
       isLoading.value = false;
     }

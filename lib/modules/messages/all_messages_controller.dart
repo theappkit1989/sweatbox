@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:s_box/modules/messages/chat_view.dart';
@@ -77,7 +78,7 @@ class AllMessagesController extends GetxController {
 
     } else {
       // _dismissDialog();
-      Get.snackbar("Error", _response.message ?? 'Something went wrong!');
+      Get.snackbar("Sweatbox", _response.message ?? 'Something went wrong!',colorText: Colors.white);
     }
   }
   void goToChatScreen(Users user){

@@ -202,7 +202,7 @@ class DateTimeView extends StatelessWidget {
         text: strContinue,
         voidCallback: () {
           if (!dateTimeController.isTimeSlotSelected()) {
-            Get.snackbar("Error", "Please select a time slot.");
+            Get.snackbar("Sweatbox", "Please select a time slot.",colorText: Colors.white);
             return;
           }
           dateTimeController.goToSummary();

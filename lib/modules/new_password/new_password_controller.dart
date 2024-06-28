@@ -32,10 +32,10 @@ class NewPasswordController extends GetxController {
           goToPwdUpdated();
         } else {
           _dismissDialog();
-          Get.snackbar("Error", _response.message ?? 'Something went wrong!');
+          Get.snackbar("Sweatbox", _response.message ?? 'Something went wrong!',colorText: Colors.white);
         }
       } else {
-        Get.snackbar("Error", "Passwords do not match or are less than 8 characters!");
+        Get.snackbar("Sweatbox", "Passwords do not match or are less than 8 characters!",colorText: Colors.white);
       }
     }
   }

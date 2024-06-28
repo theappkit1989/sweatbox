@@ -89,125 +89,126 @@ class SignUpView extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   buildForm(),
-                ],
-              ),
-            ),
-          ),
-          SizedBox(
-            height: Get.height * 0.03,
-          ),
-          GestureDetector(
-            onTap: (){
-              signupController.registerUser();
-            },
-            child: Container(
-              width: Get.width,
-              height: Get.height * 0.065,
-              padding: EdgeInsets.symmetric(horizontal: Get.width * 0.04),
-              // margin: EdgeInsets.only(right: Get.width*0.065,top: Get.height*0.029),
-              decoration: BoxDecoration(
-                  shape: BoxShape.rectangle,
-                  borderRadius: BorderRadius.circular(35),
-                  border: Border.all(color: appPrimaryColor),
-                  color: appPrimaryColor),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  texts(strSignup,
-                      fontSize: Get.height * 0.0185,
-                      latterSpacing: 0.0,
+                  SizedBox(
+                    height: Get.height * 0.03,
+                  ),
+                  GestureDetector(
+                    onTap: (){
+                      signupController.registerUser();
+                    },
+                    child: Container(
+                      width: Get.width,
+                      height: Get.height * 0.065,
+                      padding: EdgeInsets.symmetric(horizontal: Get.width * 0.04),
+                      // margin: EdgeInsets.only(right: Get.width*0.065,top: Get.height*0.029),
+                      decoration: BoxDecoration(
+                          shape: BoxShape.rectangle,
+                          borderRadius: BorderRadius.circular(35),
+                          border: Border.all(color: appPrimaryColor),
+                          color: appPrimaryColor),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          texts(strSignup,
+                              fontSize: Get.height * 0.0185,
+                              latterSpacing: 0.0,
 
-                      isCentered: false,
-                      textColor: Colors.white,
-                      fontWeight: FontWeight.w600,
-                      fontFamily: 'Lato'),
+                              isCentered: false,
+                              textColor: Colors.white,
+                              fontWeight: FontWeight.w600,
+                              fontFamily: 'Lato'),
+                        ],
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: Get.height * 0.01,
+                  ),
+                  Align(
+                    alignment: Alignment.center,
+                    child: Column(
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            //signupController.goToLoginPage();
+                          },
+                          child: RichText(
+                            textAlign: TextAlign.center,
+                            text: TextSpan(
+                              text: strByContinue,
+                              children: [
+                                TextSpan(
+                                  text: strTerms,
+                                  style: TextStyle(
+                                      fontSize: Get.height * 0.016,
+                                      color: yellowF5EA25,
+                                      fontFamily: fontType,
+                                      fontWeight: FontWeight.w500),
+                                ),
+                                TextSpan(
+                                  text: ' and \n',
+                                  style: TextStyle(
+                                      fontSize: Get.height * 0.017,
+                                      color: Colors.white,
+                                      fontFamily: fontType,
+                                      fontWeight: FontWeight.w500),
+                                ),
+                                TextSpan(
+                                  text: strPrivacyPolicy,
+                                  style: TextStyle(
+                                      fontSize: Get.height * 0.016,
+                                      color: yellowF5EA25,
+                                      fontFamily: fontType,
+                                      fontWeight: FontWeight.w500),
+                                ),
+                              ],
+                              style: TextStyle(
+                                  fontSize: Get.height * 0.017,
+                                  color: Colors.white,
+                                  fontFamily: fontType,
+                                  fontWeight: FontWeight.w500),
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: Get.height * 0.05,
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            signupController.goToLoginPage();
+                          },
+                          child: RichText(
+                            text: TextSpan(
+                              text: strAlreadyHaveAccount,
+                              children: [
+                                TextSpan(
+                                  text: strLogin,
+                                  style: TextStyle(
+                                      fontSize: Get.height * 0.016,
+                                      color: yellowF5EA25,
+                                      fontFamily: fontType,
+                                      fontWeight: FontWeight.w500),
+                                )
+                              ],
+                              style: TextStyle(
+                                  fontSize: Get.height * 0.017,
+                                  color: Colors.white,
+                                  fontFamily: fontType,
+                                  fontWeight: FontWeight.w500),
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: Get.height * 0.02,
+                        ),
+                      ],
+                    ),
+                  ),
                 ],
               ),
             ),
           ),
-          SizedBox(
-            height: Get.height * 0.01,
-          ),
-          Align(
-            alignment: Alignment.center,
-            child: Column(
-              children: [
-                GestureDetector(
-                  onTap: () {
-                    //signupController.goToLoginPage();
-                  },
-                  child: RichText(
-                    textAlign: TextAlign.center,
-                    text: TextSpan(
-                      text: strByContinue,
-                      children: [
-                        TextSpan(
-                          text: strTerms,
-                          style: TextStyle(
-                              fontSize: Get.height * 0.016,
-                              color: yellowF5EA25,
-                              fontFamily: fontType,
-                              fontWeight: FontWeight.w500),
-                        ),
-                        TextSpan(
-                          text: ' and \n',
-                          style: TextStyle(
-                              fontSize: Get.height * 0.017,
-                              color: Colors.white,
-                              fontFamily: fontType,
-                              fontWeight: FontWeight.w500),
-                        ),
-                        TextSpan(
-                          text: strPrivacyPolicy,
-                          style: TextStyle(
-                              fontSize: Get.height * 0.016,
-                              color: yellowF5EA25,
-                              fontFamily: fontType,
-                              fontWeight: FontWeight.w500),
-                        ),
-                      ],
-                      style: TextStyle(
-                          fontSize: Get.height * 0.017,
-                          color: Colors.white,
-                          fontFamily: fontType,
-                          fontWeight: FontWeight.w500),
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: Get.height * 0.05,
-                ),
-                GestureDetector(
-                  onTap: () {
-                    signupController.goToLoginPage();
-                  },
-                  child: RichText(
-                    text: TextSpan(
-                      text: strAlreadyHaveAccount,
-                      children: [
-                        TextSpan(
-                          text: strLogin,
-                          style: TextStyle(
-                              fontSize: Get.height * 0.016,
-                              color: yellowF5EA25,
-                              fontFamily: fontType,
-                              fontWeight: FontWeight.w500),
-                        )
-                      ],
-                      style: TextStyle(
-                          fontSize: Get.height * 0.017,
-                          color: Colors.white,
-                          fontFamily: fontType,
-                          fontWeight: FontWeight.w500),
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: Get.height * 0.02,
-                ),
-              ],
-            ),
-          ),
+
         ],
       ),
     );
