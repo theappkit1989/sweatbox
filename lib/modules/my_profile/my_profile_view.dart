@@ -32,7 +32,7 @@ class MyProfileView extends StatelessWidget {
     username = storage.read(userName);
     useremail = storage.read(userEmail);
     userImage = storage.read(image);
-    print("image url is ${ApiEndpoint.baseUrlImage+userImage}");
+    print("image profile url is ${ApiEndpoint.baseUrlImage+userImage}");
     return Scaffold(
         backgroundColor: ColorLight.black,
         body: Stack(
