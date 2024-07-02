@@ -24,7 +24,7 @@ class MainScreenController extends GetxController{
   List<Widget> screens=[
     MembershipView(),
     MassageView(),
-    AllMessagesView(),
+    // AllMessagesView(),
     AllBookingsView(),
     MyProfileView(),
   ];
@@ -39,13 +39,15 @@ class MainScreenController extends GetxController{
     } else if(tabIndex.value==1) {
       var homeCont = Get.find<MassageController>();
       homeCont.onInit();
-    } else if(tabIndex.value==2) {
-      var homeCont = Get.find<AllMessagesController>();
-      homeCont.onInit();
-    } else if(tabIndex.value==3) {
+    }
+    // else if(tabIndex.value==2) {
+    //   var homeCont = Get.find<AllMessagesController>();
+    //   homeCont.onInit();
+    // }
+    else if(tabIndex.value==2) {
       var homeCont = Get.find<AllBookingsController>();
       homeCont.onInit();
-    } else if(tabIndex.value==4) {
+    } else if(tabIndex.value==3) {
       var homeCont = Get.find<MyProfileController>();
       homeCont.onInit();
     }

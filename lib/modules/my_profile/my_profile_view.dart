@@ -54,7 +54,7 @@ class MyProfileView extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-
+                  SizedBox(height: 10,),
                   buildUserDetails(username, useremail),
                   buildMembership(myProfileController.memberships.value),
                   Expanded(

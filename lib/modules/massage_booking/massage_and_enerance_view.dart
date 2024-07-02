@@ -29,122 +29,140 @@ class MassageAndEntranceView extends StatelessWidget {
     massageAndEntranceController.selectedduration.value = selectedDuration;
 
     return Scaffold(
+        appBar:AppBar(
+          backgroundColor: ColorLight.black,
+          centerTitle: true,
+          title: const Text(
+            strMassageEntranceFee,
+          ),
+          titleTextStyle: const TextStyle(
+            color: appPrimaryColor,
+            fontWeight: FontWeight.w700,
+            fontSize: 18.0,
+          ),
+          leading: GestureDetector(
+            onTap: () {
+              Get.back();
+            },
+            child: const Icon(
+              Icons.arrow_back,
+              color: ColorLight.white,
+            ),
+          ),
+        ),
         backgroundColor: ColorLight.white, body: buildBody(context));
   }
 
   buildBody(BuildContext context) {
-    return SafeArea(
+    return Container(
+      width: Get.width,
+      color: ColorLight.white,
       child: Container(
         width: Get.width,
-        color: ColorLight.white,
-        child: Container(
-          width: Get.width,
-          height: Get.height,
+        height: Get.height,
 
-          decoration: BoxDecoration(
-              color: ColorLight.black,
-              borderRadius: BorderRadius.circular(25)),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              SizedBox(
-                height: Get.height * 0.0275,
-              ),
-              const Text(
-                strMassageEntranceFee,
+        decoration: BoxDecoration(
+            color: ColorLight.black,
+           ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+
+            // const Text(
+            //   strMassageEntranceFee,
+            //   style: TextStyle(
+            //     color: appPrimaryColor,
+            //     fontWeight: FontWeight.w700,
+            //     fontSize: 20.0,
+            //     fontFamily: fontType,
+            //   ),
+            // ),
+            Padding(
+              padding: EdgeInsets.symmetric(
+                  horizontal: Get.width * 0.02, vertical: 8.0),
+              child: const Text(
+                strMembershipSubtitle,
                 style: TextStyle(
-                  color: appPrimaryColor,
-                  fontWeight: FontWeight.w700,
-                  fontSize: 20.0,
+                  color: ColorLight.white,
+                  fontWeight: FontWeight.w400,
+                  fontSize: 14.0,
                   fontFamily: fontType,
                 ),
+                textAlign: TextAlign.center,
               ),
-              Padding(
-                padding: EdgeInsets.symmetric(
-                    horizontal: Get.width * 0.02, vertical: 8.0),
-                child: const Text(
-                  strMembershipSubtitle,
-                  style: TextStyle(
-                    color: ColorLight.white,
-                    fontWeight: FontWeight.w400,
-                    fontSize: 14.0,
-                    fontFamily: fontType,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-              ),
-              Expanded(
-                child: ListView.builder(
-                  itemBuilder: (context, index) {
-                    Membership membership = massageAndEntranceController.memberships[index];
-                    return buildRadioTile(
-                        title: membership.title,
-                        subtitle: "£${membership.price}",
-                        trailing:  membership.discount!=''?Container(
-                          width: Get.width * 0.3,
-                          padding: const EdgeInsets.symmetric(horizontal: 10),
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(20.0),
-                              color: ColorLight.white),
-                          height: Get.height * 0.04,
-                          child: Text(
-                            membership.discount,
-                            style: const TextStyle(
-                              color: appPrimaryColor,
-                              fontWeight: FontWeight.w600,
-                              fontFamily: fontType,
-                              fontSize: 12.0,
-                            ),
-                          ),
-                        ):SizedBox(),
-                        values: index
-                    );
-                  },
-                  itemCount: massageAndEntranceController.memberships.length,
-                  primary: false,
-                  physics: const AlwaysScrollableScrollPhysics(),
-                ),
-              ),
-            Stack(
-              alignment: Alignment.center,
-              children: [
-                Row(
-                  children: List.generate(
-                    (150 / (0.5 + 0.5)).floor(),
-                        (index) => Expanded(
-                      child: Container(
-                        color: index % 2 == 0 ? Colors.transparent : Colors.white,
-                        height: 1,
-                      ),
-                    ),
-                  ),
-                ),
-
-                Container(
-                  color: Colors.transparent,
-                  margin: EdgeInsets.only(left: 5),
-                  padding: EdgeInsets.symmetric(horizontal: 8.0), // Padding around text
-                  child: Text(
-                    "Massage Only",
-                    style: TextStyle(
-                      fontSize: Get.width*0.04,
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ],
             ),
+            Expanded(
+              child: ListView.builder(
+                itemBuilder: (context, index) {
+                  Membership membership = massageAndEntranceController.memberships[index];
+                  return buildRadioTile(
+                      title: membership.title,
+                      subtitle: "£${membership.price}",
+                      trailing:  membership.discount!=''?Container(
+                        width: Get.width * 0.3,
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20.0),
+                            color: ColorLight.white),
+                        height: Get.height * 0.04,
+                        child: Text(
+                          membership.discount,
+                          style: const TextStyle(
+                            color: appPrimaryColor,
+                            fontWeight: FontWeight.w600,
+                            fontFamily: fontType,
+                            fontSize: 12.0,
+                          ),
+                        ),
+                      ):SizedBox(),
+                      values: index
+                  );
+                },
+                itemCount: massageAndEntranceController.memberships.length,
+                primary: false,
+                physics: const AlwaysScrollableScrollPhysics(),
+              ),
+            ),
+            CenteredTextAboveDottedLine(text: 'massage only',),
+          Stack(
+            alignment: Alignment.center,
+            children: [
+              Row(
+                children: List.generate(
+                  (150 / (0.5 + 0.5)).floor(),
+                      (index) => Expanded(
+                    child: Container(
+                      color: index % 2 == 0 ? Colors.transparent : Colors.white,
+                      height: 1,
+                    ),
+                  ),
+                ),
+              ),
 
-              buildRadioTileMassage(title: massageAndEntranceController.massage.value.title, subtitle: massageAndEntranceController.massage.value.subtitle, trailing: Text("£${massageAndEntranceController.massage.value.price}"), values: -1),
-              Padding(padding: EdgeInsets.symmetric(horizontal:
-              Get.width * 0.03,vertical: Get.height*0.03),
-                child: customSubmitBtn(
-                    text: strContinue, voidCallback: () {massageAndEntranceController.goToPaymentMethod();}, width: Get.width),)
+              Container(
+                color: Colors.transparent,
+                margin: EdgeInsets.only(left: 5),
+                padding: EdgeInsets.symmetric(horizontal: 8.0), // Padding around text
+                child: Text(
+                  "Massage Only",
+                  style: TextStyle(
+                    fontSize: Get.width*0.04,
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
             ],
           ),
+
+            buildRadioTileMassage(title: massageAndEntranceController.massage.value.title, subtitle: massageAndEntranceController.massage.value.subtitle, trailing: Text("£${massageAndEntranceController.massage.value.price}"), values: -1),
+            Padding(padding: EdgeInsets.symmetric(horizontal:
+            Get.width * 0.03,vertical: Get.height*0.03),
+              child: customSubmitBtn(
+                  text: strContinue, voidCallback: () {massageAndEntranceController.goToPaymentMethod();}, width: Get.width),)
+          ],
         ),
       ),
     );
@@ -240,5 +258,69 @@ class MassageAndEntranceView extends StatelessWidget {
               secondary: trailing
           ),
         );
+  }
+}
+
+
+class CenteredTextAboveDottedLine extends StatelessWidget {
+  final String text;
+
+  CenteredTextAboveDottedLine({required this.text});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Stack(
+          alignment: Alignment.center,
+          children: [
+            CustomPaint(
+              size: Size(double.infinity, 20),
+              painter: DottedLinePainter(),
+            ),
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 16.0),
+
+              child: Text(
+                text,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 16.0,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ],
+        ),
+        SizedBox(height: 10.0), // Adjust the space between text and dotted line
+      ],
+    );
+  }
+}
+
+class DottedLinePainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final Paint paint = Paint()
+      ..color = Colors.white
+      ..strokeWidth = 1
+      ..style = PaintingStyle.stroke;
+
+    const double dashWidth = 5;
+    const double dashSpace = 5;
+
+    double startX = 0;
+    while (startX < size.width) {
+      canvas.drawLine(
+          Offset(startX, size.height / 2),
+          Offset(startX + dashWidth, size.height / 2),
+          paint);
+      startX += dashWidth + dashSpace;
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) {
+    return false;
   }
 }

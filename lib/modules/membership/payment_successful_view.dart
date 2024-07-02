@@ -277,7 +277,7 @@ class PaymentSuccessfulView extends StatelessWidget {
                         fontWeight: FontWeight.w400
                     ),),
                   SizedBox(height: Get.height * 0.01,),
-                  Text('£${membership.data?.price}',
+                  Text('£${membership.data?.price}0 ',
                     style: const TextStyle(
                         fontSize: 13,
                         fontFamily: fontType,

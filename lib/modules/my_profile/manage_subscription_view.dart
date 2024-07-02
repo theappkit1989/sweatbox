@@ -51,6 +51,7 @@ class ManageSubscriptionView extends StatelessWidget {
       ),
       body: SingleChildScrollView(
         child: Container(
+          height: Get.height,
           decoration: BoxDecoration(
             color: ColorLight.black,
             borderRadius: BorderRadius.circular(25)
@@ -294,7 +295,7 @@ class ManageSubscriptionView extends StatelessWidget {
                     height: Get.height * 0.01,
                   ),
                    Text(
-                    '£${membership.price}.00',
+                    '£${membership.price}0',
                     style: TextStyle(
                         fontSize: 13,
                         fontFamily: fontType,

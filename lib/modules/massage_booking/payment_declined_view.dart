@@ -22,7 +22,7 @@ class PaymentDeclinedView extends StatelessWidget {
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: Get.width * 0.05,vertical: Get.height * 0.02),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.end,
+          mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Align(

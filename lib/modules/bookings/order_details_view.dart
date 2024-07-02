@@ -302,7 +302,7 @@ class OrderDetailsView extends StatelessWidget {
                     height: Get.height * 0.01,
                   ),
                    Text(
-                    '£${selectedService.price}.00',
+                    '£${selectedService.price}0',
                     style: TextStyle(
                         fontSize: 13,
                         fontFamily: fontType,

@@ -120,7 +120,7 @@ class MembershipSummaryController extends GetxController {
           membership.value.price.toString(),
           "GBP",
           "VISA",
-          cardNumber.toString(),
+          cardNumber.replaceAll(' ', '').toString(),
           cardName.toString(),
           cardExpiryMonth.toString(),
           cardExpiryYear.toString(),

@@ -32,8 +32,8 @@ const String defaultApplePay = '''{
     "displayName": "Sweatbox",
     "merchantCapabilities": ["3DS", "debit", "credit"],
     "supportedNetworks": ["amex", "visa", "discover", "masterCard"],
-    "countryCode": "US",
-    "currencyCode": "USD",
+    "countryCode": "GB",
+    "currencyCode": "GBP",
     "requiredBillingContactFields": ["emailAddress", "name", "phoneNumber", "postalAddress"],
     "requiredShippingContactFields": [],
     "shippingMethods": []
@@ -74,8 +74,8 @@ const String defaultGooglePay = '''{
       "merchantName": "Sweatbox"
     },
     "transactionInfo": {
-      "countryCode": "US",
-      "currencyCode": "USD"
+      "countryCode": "GB",
+      "currencyCode": "GBP"
     }
   }
 }''';

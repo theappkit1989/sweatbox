@@ -82,7 +82,7 @@ class EditProfileController extends GetxController {
         print("message is ${_response.message}");
         // Get.snackbar("Success", _response.message ?? '');
         var homeCont = Get.find<MyProfileController>();
-        homeCont.onInit();
+        homeCont.update();
         Get.back();
       } else {
         _dismissDialog();

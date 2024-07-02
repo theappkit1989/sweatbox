@@ -24,6 +24,7 @@ class PaymentSuccessfulView extends StatelessWidget {
     _userid=storage.read(userid);
     final arguments = Get.arguments as Map<String, dynamic>;
     final ServiceDataClass massage = arguments['massage'];
+    final  massageType = arguments['massage_type'];
     String qrData = '''
       Title: Massage
       User ID: ${_userid}
@@ -67,7 +68,7 @@ class PaymentSuccessfulView extends StatelessWidget {
                 children: [
                   buildPaymentSuccess(massage),
                   buildQrCode(username,qrData),
-                  buildDetails(massage)
+                  buildDetails(massage,massageType)
                 ],
               ),
             ),
@@ -194,7 +195,7 @@ class PaymentSuccessfulView extends StatelessWidget {
     );
   }
 
-  buildDetails(ServiceDataClass massage) {
+  buildDetails(ServiceDataClass massage, massageType) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -269,7 +270,7 @@ class PaymentSuccessfulView extends StatelessWidget {
                         fontWeight: FontWeight.w400
                     ),),
                   SizedBox(height: Get.height * 0.01,),
-                   Text('£${massage.data?.price}.00',
+                   Text('£${massage.data?.price}0',
                     style: TextStyle(
                         fontSize: 13,
                         fontFamily: fontType,
@@ -294,7 +295,7 @@ class PaymentSuccessfulView extends StatelessWidget {
                   fontWeight: FontWeight.w400
               ),),
             SizedBox(height: Get.height * 0.01,),
-            const Text('Massage + Club Access',
+             Text(massageType=='2'?'Massage + Club Access':'Full Body Massage',
               style: TextStyle(
                   fontSize: 13,
                   fontFamily: fontType,

@@ -269,23 +269,27 @@ class ApiController extends BaseRepository {
       // print('email: $userEmail');
 
       print(request.url);
-      var streamedResponse = await request.send();
+      var streamedResponse = await request.send().timeout((const Duration(seconds: 10)));
       print(streamedResponse.statusCode);
 
 
       var response = await http.Response.fromStream(streamedResponse);
 
+      print(response.body);
       if (response.statusCode == 200) {
         final decodedResponse = jsonDecode(response.body);
         print('response 200: update profile: ${response.body}');
         return EditProfileResponse.fromJson(decodedResponse);
-      } else {
+      } else if(response.statusCode==413){
+        print('Failed to update profile: ${response.body}');
+        return EditProfileResponse(status:false,message: 'please uplaod picture Less than 2 MB');
+      }else {
         print('Failed to update profile: ${response.body}');
         return Future.error('Failed to update profile: ${response.statusCode}');
       }
     } catch (e) {
       print('Error occurred: $e');
-      return Future.error('Error occurred: $e');
+      return EditProfileResponse(status:false,message: 'please uplaod picture Less than 2 MB');
     }
   }
 

@@ -16,50 +16,55 @@ class AddNewCardView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: ColorLight.white,
-      appBar: AppBar(
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).requestFocus(FocusNode());
+      },
+      child: Scaffold(
         backgroundColor: ColorLight.white,
-        centerTitle: true,
-        title: const Text(
-          strAddCard,
+        appBar: AppBar(
+          backgroundColor: ColorLight.white,
+          centerTitle: true,
+          title: const Text(
+            strAddCard,
+          ),
+          titleTextStyle: const TextStyle(
+            color: ColorLight.black,
+            fontWeight: FontWeight.w700,
+            fontFamily: fontType,
+            fontSize: 18.0,
+          ),
         ),
-        titleTextStyle: const TextStyle(
-          color: ColorLight.black,
-          fontWeight: FontWeight.w700,
-          fontFamily: fontType,
-          fontSize: 18.0,
-        ),
-      ),
-      body: SafeArea(
-        bottom: true,
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Container(
-                width: Get.width,
-                padding: EdgeInsets.symmetric(
-                    horizontal: Get.width * 0.05, vertical: Get.height * 0.04),
-                decoration: BoxDecoration(
-                  color: ColorLight.black,
-                  borderRadius: BorderRadius.circular(25),
+        body: SafeArea(
+          bottom: true,
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Container(
+                  width: Get.width,
+                  padding: EdgeInsets.symmetric(
+                      horizontal: Get.width * 0.05, vertical: Get.height * 0.04),
+                  decoration: BoxDecoration(
+                    color: ColorLight.black,
+                    borderRadius: BorderRadius.circular(25),
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      // buildCard(),
+                      buildForm(context),
+                    ],
+                  ),
                 ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    // buildCard(),
-                    buildForm(context),
-                  ],
+                SizedBox(
+                  height: Get.height * 0.08,
                 ),
-              ),
-              SizedBox(
-                height: Get.height * 0.08,
-              ),
-              buildAddCard()
-            ],
+                buildAddCard()
+              ],
+            ),
           ),
         ),
       ),
@@ -316,7 +321,7 @@ class AddNewCardView extends StatelessWidget {
               }
               return null;
             },
-            keyboardType: TextInputType.datetime,
+            keyboardType: TextInputType.number,
             inputFormatters: [
               FilteringTextInputFormatter.digitsOnly,
               LengthLimitingTextInputFormatter(4),
@@ -474,21 +479,22 @@ class ExpiryDateInputFormatter extends TextInputFormatter {
   @override
   TextEditingValue formatEditUpdate(
       TextEditingValue oldValue, TextEditingValue newValue) {
-    if (newValue.selection.baseOffset == 0) {
-      return newValue;
+    String filteredText = newValue.text.replaceAll(RegExp(r'\D'), '');
+
+    if (filteredText.length > 4) {
+      filteredText = filteredText.substring(0, 4);
     }
 
-    String newText = newValue.text;
-    newText = newText.replaceAll(RegExp(r'\D'), '');
-    final buffer = StringBuffer();
-    for (int i = 0; i < newText.length; i++) {
-      buffer.write(newText[i]);
-      if (i == 1 && newText.length > 1) {
+    var buffer = StringBuffer();
+
+    for (int i = 0; i < filteredText.length; i++) {
+      if (i == 2 && i < filteredText.length) {
         buffer.write('/');
       }
+      buffer.write(filteredText[i]);
     }
 
-    return newValue.copyWith(
+    return TextEditingValue(
       text: buffer.toString(),
       selection: TextSelection.collapsed(offset: buffer.length),
     );
