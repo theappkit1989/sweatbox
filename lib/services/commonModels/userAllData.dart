@@ -143,7 +143,7 @@ class Membership {
   }
   static DateTime parseDate(String dateString) {
     List<String> parts = dateString.split(' ');
-    String day = parts[0];
+    String day = parts[0].padLeft(2, '0');
     String month = parts[1];
     String year = parts[2];
     String time = parts[3];
@@ -158,7 +158,8 @@ class Membership {
     String monthNumeric = monthMap[month] ?? '01'; // Default to January if not found
 
     // Construct date and time string in ISO 8601 format
-    String isoString = '$year-$monthNumeric-$day $time';
+    String isoString = '$year-$monthNumeric-$day $time:00';
+    print('date is $isoString');
     return DateTime.parse(isoString);
   }
 }

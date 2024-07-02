@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:intl/intl.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:s_box/extras/constant/app_color.dart';
 import 'package:s_box/extras/constant/app_images.dart';
 import 'package:s_box/extras/constant/string_constant.dart';
+import 'package:s_box/modules/bookings/all_bookings_controller.dart';
 import 'package:s_box/modules/home_screen/home_view.dart';
 import 'package:s_box/modules/membership/membership_controller.dart';
 import 'package:ticket_widget/ticket_widget.dart';
@@ -13,6 +15,7 @@ import '../../extras/constant/shared_pref_constant.dart';
 import '../../services/commonModels/membershipModal.dart';
 import '../../themes/colors/color_light.dart';
 import '../commonWidgets/submitBtn.dart';
+import '../home_screen/home_controller.dart';
 import '../membership/payment_successful_controller.dart';
 import 'membership_view.dart';
 
@@ -43,7 +46,7 @@ class PaymentSuccessfulView extends StatelessWidget {
     return Scaffold(
       backgroundColor: ColorLight.white,
       appBar: AppBar(
-
+        automaticallyImplyLeading: false,
         backgroundColor: ColorLight.white,
         centerTitle: true,
         title: const Text(
@@ -149,7 +152,23 @@ class PaymentSuccessfulView extends StatelessWidget {
             Padding(padding: EdgeInsets.symmetric(horizontal:
             Get.width * 0.03,vertical: Get.height*0.03),
               child: customSubmitBtn(
-                  text: strContinue, voidCallback: () {Get.to(HomeScreenView());}, width: Get.width),)
+                  text: strAllBookings, voidCallback: () {
+                var homecont= Get.find<MainScreenController>();
+                homecont.tabIndex.value=2;
+                homecont.update();
+                var bookingcont= Get.find<AllBookingsController>();
+                bookingcont.onInit();
+                print("object${Get.find<MainScreenController>().tabIndex.value}");
+
+                if (Get.find<MainScreenController>().tabIndex.value == 2) {
+                  // Navigate to HomeScreenView with AllBookingsView already visible
+                  Get.close(2);
+                  // Get.offAll(() => HomeScreenView(), transition: Transition.fade, arguments: 2);
+                } else {
+                  // Navigate to HomeScreenView
+                  // Get.offAll(() => HomeScreenView(), transition: Transition.fade);
+                }
+                    }, width: Get.width),)
             //buildBook()
           ],
         ),
@@ -310,7 +329,7 @@ class PaymentSuccessfulView extends StatelessWidget {
                         fontWeight: FontWeight.w400
                     ),),
                   SizedBox(height: Get.height * 0.01,),
-                  Text(membership.data!.activeTime!.split('T').first,
+                  Text(formatDateString(membership.data!.activeTime!.split('T').first),
                     style: const TextStyle(
                         fontSize: 13,
                         fontFamily: fontType,
@@ -366,5 +385,33 @@ class PaymentSuccessfulView extends StatelessWidget {
         ),
       ],
     );
+  }
+  String formatDateString(String dateString) {
+    // Define a map to convert month names to numeric values
+    Map<String, String> monthMap = {
+      'January': '01', 'February': '02', 'March': '03',
+      'April': '04', 'May': '05', 'June': '06',
+      'July': '07', 'August': '08', 'September': '09',
+      'October': '10', 'November': '11', 'December': '12'
+    };
+
+    // Split the input date string
+    List<String> parts = dateString.split(' ');
+
+    // Extract day, month, and year
+    String day = parts[0];
+    String month = parts[1];
+    String year = parts[2];
+
+    // Convert day to two digits
+    if (day.length == 1) {
+      day = '0$day';
+    }
+
+    // Get numeric month value
+    String monthNumeric = monthMap[month] ?? '01'; // Default to January if not found
+
+    // Return the formatted date string
+    return '$day $month $year';
   }
 }

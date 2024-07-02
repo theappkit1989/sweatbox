@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:intl/intl.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:s_box/modules/home_screen/home_view.dart';
 import 'package:s_box/modules/massage_booking/massage_controller.dart';
-import 'package:s_box/modules/massage_booking/payment_successful_controller.dart';
+import 'package:s_box/modules/massage_booking/massage_payment_successful_controller.dart';
 import 'package:ticket_widget/ticket_widget.dart';
 import '../../extras/constant/app_color.dart';
 import '../../extras/constant/app_constant.dart';
@@ -13,6 +14,7 @@ import '../../extras/constant/shared_pref_constant.dart';
 import '../../extras/constant/string_constant.dart';
 import '../../services/commonModels/ServiceDataClass.dart';
 import '../../themes/colors/color_light.dart';
+import '../bookings/all_bookings_controller.dart';
 import '../commonWidgets/submitBtn.dart';
 import '../home_screen/home_controller.dart';
 
@@ -44,6 +46,7 @@ class MassagePaymentSuccessfulView extends StatelessWidget {
         title: const Text(
           strPaymentSuccess,
         ),
+        automaticallyImplyLeading: false,
         titleTextStyle: const TextStyle(
           color: ColorLight.black,
           fontWeight: FontWeight.w700,
@@ -143,18 +146,19 @@ class MassagePaymentSuccessfulView extends StatelessWidget {
             Padding(padding: EdgeInsets.symmetric(horizontal:
             Get.width * 0.03,vertical: Get.height*0.03),
               child: customSubmitBtn(
-                  text: strContinue, voidCallback: () {
+                  text: strAllBookings, voidCallback: () {
                var homecont= Get.find<MainScreenController>();
                homecont.tabIndex.value=2;
                 homecont.update();
                     print("object${Get.find<MainScreenController>().tabIndex.value}");
-
+               var bookingcont= Get.find<AllBookingsController>();
+               bookingcont.onInit();
                 if (Get.find<MainScreenController>().tabIndex.value == 2) {
                   // Navigate to HomeScreenView with AllBookingsView already visible
-                  Get.offAll(() => HomeScreenView(), transition: Transition.fade, arguments: 2);
+                  Get.close(4);
                 } else {
                   // Navigate to HomeScreenView
-                  Get.offAll(() => HomeScreenView(), transition: Transition.fade);
+                  // Get.offAll(() => HomeScreenView(), transition: Transition.fade);
                 }
                     }, width: Get.width),)
             //buildBook()
@@ -308,7 +312,7 @@ class MassagePaymentSuccessfulView extends StatelessWidget {
                         fontWeight: FontWeight.w400
                     ),),
                   SizedBox(height: Get.height * 0.01,),
-                   Text(massage.data?.date??"",
+                   Text(formatDateString(massage.data?.date??"2024-07-09"),
                     style: TextStyle(
                         fontSize: 13,
                         fontFamily: fontType,
@@ -386,5 +390,10 @@ class MassagePaymentSuccessfulView extends StatelessWidget {
         ),
       ],
     );
+  }
+  String formatDateString(String dateString) {
+    DateTime date = DateTime.parse(dateString);
+    String formattedDate = DateFormat('d MMMM yyyy').format(date);
+    return formattedDate;
   }
 }

@@ -5,9 +5,10 @@ import 'package:pay/pay.dart';
 import 'package:s_box/modules/massage_booking/massage_and_entrance_controller.dart';
 import 'package:s_box/modules/massage_booking/massage_controller.dart';
 import 'package:s_box/modules/massage_booking/payment_declined_view.dart';
-import 'package:s_box/modules/massage_booking/payment_successful_view.dart';
+import 'package:s_box/modules/massage_booking/massage_payment_successful_view.dart';
 import 'package:flutter/material.dart';
 import 'package:s_box/modules/massage_booking/testpaymentService/PaymentService.dart';
+import 'package:s_box/modules/my_profile/my_profile_controller.dart';
 import '../../extras/constant/shared_pref_constant.dart';
 import '../../services/repo/common_repo.dart';
 import '../../themes/loading_dialofg.dart';
@@ -72,7 +73,7 @@ class MassageSummaryController extends GetxController{
    _dismissDialog();
    print(e);
    final errorMessage = PaymentService().parseException(e.toString());
-   Get.snackbar('Error', 'Payment failed: ${errorMessage}',colorText: Colors.white);
+   // Get.snackbar('Error', 'Payment failed: ${errorMessage}',colorText: Colors.white);
    Get.to(PaymentDeclinedView());
 
 
@@ -146,6 +147,9 @@ class MassageSummaryController extends GetxController{
       addService();
       // Get.to(PaymentSuccessfulView(), arguments: {'membership': _response});
     } else {
+      if(_response.message=='The Selected appuserid is invalid '){
+        Get.find<MyProfileController>().logout();
+      }
 
       Get.snackbar("Sweatbox", _response.message ?? 'Something went wrong!',colorText: Colors.white);
     }
@@ -181,6 +185,9 @@ class MassageSummaryController extends GetxController{
       _dismissDialog();
       discount.value=0.0;
       totalAmount.value=double.parse(massage.value.price.toString());
+      if(_response.message=='The Selected appuserid is invalid '){
+        Get.find<MyProfileController>().logout();
+      }
       Get.snackbar("Sweatbox", _response.message ?? 'Something went wrong!',colorText: Colors.white);
       return 0.0;
     }

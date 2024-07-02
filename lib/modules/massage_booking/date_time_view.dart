@@ -179,7 +179,7 @@ class DateTimeView extends StatelessWidget {
                       fontSize: Get.height*0.0175 , fontWeight: dateTimeController.timeSelected[index].value ? FontWeight.w700:FontWeight.w400),
                 ),
                 padding: EdgeInsets.symmetric(
-                  horizontal: Get.width * 0.0395,
+                  horizontal: Get.width * 0.0295,
                   vertical: Get.height*0.0125,
                 ),
                 shape: RoundedRectangleBorder(

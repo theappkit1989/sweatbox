@@ -11,6 +11,7 @@ import '../../services/repo/common_repo.dart';
 import '../../themes/loading_dialofg.dart';
 import '../massage_booking/payment_declined_view.dart';
 import '../massage_booking/testpaymentService/PaymentService.dart';
+import '../my_profile/my_profile_controller.dart';
 import 'TestPaymentScreen.dart';
 
 class MembershipSummaryController extends GetxController {
@@ -138,7 +139,7 @@ class MembershipSummaryController extends GetxController {
       Get.to(PaymentDeclinedView());
       print('Payment failed: ${e}');
       final errorMessage = PaymentService().parseException(e.toString());
-      Get.snackbar('Error', 'Payment failed: ${errorMessage}',colorText: Colors.white);
+      // Get.snackbar('Error', 'Payment failed: ${errorMessage}',colorText: Colors.white);
     }
   }
 
@@ -194,6 +195,9 @@ class MembershipSummaryController extends GetxController {
       Get.to(PaymentSuccessfulView(), arguments: {'membership': _response});
     } else {
       _dismissDialog();
+      if(_response.message=='The Selected appuserid is invalid '){
+        Get.find<MyProfileController>().logout();
+      }
       Get.snackbar("Sweatbox", _response.message ?? 'Something went wrong!',colorText: Colors.white);
     }
   }

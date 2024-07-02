@@ -10,6 +10,8 @@ import '../../services/commonModels/userAllData.dart';
 import '../../services/repo/common_repo.dart';
 import '../../themes/loading_dialofg.dart';import 'package:flutter/material.dart';
 
+import '../my_profile/my_profile_controller.dart';
+
 class AllBookingsController extends GetxController {
   RxBool isActive = true.obs;
   RxList<Services> servicesList = <Services>[].obs;
@@ -90,6 +92,9 @@ class AllBookingsController extends GetxController {
         Get.snackbar('Error', _response.message ?? 'Unknown error occurred',colorText: Colors.white);
       }
     } else {
+      if(_response.message=='The selected id is invalid.'){
+        Get.find<MyProfileController>().logout();
+      }
       // _dismissDialog();
       Get.snackbar("Sweatbox", _response.message ?? 'Something went wrong!',colorText: Colors.white);
     }

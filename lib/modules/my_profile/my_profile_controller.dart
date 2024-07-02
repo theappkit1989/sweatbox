@@ -143,9 +143,12 @@ class MyProfileController extends GetxController {
 
   void updateCountdown() {
     if (memberships.isNotEmpty) {
+      var now = DateTime.now();
+      print('date and time now $now');
       var activeTime = Membership.parseDate(memberships.last.activeTime!);
       var expireTime = Membership.parseDate(memberships.last.expireTime!);
-      var now = DateTime.now();
+
+
 
       if (now.isBefore(activeTime)) {
         countdownText.value = 'Membership starts in ${formatDuration(activeTime.difference(now))}';

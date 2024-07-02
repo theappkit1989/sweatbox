@@ -11,7 +11,7 @@ class PaymentService {
   final String _host = 'https://eu-test.oppwa.com/';
 
   Future<int> makePayment(String amount, String currency, String paymentBrand, String cardNumber, String holder, String expiryMonth, String expiryYear, String cvv) async {
-    final url = Uri.parse('${_host}v1/payments');
+    final url = Uri.parse('${_host}v1/checkouts');
 
     final response = await http.post(
       url,

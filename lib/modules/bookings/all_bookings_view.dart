@@ -264,15 +264,67 @@ class AllBookingsView extends StatelessWidget {
           ),
           SizedBox(height: 20),
           SizedBox(
-
-            child: customSubmitBtn(
-              voidCallback: () {
-                allBookingsController.goToOrderDetails(service);
-              },
-              width: Get.width,
-              text: 'View Details',
+            width: Get.width,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                MaterialButton(
+                  onPressed: () {},
+                  child: Row(
+                    children: [
+                      Image.asset(
+                        ImageConstant.chatRed,
+                        width: 24,
+                      ),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      const Text(
+                        strSendMsg,
+                        style: TextStyle(
+                            fontFamily: fontType,
+                            color: appPrimaryColor,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 12),
+                      ),
+                    ],
+                  ),
+                  color: ColorLight.white,
+                  minWidth: Get.width * 0.4,
+                  elevation: 0.0,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(40.0)),
+                ),
+                MaterialButton(
+                  onPressed: () => {allBookingsController.goToOrderDetails(service)},
+                  child: const Text(
+                    strViewDetails,
+                    style: TextStyle(
+                        fontFamily: fontType,
+                        color: yellowF5EA25,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 12),
+                  ),
+                  color: ColorLight.black,
+                  minWidth: Get.width * 0.4,
+                  elevation: 0.0,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(40.0),
+                      side: const BorderSide(color: yellowF5EA25)),
+                ),
+              ],
             ),
           ),
+          // SizedBox(
+          //
+          //   child: customSubmitBtn(
+          //     voidCallback: () {
+          //       allBookingsController.goToOrderDetails(service);
+          //     },
+          //     width: Get.width,
+          //     text: 'View Details',
+          //   ),
+          // ),
         ],
       ),
     );

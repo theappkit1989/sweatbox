@@ -36,7 +36,7 @@ class MembershipView extends StatelessWidget {
               margin: EdgeInsets.only(top: Get.height * 0.175),
               decoration: BoxDecoration(
                   color: ColorLight.black,
-                  borderRadius: BorderRadius.circular(25)),
+                 ),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.center,
