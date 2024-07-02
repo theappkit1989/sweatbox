@@ -43,27 +43,44 @@ class DateTimeView extends StatelessWidget {
         child: GetBuilder<DateTimeController>(
           init: DateTimeController(),
           builder: (controller) {
-            return SingleChildScrollView(
-              child: Column(
-                children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      color: ColorLight.black,
-                      borderRadius: BorderRadius.circular(25.0),
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        buildCalendar(controller),
-                        buildSelectTime(controller),
-                      ],
+            return Column(
+              children: [
+            Container(
+            decoration: BoxDecoration(
+            color: ColorLight.black,
+
+            ),
+              child:   buildCalendar(controller),
+            ),
+                Expanded(
+                  child: SingleChildScrollView(
+                    physics: ScrollPhysics().parent,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: ColorLight.black,
+
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+
+                          buildSelectTime(controller),
+                        ],
+                      ),
                     ),
                   ),
-                  SizedBox(height: Get.height * 0.02,),
-                  buildContinueBtn(controller),
-                ],
-              ),
+                ),
+                SizedBox(height: Get.height * 0.02),
+            Container(
+              padding: EdgeInsets.all(10),
+            decoration: BoxDecoration(
+            color: ColorLight.black,
+
+              
+            ),
+              child:   buildContinueBtn(controller),)
+              ],
             );
           },
         ),

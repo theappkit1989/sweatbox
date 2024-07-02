@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import 'package:s_box/modules/home_screen/home_view.dart';
 import 'package:s_box/modules/massage_booking/massage_controller.dart';
 import 'package:s_box/modules/massage_booking/payment_successful_controller.dart';
+import 'package:ticket_widget/ticket_widget.dart';
 import '../../extras/constant/app_color.dart';
 import '../../extras/constant/app_constant.dart';
 import '../../extras/constant/app_images.dart';
@@ -11,10 +13,12 @@ import '../../extras/constant/shared_pref_constant.dart';
 import '../../extras/constant/string_constant.dart';
 import '../../services/commonModels/ServiceDataClass.dart';
 import '../../themes/colors/color_light.dart';
+import '../commonWidgets/submitBtn.dart';
+import '../home_screen/home_controller.dart';
 
-class PaymentSuccessfulView extends StatelessWidget {
-  final paymentSuccessfulController = Get.put(PaymentSuccessfulController());
-  PaymentSuccessfulView({super.key});
+class MassagePaymentSuccessfulView extends StatelessWidget {
+  final paymentSuccessfulController = Get.put(MassagePaymentSuccessfulController());
+  MassagePaymentSuccessfulView({super.key});
   var storage = GetStorage();
   String username = '';
   String _userid= '';
@@ -55,26 +59,104 @@ class PaymentSuccessfulView extends StatelessWidget {
             Container(
               width: Get.width,
               padding: EdgeInsets.symmetric(
-                  horizontal: Get.width * 0.05, vertical: Get.height * 0.04),
-              margin: EdgeInsets.symmetric(
                   horizontal: Get.width * 0.05, vertical: Get.height * 0.02),
+              margin: EdgeInsets.symmetric(
+                  horizontal: Get.width * 0.05),
               decoration: BoxDecoration(
-                color: ColorLight.black,
+                color: ColorLight.white,
                 borderRadius: BorderRadius.circular(25),
               ),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  buildPaymentSuccess(massage),
-                  buildQrCode(username,qrData),
-                  buildDetails(massage,massageType)
+                Container(
+                width: Get.width,
+                padding: EdgeInsets.symmetric(
+                    horizontal: Get.width * 0.05, vertical: Get.height * 0.02),
+
+                decoration: BoxDecoration(
+                  color: ColorLight.black,
+                  borderRadius: BorderRadius.only(topLeft: Radius.circular(25),topRight: Radius.circular(25)),
+                ),
+                  child:buildPaymentSuccess(massage)),
+                  TicketWidget(
+                    color: Colors.black,
+                    width: Get.width,
+                    height: 40,
+
+                    padding: EdgeInsets.all(10),
+                    child:  Row(
+                      children: List.generate(
+                          150 ~/ 1,
+                              (index) => Expanded(
+                            child: Container(
+                              color: index % 2 == 0 ? Colors.transparent : Colors.grey,
+                              height: 1,
+                            ),
+                          )),
+                    ),
+                  ),
+              Container(
+                width: Get.width,
+                padding: EdgeInsets.symmetric(
+                    horizontal: Get.width * 0.05, vertical: Get.height * 0.02),
+
+                decoration: BoxDecoration(
+                  color: ColorLight.black,
+
+                ),child:
+                  buildQrCode(username,qrData),),
+                  TicketWidget(
+                    color: Colors.black,
+                    width: Get.width,
+                    height: 40,
+
+                    padding: EdgeInsets.all(10),
+                    child:  Row(
+                      children: List.generate(
+                          150 ~/ 1,
+                              (index) => Expanded(
+                            child: Container(
+                              color: index % 2 == 0 ? Colors.transparent : Colors.grey,
+                              height: 1,
+                            ),
+                          )),
+                    ),
+                  ),
+              Container(
+                width: Get.width,
+                padding: EdgeInsets.symmetric(
+                    horizontal: Get.width * 0.05, vertical: Get.height * 0.02),
+
+                decoration: BoxDecoration(
+                  color: ColorLight.black,
+                  borderRadius: BorderRadius.only(bottomLeft: Radius.circular(25),bottomRight: Radius.circular(25)),
+                ),child:
+                  buildDetails(massage,massageType))
                 ],
               ),
             ),
             SizedBox(
-              height: Get.height * 0.05,
+              height: Get.height * 0.02,
             ),
+            Padding(padding: EdgeInsets.symmetric(horizontal:
+            Get.width * 0.03,vertical: Get.height*0.03),
+              child: customSubmitBtn(
+                  text: strContinue, voidCallback: () {
+               var homecont= Get.find<MainScreenController>();
+               homecont.tabIndex.value=2;
+                homecont.update();
+                    print("object${Get.find<MainScreenController>().tabIndex.value}");
+
+                if (Get.find<MainScreenController>().tabIndex.value == 2) {
+                  // Navigate to HomeScreenView with AllBookingsView already visible
+                  Get.offAll(() => HomeScreenView(), transition: Transition.fade, arguments: 2);
+                } else {
+                  // Navigate to HomeScreenView
+                  Get.offAll(() => HomeScreenView(), transition: Transition.fade);
+                }
+                    }, width: Get.width),)
             //buildBook()
           ],
         ),
@@ -89,7 +171,7 @@ class PaymentSuccessfulView extends StatelessWidget {
       children: [
         Image.asset(
           ImageConstant.verifyImg,
-          width: Get.width * 0.25,
+          width: Get.width * 0.2,
         ),
         const SizedBox(
           height: 10,
@@ -97,7 +179,7 @@ class PaymentSuccessfulView extends StatelessWidget {
         const Text(
           strPaymentSuccess,
           style: TextStyle(
-            fontSize: 16,
+            fontSize: 14,
             color: ColorLight.white,
             fontFamily: fontType,
             fontWeight: FontWeight.w700,
@@ -115,19 +197,19 @@ class PaymentSuccessfulView extends StatelessWidget {
             fontWeight: FontWeight.w400,
           ),
         ),
-        SizedBox(
-          height: Get.height * 0.03,
-        ),
-        Row(
-          children: List.generate(
-              150 ~/ 1,
-                  (index) => Expanded(
-                child: Container(
-                  color: index % 2 == 0 ? Colors.transparent : Colors.grey,
-                  height: 1,
-                ),
-              )),
-        ),
+        // SizedBox(
+        //   height: Get.height * 0.03,
+        // ),
+        // Row(
+        //   children: List.generate(
+        //       150 ~/ 1,
+        //           (index) => Expanded(
+        //         child: Container(
+        //           color: index % 2 == 0 ? Colors.transparent : Colors.grey,
+        //           height: 1,
+        //         ),
+        //       )),
+        // ),
       ],
     );
   }
@@ -135,17 +217,15 @@ class PaymentSuccessfulView extends StatelessWidget {
   Widget buildQrCode(String username,String qrData) {
     return Container(
       width: Get.width * 0.8,
-      height: Get.height * 0.4,
-      margin: EdgeInsets.only(
-        top: Get.height * 0.03,
-      ),
+      height: Get.height * 0.35,
+
       child: Stack(
         alignment: Alignment.center,
         children: [
           Container(
             width: Get.width * 0.7,
-            height: Get.height * 0.35,
-            padding: EdgeInsets.all(20),
+            height: Get.height * 0.3,
+            padding: EdgeInsets.all(10),
             decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(23),
@@ -200,17 +280,17 @@ class PaymentSuccessfulView extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
-          children: List.generate(
-              150 ~/ 1,
-                  (index) => Expanded(
-                child: Container(
-                  color: index % 2 == 0 ? Colors.transparent : Colors.grey,
-                  height: 1,
-                ),
-              )),
-        ),
-        SizedBox(height: Get.height * 0.04,),
+        // Row(
+        //   children: List.generate(
+        //       150 ~/ 1,
+        //           (index) => Expanded(
+        //         child: Container(
+        //           color: index % 2 == 0 ? Colors.transparent : Colors.grey,
+        //           height: 1,
+        //         ),
+        //       )),
+        // ),
+        // SizedBox(height: Get.height * 0.01,),
         SizedBox(
           width: Get.width,
           child: Row(

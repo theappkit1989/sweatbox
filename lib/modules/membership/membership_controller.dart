@@ -12,7 +12,7 @@ class MembershipController extends GetxController{
   ];
   List<String> membershipTitleList = ['24 hr Pass ','48 hr Pass','Weekly Pass','25 & Under','One Month','Twelve Months'];
   List<String> membershipSubTitleList = ['£23','£28','£50','£15*','£95','£950'];
-  List<RxBool> isSelected = [false.obs,false.obs,false.obs,false.obs,false.obs,false.obs];
+  List<RxBool> isSelected = [true.obs,false.obs,false.obs,false.obs,false.obs,false.obs];
   RxInt selectedValue = 0.obs;
 
   void goToPaymentMethod() {

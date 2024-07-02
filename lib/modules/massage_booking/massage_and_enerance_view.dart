@@ -97,6 +97,7 @@ class MassageAndEntranceView extends StatelessWidget {
                 itemBuilder: (context, index) {
                   Membership membership = massageAndEntranceController.memberships[index];
                   return buildRadioTile(
+                    index: index,
                       title: membership.title,
                       subtitle: "£${membership.price}",
                       trailing:  membership.discount!=''?Container(
@@ -125,22 +126,23 @@ class MassageAndEntranceView extends StatelessWidget {
                 physics: const AlwaysScrollableScrollPhysics(),
               ),
             ),
-            CenteredTextAboveDottedLine(text: 'massage only',),
-          Stack(
-            alignment: Alignment.center,
+
+          Row(
             children: [
-              Row(
-                children: List.generate(
-                  (150 / (0.5 + 0.5)).floor(),
-                      (index) => Expanded(
-                    child: Container(
-                      color: index % 2 == 0 ? Colors.transparent : Colors.white,
-                      height: 1,
+              Flexible(
+                flex: 2,
+                child: Row(
+                  children: List.generate(
+                    (150 / (0.5 + 0.5)).floor(),
+                        (index) => Expanded(
+                      child: Container(
+                        color: index % 2 == 0 ? Colors.transparent : Colors.white,
+                        height: 1,
+                      ),
                     ),
                   ),
                 ),
               ),
-
               Container(
                 color: Colors.transparent,
                 margin: EdgeInsets.only(left: 5),
@@ -154,10 +156,34 @@ class MassageAndEntranceView extends StatelessWidget {
                   ),
                 ),
               ),
+              Flexible(
+                flex: 2,
+                child: Row(
+                  children: List.generate(
+                    (150 / (0.5 + 0.5)).floor(),
+                        (index) => Expanded(
+                      child: Container(
+                        color: index % 2 == 0 ? Colors.transparent : Colors.white,
+                        height: 1,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+
             ],
           ),
 
-            buildRadioTileMassage(title: massageAndEntranceController.massage.value.title, subtitle: massageAndEntranceController.massage.value.subtitle, trailing: Text("£${massageAndEntranceController.massage.value.price}"), values: -1),
+            buildRadioTileMassage(title: massageAndEntranceController.massage.value.title, subtitle: massageAndEntranceController.massage.value.subtitle, trailing:
+            Text("£${massageAndEntranceController.massage.value.price}",
+              style:  TextStyle(
+                  color: ColorLight.white,
+                  fontSize: 12.0,
+                  fontFamily: fontType,
+                  fontWeight: FontWeight.w600),
+            ),
+
+                values: -1),
             Padding(padding: EdgeInsets.symmetric(horizontal:
             Get.width * 0.03,vertical: Get.height*0.03),
               child: customSubmitBtn(
@@ -172,9 +198,11 @@ class MassageAndEntranceView extends StatelessWidget {
       {required String title,
         required String subtitle,
         required Widget trailing,
-        required int values}) {
-    return Container(
+        required int values,required int index}) {
+    return Obx(
+            () =>Container(
         decoration: BoxDecoration(
+          color: massageAndEntranceController.isSelected[index].value?appPrimaryColor:Colors.transparent,
           borderRadius: BorderRadius.circular(40.0),
           border: Border.all(color: textFieldColor),
         ),
@@ -186,6 +214,10 @@ class MassageAndEntranceView extends StatelessWidget {
               groupValue: massageAndEntranceController.selectedValue.value,
               onChanged: (value) {
                 massageAndEntranceController.selectedValue.value = value??6;
+                massageAndEntranceController.isSelected.forEach((v){
+                  v.value=false;
+                });
+                massageAndEntranceController.isSelected[index].toggle();
               },
                   toggleable: true,
               shape: RoundedRectangleBorder(
@@ -212,7 +244,7 @@ class MassageAndEntranceView extends StatelessWidget {
               dense: true,
               secondary: trailing
           ),
-        ));
+        )));
   }
 
   buildRadioTileMassage(
@@ -222,6 +254,7 @@ class MassageAndEntranceView extends StatelessWidget {
         required int values}) {
     return Container(
         decoration: BoxDecoration(
+          color: appPrimaryColor,
           borderRadius: BorderRadius.circular(40.0),
           border: Border.all(color: textFieldColor),
         ),
@@ -246,7 +279,7 @@ class MassageAndEntranceView extends StatelessWidget {
                     fontWeight: FontWeight.w700),
               ),
               subtitle: Text(
-                subtitle,
+                '$subtitle Minutes',
                 style: const TextStyle(
                     color: ColorLight.white,
                     fontSize: 12.0,

@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
 
-class PaymentSuccessfulController extends GetxController{
+class MassagePaymentSuccessfulController extends GetxController{
 
 }

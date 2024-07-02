@@ -72,6 +72,7 @@ class MembershipView extends StatelessWidget {
                       itemBuilder: (context, index) {
                         Membership membership = membershipController.memberships[index];
                         return buildRadioTile(
+                          index: index,
                             title: membership.title,
                             subtitle: "£${membership.price}",
                             trailing:  membership.discount!=''?Container(
@@ -117,9 +118,12 @@ class MembershipView extends StatelessWidget {
       {required String title,
       required String subtitle,
       required Widget trailing,
-      required int values}) {
-    return Container(
+      required int values,
+      required int index}) {
+    return Obx(
+            () => Container(
         decoration: BoxDecoration(
+          color: membershipController.isSelected[index].value?appPrimaryColor:Colors.transparent,
           borderRadius: BorderRadius.circular(40.0),
           border: Border.all(color: textFieldColor),
         ),
@@ -131,6 +135,10 @@ class MembershipView extends StatelessWidget {
               groupValue: membershipController.selectedValue.value,
               onChanged: (value) {
                 membershipController.selectedValue.value = value!;
+                membershipController.isSelected.forEach((v){
+                  v.value=false;
+                });
+                membershipController.isSelected[index].toggle();
               },
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(40.0)
@@ -156,6 +164,6 @@ class MembershipView extends StatelessWidget {
               dense: true,
               secondary: trailing
           ),
-        ));
+        )));
   }
 }

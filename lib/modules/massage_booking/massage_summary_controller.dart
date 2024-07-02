@@ -85,7 +85,7 @@ class MassageSummaryController extends GetxController{
             massage.value.time.toString(),massage.value.duration.toString(),token.toString());
         if (_response.status == true) {
           _dismissDialog();
-          Get.to(PaymentSuccessfulView(),arguments: {'massage':_response,'massage_type':massageType});
+          Get.to(MassagePaymentSuccessfulView(),arguments: {'massage':_response,'massage_type':massageType});
           // goToPwdUpdated();
           // Get.back();
         } else {

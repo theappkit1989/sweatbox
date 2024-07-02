@@ -11,7 +11,7 @@ class MassageController extends GetxController{
     Massage(title: 'Full Body Massage ',price: 80,subtitle: '90'),
 
   ];
-
+  List<RxBool> isSelected = [true.obs,false.obs,false.obs];
   void goToPaymentMethod() {
     Massage selectedMassage = massages[selectedValue.value];
     Get.to(DateTimeView(), arguments: [selectedMassage]);

@@ -7,6 +7,7 @@ import 'package:s_box/extras/constant/app_images.dart';
 import 'package:s_box/extras/constant/string_constant.dart';
 import 'package:s_box/modules/home_screen/home_view.dart';
 import 'package:s_box/modules/membership/membership_controller.dart';
+import 'package:ticket_widget/ticket_widget.dart';
 import '../../extras/constant/app_constant.dart';
 import '../../extras/constant/shared_pref_constant.dart';
 import '../../services/commonModels/membershipModal.dart';
@@ -56,36 +57,132 @@ class PaymentSuccessfulView extends StatelessWidget {
         ),
       ),
       body: SingleChildScrollView(
-        child: Column(
+        child:
+        Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Container(
               width: Get.width,
               padding: EdgeInsets.symmetric(
-                  horizontal: Get.width * 0.05, vertical: Get.height * 0.04),
-              margin: EdgeInsets.symmetric(
                   horizontal: Get.width * 0.05, vertical: Get.height * 0.02),
+              margin: EdgeInsets.symmetric(
+                  horizontal: Get.width * 0.05),
               decoration: BoxDecoration(
-                color: ColorLight.black,
+                color: ColorLight.white,
                 borderRadius: BorderRadius.circular(25),
               ),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  buildPaymentSuccess(membership),
-                  buildQrCode(username,qrData),
-                  buildDetails(membership)
+                  Container(
+                      width: Get.width,
+                      padding: EdgeInsets.symmetric(
+                          horizontal: Get.width * 0.05, vertical: Get.height * 0.02),
+
+                      decoration: BoxDecoration(
+                        color: ColorLight.black,
+                        borderRadius: BorderRadius.only(topLeft: Radius.circular(25),topRight: Radius.circular(25)),
+                      ),
+                      child:buildPaymentSuccess(membership)),
+                  TicketWidget(
+                    color: Colors.black,
+                    width: Get.width,
+                    height: 40,
+
+                    padding: EdgeInsets.all(10),
+                    child:  Row(
+                      children: List.generate(
+                          150 ~/ 1,
+                              (index) => Expanded(
+                            child: Container(
+                              color: index % 2 == 0 ? Colors.transparent : Colors.grey,
+                              height: 1,
+                            ),
+                          )),
+                    ),
+                  ),
+                  Container(
+                    width: Get.width,
+                    padding: EdgeInsets.symmetric(
+                        horizontal: Get.width * 0.05, vertical: Get.height * 0.02),
+
+                    decoration: BoxDecoration(
+                      color: ColorLight.black,
+
+                    ),child:
+                  buildQrCode(username,qrData),),
+                  TicketWidget(
+                    color: Colors.black,
+                    width: Get.width,
+                    height: 40,
+
+                    padding: EdgeInsets.all(10),
+                    child:  Row(
+                      children: List.generate(
+                          150 ~/ 1,
+                              (index) => Expanded(
+                            child: Container(
+                              color: index % 2 == 0 ? Colors.transparent : Colors.grey,
+                              height: 1,
+                            ),
+                          )),
+                    ),
+                  ),
+                  Container(
+                      width: Get.width,
+                      padding: EdgeInsets.symmetric(
+                          horizontal: Get.width * 0.05, vertical: Get.height * 0.02),
+
+                      decoration: BoxDecoration(
+                        color: ColorLight.black,
+                        borderRadius: BorderRadius.only(bottomLeft: Radius.circular(25),bottomRight: Radius.circular(25)),
+                      ),child:
+                  buildDetails(membership))
                 ],
               ),
             ),
             SizedBox(
-              height: Get.height * 0.05,
+              height: Get.height * 0.02,
             ),
-            // customSubmitBtn(text: "Home", voidCallback: (){Get.offAll(HomeScreenView());}, width: Get.width)
+            Padding(padding: EdgeInsets.symmetric(horizontal:
+            Get.width * 0.03,vertical: Get.height*0.03),
+              child: customSubmitBtn(
+                  text: strContinue, voidCallback: () {Get.to(HomeScreenView());}, width: Get.width),)
+            //buildBook()
           ],
         ),
+        // Column(
+        //   mainAxisAlignment: MainAxisAlignment.start,
+        //   crossAxisAlignment: CrossAxisAlignment.center,
+        //   children: [
+        //     Container(
+        //       width: Get.width,
+        //       padding: EdgeInsets.symmetric(
+        //           horizontal: Get.width * 0.05, vertical: Get.height * 0.04),
+        //       margin: EdgeInsets.symmetric(
+        //           horizontal: Get.width * 0.05, vertical: Get.height * 0.02),
+        //       decoration: BoxDecoration(
+        //         color: ColorLight.black,
+        //         borderRadius: BorderRadius.circular(25),
+        //       ),
+        //       child: Column(
+        //         mainAxisAlignment: MainAxisAlignment.start,
+        //         crossAxisAlignment: CrossAxisAlignment.center,
+        //         children: [
+        //           buildPaymentSuccess(membership),
+        //           buildQrCode(username,qrData),
+        //           buildDetails(membership)
+        //         ],
+        //       ),
+        //     ),
+        //     SizedBox(
+        //       height: Get.height * 0.05,
+        //     ),
+        //     // customSubmitBtn(text: "Home", voidCallback: (){Get.offAll(HomeScreenView());}, width: Get.width)
+        //   ],
+        // ),
       ),
     );
   }
@@ -123,19 +220,7 @@ class PaymentSuccessfulView extends StatelessWidget {
             fontWeight: FontWeight.w400,
           ),
         ),
-        SizedBox(
-          height: Get.height * 0.03,
-        ),
-        Row(
-          children: List.generate(
-              150 ~/ 1,
-                  (index) => Expanded(
-                child: Container(
-                  color: index % 2 == 0 ? Colors.transparent : Colors.grey,
-                  height: 1,
-                ),
-              )),
-        ),
+
       ],
     );
   }
@@ -152,7 +237,7 @@ class PaymentSuccessfulView extends StatelessWidget {
         children: [
           Container(
             width: Get.width * 0.7,
-            height: Get.height * 0.35,
+            height: Get.height * 0.32,
 
             decoration: BoxDecoration(
               color: Colors.white,
@@ -207,17 +292,7 @@ class PaymentSuccessfulView extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
-          children: List.generate(
-              150 ~/ 1,
-                  (index) => Expanded(
-                child: Container(
-                  color: index % 2 == 0 ? Colors.transparent : Colors.grey,
-                  height: 1,
-                ),
-              )),
-        ),
-        SizedBox(height: Get.height * 0.04,),
+
         SizedBox(
           width: Get.width,
           child: Row(

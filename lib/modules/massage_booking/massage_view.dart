@@ -61,6 +61,7 @@ class MassageView extends StatelessWidget {
                       itemBuilder: (context, index) {
                         Massage massage=MassageController().massages[index];
                         return buildRadioListTile(
+                          index: index,
                           title: "${massage.title}",
                           subtitle: "${massage.subtitle} min",
                           trailing: "£${massage.price}",
@@ -95,9 +96,11 @@ class MassageView extends StatelessWidget {
       {required String title,
       required String subtitle,
       required String trailing,
-      required int values}) {
-    return Container(
+      required int values ,required int index}) {
+    return Obx(
+            () =>Container(
       decoration: BoxDecoration(
+        color: massageController.isSelected[index].value?appPrimaryColor:Colors.transparent,
         borderRadius: BorderRadius.circular(40.0),
         border: Border.all(color: textFieldColor),
       ),
@@ -108,6 +111,10 @@ class MassageView extends StatelessWidget {
             groupValue: massageController.selectedValue.value,
             onChanged: (value) {
               massageController.selectedValue.value = value!;
+              massageController.isSelected.forEach((v){
+                v.value=false;
+              });
+              massageController.isSelected[index].toggle();
             },
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(40.0)),
@@ -135,6 +142,6 @@ class MassageView extends StatelessWidget {
                 fontWeight: FontWeight.w700,
                 color: ColorLight.white)),
       ),
-    );
+    ));
   }
 }
