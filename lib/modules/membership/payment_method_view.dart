@@ -202,67 +202,73 @@ class PaymentMethodView extends StatelessWidget {
         Platform.isIOS ?
         Obx(
               () =>
-              ListTile(
-                selectedTileColor: appPrimaryColor,
-                tileColor: Colors.transparent,
-                leading: Image.asset(
-                  ImageConstant.applePayIcon,
-                  width: Get.width * 0.06,
-                ),
-                trailing: Radio(
-                  value: -1,
-                  groupValue: paymentMethodController.selectedValue.value,
-                  onChanged: (value) {
-                    paymentMethodController.selectedValue.value = value!;
-                  },
-                  activeColor: ColorLight.white,
-                ),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(40),
-                  side: const BorderSide(color: textFieldColor, width: 1.0),
-                ),
-                title: const Text(
-                  strApplePay,
-                  style: TextStyle(
-                    color: ColorLight.white,
-                    fontSize: 14.0,
-                    fontFamily: fontType,
-                    fontWeight: FontWeight.w700,
+              GestureDetector(
+                onTap: (){paymentMethodController.selectedValue.value=-1;},
+                child: ListTile(
+                  selectedTileColor: appPrimaryColor,
+                  tileColor: Colors.transparent,
+                  leading: Image.asset(
+                    ImageConstant.applePayIcon,
+                    width: Get.width * 0.06,
                   ),
+                  trailing: Radio(
+                    value: -1,
+                    groupValue: paymentMethodController.selectedValue.value,
+                    onChanged: (value) {
+                      paymentMethodController.selectedValue.value = value!;
+                    },
+                    activeColor: ColorLight.white,
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(40),
+                    side: const BorderSide(color: textFieldColor, width: 1.0),
+                  ),
+                  title: const Text(
+                    strApplePay,
+                    style: TextStyle(
+                      color: ColorLight.white,
+                      fontSize: 14.0,
+                      fontFamily: fontType,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                  dense: true,
                 ),
-                dense: true,
               ),
         ):
         Obx(
               () =>
-              ListTile(
-                selectedTileColor: appPrimaryColor,
-                tileColor: Colors.transparent,
-                leading: Image.asset(
-                  ImageConstant.googlePayIcon,
-                  width: Get.width * 0.06,
-                ),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(40),
-                  side: const BorderSide(color: textFieldColor, width: 1.0),
-                ),
-                title: const Text(
-                  strGooglePay,
-                  style: TextStyle(
-                    color: ColorLight.white,
-                    fontSize: 14.0,
-                    fontFamily: fontType,
-                    fontWeight: FontWeight.w700,
+              GestureDetector(
+                onTap: (){paymentMethodController.selectedValue.value=-2;},
+                child: ListTile(
+                  selectedTileColor: appPrimaryColor,
+                  tileColor: Colors.transparent,
+                  leading: Image.asset(
+                    ImageConstant.googlePayIcon,
+                    width: Get.width * 0.06,
                   ),
-                ),
-                dense: true,
-                trailing: Radio(
-                  value: -2,
-                  groupValue: paymentMethodController.selectedValue.value,
-                  onChanged: (value) {
-                    paymentMethodController.selectedValue.value = value!;
-                  },
-                  activeColor: ColorLight.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(40),
+                    side: const BorderSide(color: textFieldColor, width: 1.0),
+                  ),
+                  title: const Text(
+                    strGooglePay,
+                    style: TextStyle(
+                      color: ColorLight.white,
+                      fontSize: 14.0,
+                      fontFamily: fontType,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                  dense: true,
+                  trailing: Radio(
+                    value: -2,
+                    groupValue: paymentMethodController.selectedValue.value,
+                    onChanged: (value) {
+                      paymentMethodController.selectedValue.value = value!;
+                    },
+                    activeColor: ColorLight.white,
+                  ),
                 ),
               ),
         ),

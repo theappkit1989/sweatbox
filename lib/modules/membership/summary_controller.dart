@@ -137,8 +137,8 @@ class MembershipSummaryController extends GetxController {
       _dismissDialog();
       Get.to(PaymentDeclinedView());
       print('Payment failed: ${e}');
-
-      Get.snackbar('Error', 'Payment failed: ${e}',colorText: Colors.white);
+      final errorMessage = PaymentService().parseException(e.toString());
+      Get.snackbar('Error', 'Payment failed: ${errorMessage}',colorText: Colors.white);
     }
   }
 

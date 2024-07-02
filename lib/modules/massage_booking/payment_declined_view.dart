@@ -35,7 +35,7 @@ class PaymentDeclinedView extends StatelessWidget {
             SizedBox(height: Get.height * 0.02,),
             text(text: strDeclinedSubtitle, size: 14, fontWeight: FontWeight.w400, color: ColorLight.white),
             SizedBox(height: Get.height * 0.02,),
-            customSubmitBtn(text: strTryAgain, voidCallback: (){Get.offAll(HomeScreenView());}, width: Get.width)
+            customSubmitBtn(text: strTryAgain, voidCallback: (){Get.back();}, width: Get.width)
           ],
         ),
       ),

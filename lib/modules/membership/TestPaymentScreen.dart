@@ -42,6 +42,39 @@ class PaymentService {
       throw Exception('Failed to make payment ${response.body}');
     }
   }
+
+
+  String parseException(String exception) {
+    try {
+      // Extract JSON part from the exception string
+      final jsonString = exception.substring(exception.indexOf('{'));
+      final Map<String, dynamic> errorResponse = json.decode(jsonString);
+
+      // Extract relevant error details
+      final String errorCode = errorResponse['result']['code'];
+      final String errorDescription = errorResponse['result']['description'];
+      final List<dynamic> parameterErrors = errorResponse['result']['parameterErrors'];
+
+      if (parameterErrors.isNotEmpty) {
+        final String parameterName = parameterErrors[0]['name'];
+        if (parameterName == 'card.number') {
+          return 'Card number is invalid';
+        } else if (parameterName == 'card.expiry') {
+          return 'Card expiry date is invalid';
+        } else if (parameterName == 'card.cvv') {
+          return 'Card CVV is invalid';
+        } else {
+          return 'Invalid parameter: $parameterName';
+        }
+      } else {
+        return errorDescription;
+      }
+    } catch (e) {
+      // If parsing fails, return a generic error message
+      return 'An error occurred. Please try again.';
+    }
+  }
+
 }
 
 

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:pay/pay.dart';
+import 'package:s_box/modules/massage_booking/massage_and_entrance_controller.dart';
 import 'package:s_box/modules/massage_booking/massage_controller.dart';
 import 'package:s_box/modules/massage_booking/massage_summary_view.dart';
 import 'package:s_box/modules/massage_booking/add_new_card_view.dart';
@@ -10,10 +11,13 @@ import 'package:s_box/modules/massage_booking/testpaymentService/PaymentService.
 
 import '../../extras/constant/shared_pref_constant.dart';
 
+
 class MassagePaymentMethodController extends GetxController {
   RxInt selectedValue = 0.obs;
   var massage = Massage(title: '', subtitle: '', price: 0,).obs;
+  var membership = Membership(title: '', user_id: '', price: 0, discount: '').obs;
   RxString selectedDate=''.obs;
+  RxString selectedtype=''.obs;
   RxString selectedtime=''.obs;
   RxString selectedduration=''.obs;
   RxList<dynamic> cards = <Map<String, dynamic>>[].obs;
@@ -73,11 +77,22 @@ class MassagePaymentMethodController extends GetxController {
               time: selectedtime.toString(),
               duration: selectedduration.toString());
           // Pass the membership and card details to the SummaryView
-          Get.to(MassageSummaryView(), arguments: {
+          if(selectedtype.value=="2"){
+            Get.to(MassageSummaryView(), arguments: {
+              'massage': _massage,
+              'card': selectedCard,
+              'paymentType': paymentType,
+              'membership': membership.value,
+              'type': selectedtype.value,
+            });
+          }else{
+            Get.to(MassageSummaryView(), arguments: {
             'massage': _massage,
             'card': selectedCard,
             'paymentType': paymentType,
-          });
+              'type': selectedtype.value,
+          });}
+
         } else {
           print("card valu is${cards[selectedValue.value]}");
           final selectedCard = cards[selectedValue.value];
@@ -88,11 +103,21 @@ class MassagePaymentMethodController extends GetxController {
               time: selectedtime.toString(),
               duration: selectedduration.toString());
           // Pass the membership and card details to the SummaryView
-          Get.to(MassageSummaryView(), arguments: {
-            'massage': _massage,
-            'card': selectedCard,
-            'paymentType': paymentType,
-          });
+          if(selectedtype.value=="2"){
+            Get.to(MassageSummaryView(), arguments: {
+              'massage': _massage,
+              'card': selectedCard,
+              'paymentType': paymentType,
+              'membership': membership.value,
+              'type': selectedtype.value,
+            });
+          }else{
+            Get.to(MassageSummaryView(), arguments: {
+              'massage': _massage,
+              'card': selectedCard,
+              'paymentType': paymentType,
+              'type': selectedtype.value,
+            });}
         }
       } else {
         final selectedCard = '';
@@ -103,11 +128,21 @@ class MassagePaymentMethodController extends GetxController {
             time: selectedtime.toString(),
             duration: selectedduration.toString());
         // Pass the membership and card details to the SummaryView
-        Get.to(MassageSummaryView(), arguments: {
-          'massage': _massage,
-          'card': selectedCard,
-          'paymentType': paymentType,
-        });
+        if(selectedtype.value=="2"){
+          Get.to(MassageSummaryView(), arguments: {
+            'massage': _massage,
+            'card': selectedCard,
+            'paymentType': paymentType,
+            'membership': membership.value,
+            'type': selectedtype.value,
+          });
+        }else{
+          Get.to(MassageSummaryView(), arguments: {
+            'massage': _massage,
+            'card': selectedCard,
+            'paymentType': paymentType,
+            'type': selectedtype.value,
+          });}
       }
     }
 

@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:s_box/modules/massage_booking/massage_and_enerance_view.dart';
 
 import 'package:s_box/modules/massage_booking/massage_controller.dart';
 import 'package:s_box/modules/massage_booking/massage_payment_method_view.dart';
@@ -94,7 +95,7 @@ class DateTimeController extends GetxController {
 
   void goToSummary() {
 
-    Get.to(MassagePaymentMethodView(), arguments: [selectedMassage,selectedDate,selectedTime,massage.value.subtitle]);
+    Get.to(MassageAndEntranceView(), arguments: [selectedMassage,selectedDate,selectedTime,massage.value.subtitle]);
   }
   void gatherDetails(String selectedTime) {
     this.selectedTime = selectedTime;

@@ -482,10 +482,10 @@ class ExpiryDateInputFormatter extends TextInputFormatter {
     newText = newText.replaceAll(RegExp(r'\D'), '');
     final buffer = StringBuffer();
     for (int i = 0; i < newText.length; i++) {
-      if (i == 2) {
+      buffer.write(newText[i]);
+      if (i == 1 && newText.length > 1) {
         buffer.write('/');
       }
-      buffer.write(newText[i]);
     }
 
     return newValue.copyWith(

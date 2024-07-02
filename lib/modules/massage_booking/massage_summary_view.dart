@@ -8,6 +8,7 @@ import 'package:s_box/extras/constant/app_color.dart';
 import 'package:s_box/extras/constant/app_images.dart';
 import 'package:s_box/modules/commonWidgets/common.dart';
 import 'package:s_box/modules/commonWidgets/submitBtn.dart';
+import 'package:s_box/modules/massage_booking/massage_and_entrance_controller.dart';
 import 'package:s_box/modules/massage_booking/massage_controller.dart';
 import 'package:s_box/modules/massage_booking/payment_declined_view.dart';
 import 'package:s_box/modules/massage_booking/massage_summary_controller.dart';
@@ -31,37 +32,51 @@ class MassageSummaryView extends StatelessWidget {
     final arguments = Get.arguments as Map<String, dynamic>;
     final Massage massage = arguments['massage'];
     final paymentType = arguments['paymentType'];
+    final massageType = arguments['type'];
+    var total_amount=0;
+    var cardNumber = '';
+    var cardname = '';
+    var cardExpiryMonth = '';
+    var cardExpiryYear = '';
+     Membership membership;
+
+    var cardCvv = '';
+    var last4Digits = cardNumber.length >= 4
+        ? cardNumber.substring(cardNumber.length - 4)
+        : '****';
 
     if (paymentType == 'Credit Card') {
       final card = arguments['card'];
-      final cardNumber = card['number'] as String;
-      final cardname = card['name'] as String;
-      final cardExpiryMonth = card['expiryMonth'] as String;
-      final cardExpiryyear = card['expiryYear'] as String;
-      final cardCvv = card['cvv'] as String;
-      final last4Digits = cardNumber.length >= 4
+       cardNumber = card['number'] as String;
+       cardname = card['name'] as String;
+       cardExpiryMonth = card['expiryMonth'] as String;
+       cardExpiryYear = card['expiryYear'] as String;
+       cardCvv = card['cvv'] as String;
+       last4Digits = cardNumber.length >= 4
           ? cardNumber.substring(cardNumber.length - 4)
           : '****';
       summaryController.cardNumber.value = cardNumber;
       summaryController.cardName.value = cardname;
       summaryController.cardExpiryMonth.value = cardExpiryMonth;
-      summaryController.cardExpiryYear.value = cardExpiryyear;
+      summaryController.cardExpiryYear.value = cardExpiryYear;
       summaryController.cardCvv.value = cardCvv;
     }
-    final cardNumber = '';
-    final cardname = '';
-    final cardExpiryMonth = '';
 
-    final cardCvv = '';
-    final last4Digits = cardNumber.length >= 4
-        ? cardNumber.substring(cardNumber.length - 4)
-        : '****';
+    if(massageType=='2'){
+       membership = arguments['membership'];
+       summaryController.membership.value=membership;
+      print(" membership in summary ${membership.title}");
+      total_amount=massage.price+membership.price;
+    }else{
+      total_amount=massage.price;
+    }
 
+    summaryController.massageType.value=massageType;
     summaryController.massage.value = massage;
     summaryController.totalAmount.value =
-        double.parse(massage.price.toString());
-    final bool isApplePay = paymentType == 'Apple Pay';
-    final bool isGooglePay = paymentType == 'Google Pay';
+        double.parse(total_amount.toString());
+    // final bool isApplePay = paymentType == 'Apple Pay';
+    // final bool isGooglePay = paymentType == 'Google Pay';
     return Scaffold(
       backgroundColor: ColorLight.white,
       appBar: AppBar(
@@ -95,17 +110,18 @@ class MassageSummaryView extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                buildServices(massage),
+                buildServices(massage,massageType),
 
-                paymentType != 'Credit Card' ? buildPaymentMethod(
-                    last4Digits, cardExpiryMonth, cardCvv, cardname) : Text(
-                    ""),
-                buildPromoCode(massage),
+
+                 buildPaymentMethod(
+                    last4Digits, cardExpiryMonth, cardCvv, cardname,paymentType) ,
+                buildPromoCode(massage,total_amount),
                 SizedBox(
                   height: Get.height * 0.05,
                 ),
                 paymentType == 'Apple Pay' ? Obx(() {
                   return    ApplePayButton(
+
 
                     paymentItems: [
                       PaymentItem(
@@ -255,7 +271,7 @@ class MassageSummaryView extends StatelessWidget {
     );
   }
 
-  buildServices(Massage massage) {
+  buildServices(Massage massage, massageType) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -312,8 +328,8 @@ class MassageSummaryView extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    'Massage + Entrance Fee',
+                   Text(
+                    massageType=="2"?'Massage + Entrance Fee':'Full Body Massage',
                     style: TextStyle(
                       fontSize: 15,
                       fontFamily: fontType,
@@ -373,7 +389,7 @@ class MassageSummaryView extends StatelessWidget {
   }
 
   buildPaymentMethod(String last4digits, String cardExpiryMonth, String cardCvv,
-      String cardname) {
+      String cardname, paymentType) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -416,37 +432,62 @@ class MassageSummaryView extends StatelessWidget {
               borderRadius: BorderRadius.circular(40),
               border: Border.all(color: textFieldColor)),
           child: ListTile(
-            leading: Image.asset(
+            leading: paymentType == 'Apple Pay'
+                ? Image.asset(
+              ImageConstant.applePayIcon,
+              width: Get.width * 0.04,
+            )
+                : paymentType == 'Google Pay'
+                ? Image.asset(
+              ImageConstant.googlePayIcon,
+              width: Get.width * 0.04,
+            )
+                : Image.asset(
               ImageConstant.creditCardIcon,
               width: Get.width * 0.06,
             ),
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(40),
                 side: const BorderSide(color: textFieldColor, width: 1.0)),
-            title: Text(
+            title: paymentType == 'Apple Pay' || paymentType == 'Google Pay'
+                ? Text(
+                  paymentType,
+                  style: const TextStyle(
+                    color: ColorLight.white,
+                    fontSize: 14.0,
+                    fontFamily: fontType,
+                    fontWeight: FontWeight.w700,
+                  ),
+                )
+                : Text(
               cardname,
-              style: TextStyle(
-                  color: ColorLight.white,
-                  fontSize: 14.0,
-                  fontFamily: fontType,
-                  fontWeight: FontWeight.w700),
+              style: const TextStyle(
+                color: ColorLight.white,
+                fontSize: 14.0,
+                fontFamily: fontType,
+                fontWeight: FontWeight.w700,
+              ),
             ),
-            subtitle: Text(
+            subtitle: paymentType == 'Apple Pay' || paymentType == 'Google Pay'
+                ? null
+                : Text(
               '**** **** **** $last4digits',
-              style: TextStyle(
-                  color: ColorLight.white,
-                  fontSize: 12.0,
-                  fontFamily: fontType,
-                  fontWeight: FontWeight.w600),
+              style: const TextStyle(
+                color: ColorLight.white,
+                fontSize: 12.0,
+                fontFamily: fontType,
+                fontWeight: FontWeight.w600,
+              ),
             ),
             dense: true,
           ),
-        ),
+        )
+
       ],
     );
   }
 
-  buildPromoCode(Massage massage) {
+  buildPromoCode(Massage massage, int total_amount) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -548,7 +589,7 @@ class MassageSummaryView extends StatelessWidget {
               ),
             ),
             Text(
-              '£${massage.price.toString()}.00',
+              '£${total_amount}.00',
               style: TextStyle(
                 color: ColorLight.white,
                 fontWeight: FontWeight.w700,
@@ -646,7 +687,7 @@ class MassageSummaryView extends StatelessWidget {
             Obx(() {
               return Text(
 
-                '£${double.parse(massage.price.toString()) -
+                '£${double.parse(total_amount.toString()) -
                     summaryController.discount.value}0',
                 style: TextStyle(
                   color: ColorLight.white,

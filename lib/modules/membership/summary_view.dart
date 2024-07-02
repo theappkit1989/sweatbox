@@ -27,33 +27,35 @@ class SummaryView extends StatelessWidget {
     final arguments = Get.arguments as Map<String, dynamic>;
     final Membership membership = arguments['membership'];
     final paymentType = arguments['paymentType'];
+    var cardNumber = '';
+    var cardname = '';
+    var cardExpiryMonth = '';
+    var cardExpiryYear = '';
+    var cardCvv = '';
+    var last4Digits = cardNumber.length >= 4
+        ? cardNumber.substring(cardNumber.length - 4)
+        : '****';
     summaryController.membership.value=membership;
     summaryController.totalAmount.value=double.parse(membership.price.toString());
+
     print('name is ${membership.title}');
     if (paymentType == 'Credit Card') {
       final card = arguments['card'];
-      final cardNumber = card['number'] as String;
-      final cardname = card['name'] as String;
-      final cardExpiryMonth = card['expiryMonth'] as String;
-      final cardExpiryyear = card['expiryYear'] as String;
-      final cardCvv = card['cvv'] as String;
-      final last4Digits = cardNumber.length >= 4
+       cardNumber = card['number'] as String;
+       cardname = card['name'] as String;
+       cardExpiryMonth = card['expiryMonth'] as String;
+       cardExpiryYear = card['expiryYear'] as String;
+       cardCvv = card['cvv'] as String;
+       last4Digits = cardNumber.length >= 4
           ? cardNumber.substring(cardNumber.length - 4)
           : '****';
       summaryController.cardNumber.value = cardNumber;
       summaryController.cardName.value = cardname;
       summaryController.cardExpiryMonth.value = cardExpiryMonth;
-      summaryController.cardExpiryYear.value = cardExpiryyear;
+      summaryController.cardExpiryYear.value = cardExpiryYear;
       summaryController.cardCvv.value = cardCvv;
     }
-    final cardNumber = '';
-    final cardname = '';
-    final cardExpiryMonth = '';
 
-    final cardCvv = '';
-    final last4Digits = cardNumber.length >= 4
-        ? cardNumber.substring(cardNumber.length - 4)
-        : '****';
     return Scaffold(
       backgroundColor: ColorLight.white,
       appBar: AppBar(
@@ -88,7 +90,7 @@ class SummaryView extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   buildServices(membership),
-                  buildPaymentMethod(last4Digits,cardExpiryMonth,cardCvv,cardname),
+                  buildPaymentMethod(last4Digits,cardExpiryMonth,cardCvv,cardname,paymentType),
                   buildPromoCode(membership),
                   SizedBox(
                     height: Get.height * 0.05,
@@ -343,7 +345,7 @@ class SummaryView extends StatelessWidget {
     );
   }
 
-  buildPaymentMethod(String last4digits, String cardExpiryMonth, String cardCvv, String cardname) {
+  buildPaymentMethod(String last4digits, String cardExpiryMonth, String cardCvv, String cardname, paymentType) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -386,32 +388,56 @@ class SummaryView extends StatelessWidget {
               borderRadius: BorderRadius.circular(40),
               border: Border.all(color: textFieldColor)),
           child: ListTile(
-            leading: Image.asset(
+            leading: paymentType == 'Apple Pay'
+                ? Image.asset(
+              ImageConstant.applePayIcon,
+              width: Get.width * 0.04,
+            )
+                : paymentType == 'Google Pay'
+                ? Image.asset(
+              ImageConstant.googlePayIcon,
+              width: Get.width * 0.04,
+            )
+                : Image.asset(
               ImageConstant.creditCardIcon,
               width: Get.width * 0.06,
             ),
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(40),
                 side: const BorderSide(color: textFieldColor, width: 1.0)),
-            title:  Text(
+            title: paymentType == 'Apple Pay' || paymentType == 'Google Pay'
+                ? Text(
+              paymentType,
+              style: const TextStyle(
+                color: ColorLight.white,
+                fontSize: 14.0,
+                fontFamily: fontType,
+                fontWeight: FontWeight.w700,
+              ),
+            )
+                : Text(
               cardname,
-              style: TextStyle(
-                  color: ColorLight.white,
-                  fontSize: 14.0,
-                  fontFamily: fontType,
-                  fontWeight: FontWeight.w700),
+              style: const TextStyle(
+                color: ColorLight.white,
+                fontSize: 14.0,
+                fontFamily: fontType,
+                fontWeight: FontWeight.w700,
+              ),
             ),
-            subtitle:  Text(
+            subtitle: paymentType == 'Apple Pay' || paymentType == 'Google Pay'
+                ? null
+                : Text(
               '**** **** **** $last4digits',
-              style: TextStyle(
-                  color: ColorLight.white,
-                  fontSize: 12.0,
-                  fontFamily: fontType,
-                  fontWeight: FontWeight.w600),
+              style: const TextStyle(
+                color: ColorLight.white,
+                fontSize: 12.0,
+                fontFamily: fontType,
+                fontWeight: FontWeight.w600,
+              ),
             ),
             dense: true,
           ),
-        ),
+        )
       ],
     );
   }

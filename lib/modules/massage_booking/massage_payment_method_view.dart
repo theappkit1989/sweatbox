@@ -2,10 +2,12 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:s_box/extras/constant/app_constant.dart';
 import 'package:s_box/extras/constant/app_images.dart';
 import 'package:s_box/extras/constant/string_constant.dart';
 import 'package:s_box/modules/commonWidgets/submitBtn.dart';
+import 'package:s_box/modules/massage_booking/massage_and_entrance_controller.dart';
 import 'package:s_box/modules/massage_booking/massage_controller.dart';
 import 'package:s_box/modules/massage_booking/massage_payment_method_controller.dart';
 import 'package:s_box/modules/massage_booking/testpaymentService/PaymentScreen.dart';
@@ -28,7 +30,14 @@ class MassagePaymentMethodView extends StatelessWidget {
     final String selectedDate = Get.arguments[1];
     final String selectedtime = Get.arguments[2];
     final String selectedDuration = Get.arguments[3];
+    final String type = Get.arguments[4];
+    paymentMethodController.selectedtype.value=type;
+    if(type=='2'){
+      final Membership? selectedMembership = Get.arguments[5];
+      paymentMethodController.membership.value = selectedMembership!;
+    }
     paymentMethodController.massage.value = selectedMassage;
+
     paymentMethodController.selectedDate.value = selectedDate;
     paymentMethodController.selectedtime.value = selectedtime;
     paymentMethodController.selectedduration.value = selectedDuration;
@@ -210,70 +219,76 @@ class MassagePaymentMethodView extends StatelessWidget {
         Platform.isIOS ?
         Obx(
               () =>
-              ListTile(
-                selectedTileColor: appPrimaryColor,
-                tileColor: Colors.transparent,
-                leading: Image.asset(
-                  ImageConstant.applePayIcon,
-                  width: Get.width * 0.06,
-                ),
-                trailing: Radio(
-                  value: -1,
-                  groupValue: paymentMethodController.selectedValue.value,
-                  onChanged: (value) {
-                    paymentMethodController.selectedValue.value = value!;
-                  },
-                  activeColor: ColorLight.white,
-                ),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(40),
-                  side: const BorderSide(color: textFieldColor, width: 1.0),
-                ),
-                title: const Text(
-                  strApplePay,
-                  style: TextStyle(
-                    color: ColorLight.white,
-                    fontSize: 14.0,
-                    fontFamily: fontType,
-                    fontWeight: FontWeight.w700,
+              GestureDetector(
+                onTap: (){paymentMethodController.selectedValue.value=-1;},
+                child: ListTile(
+                  selectedTileColor: appPrimaryColor,
+                  tileColor: Colors.transparent,
+                  leading: Image.asset(
+                    ImageConstant.applePayIcon,
+                    width: Get.width * 0.06,
                   ),
+                  trailing: Radio(
+                    value: -1,
+                    groupValue: paymentMethodController.selectedValue.value,
+                    onChanged: (value) {
+                      paymentMethodController.selectedValue.value = value!;
+                    },
+                    activeColor: ColorLight.white,
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(40),
+                    side: const BorderSide(color: textFieldColor, width: 1.0),
+                  ),
+                  title: const Text(
+                    strApplePay,
+                    style: TextStyle(
+                      color: ColorLight.white,
+                      fontSize: 14.0,
+                      fontFamily: fontType,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                  dense: true,
+                  // onTap: (){Get.to(HomePage());},
                 ),
-                dense: true,
-                // onTap: (){Get.to(HomePage());},
               ),
         ):
         Obx(
               () =>
-              ListTile(
-                selectedTileColor: appPrimaryColor,
-                tileColor: Colors.transparent,
-                leading: Image.asset(
-                  ImageConstant.googlePayIcon,
-                  width: Get.width * 0.06,
-                ),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(40),
-                  side: const BorderSide(color: textFieldColor, width: 1.0),
-                ),
-                title: const Text(
-                  strGooglePay,
-                  style: TextStyle(
-                    color: ColorLight.white,
-                    fontSize: 14.0,
-                    fontFamily: fontType,
-                    fontWeight: FontWeight.w700,
+              GestureDetector(
+                onTap: (){paymentMethodController.selectedValue.value=-2;},
+                child: ListTile(
+                  selectedTileColor: appPrimaryColor,
+                  tileColor: Colors.transparent,
+                  leading: Image.asset(
+                    ImageConstant.googlePayIcon,
+                    width: Get.width * 0.06,
                   ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(40),
+                    side: const BorderSide(color: textFieldColor, width: 1.0),
+                  ),
+                  title: const Text(
+                    strGooglePay,
+                    style: TextStyle(
+                      color: ColorLight.white,
+                      fontSize: 14.0,
+                      fontFamily: fontType,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                  dense: true,
+                  trailing: Radio(
+                    value: -2,
+                    groupValue: paymentMethodController.selectedValue.value,
+                    onChanged: (value) {
+                      paymentMethodController.selectedValue.value = value!;
+                    },
+                    activeColor: ColorLight.white,
+                  ),
+                  // onTap: (){Get.to(HomePage());},
                 ),
-                dense: true,
-                trailing: Radio(
-                  value: -2,
-                  groupValue: paymentMethodController.selectedValue.value,
-                  onChanged: (value) {
-                    paymentMethodController.selectedValue.value = value!;
-                  },
-                  activeColor: ColorLight.white,
-                ),
-                // onTap: (){Get.to(HomePage());},
               ),
         ),
       ],
