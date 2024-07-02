@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:get/get_navigation/src/routes/get_transition_mixin.dart';
+import 'package:intl/intl.dart';
 import 'package:pay/pay.dart';
 import 'package:s_box/extras/constant/app_color.dart';
 import 'package:s_box/extras/constant/app_images.dart';
@@ -93,6 +94,7 @@ class MassageSummaryView extends StatelessWidget {
         ),
       ),
       body: SingleChildScrollView(
+        physics: NeverScrollableScrollPhysics(),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -363,7 +365,7 @@ class MassageSummaryView extends StatelessWidget {
                           Image.asset(ImageConstant.dateIcon,
                             width: 20, height: 20,),
                           const SizedBox(width: 5,),
-                          text(text: massage.date.toString(),
+                          text(text: formatDateString(massage.date.toString()),
                               size: 11,
                               fontWeight: FontWeight.w400,
                               color: ColorLight.white)
@@ -732,5 +734,10 @@ class MassageSummaryView extends StatelessWidget {
           },
           width: Get.width),
     );
+  }
+  String formatDateString(String dateString) {
+    DateTime date = DateTime.parse(dateString);
+    String formattedDate = DateFormat('dd MMMM yyyy').format(date);
+    return formattedDate;
   }
 }

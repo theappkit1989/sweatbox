@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:s_box/extras/constant/string_constant.dart';
 import 'package:s_box/modules/bookings/all_bookings_controller.dart';
 import 'package:s_box/themes/colors/color_light.dart';
@@ -227,7 +228,7 @@ class AllBookingsView extends StatelessWidget {
                           ),
                           SizedBox(width: 5),
                           Text(
-                            service.date ?? 'Date',
+                            formatDateString(service.date??"2024-09-01") ?? 'Date',
                             style: TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.w400,
@@ -329,4 +330,9 @@ class AllBookingsView extends StatelessWidget {
       ),
     );
   }
+}
+String formatDateString(String dateString) {
+  DateTime date = DateTime.parse(dateString);
+  String formattedDate = DateFormat('dd MMMM yyyy').format(date);
+  return formattedDate;
 }

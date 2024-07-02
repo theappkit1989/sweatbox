@@ -149,29 +149,31 @@ class PaymentSuccessfulView extends StatelessWidget {
             SizedBox(
               height: Get.height * 0.02,
             ),
-            Padding(padding: EdgeInsets.symmetric(horizontal:
-            Get.width * 0.03,vertical: Get.height*0.03),
-              child: customSubmitBtn(
-                  text: strAllBookings, voidCallback: () {
-                var homecont= Get.find<MainScreenController>();
-                homecont.tabIndex.value=2;
-                homecont.update();
-                var bookingcont= Get.find<AllBookingsController>();
-                bookingcont.onInit();
-                print("object${Get.find<MainScreenController>().tabIndex.value}");
 
-                if (Get.find<MainScreenController>().tabIndex.value == 2) {
-                  // Navigate to HomeScreenView with AllBookingsView already visible
-                  Get.close(2);
-                  // Get.offAll(() => HomeScreenView(), transition: Transition.fade, arguments: 2);
-                } else {
-                  // Navigate to HomeScreenView
-                  // Get.offAll(() => HomeScreenView(), transition: Transition.fade);
-                }
-                    }, width: Get.width),)
-            //buildBook()
+            // Padding(padding: EdgeInsets.symmetric(horizontal:
+            // Get.width * 0.03,vertical: Get.height*0.03),
+            //   child: customSubmitBtn(
+            //       text: strAllBookings, voidCallback: () {
+            //     var homecont= Get.find<MainScreenController>();
+            //     homecont.tabIndex.value=0;
+            //     homecont.update();
+            //     var bookingcont= Get.find<AllBookingsController>();
+            //     bookingcont.onInit();
+            //     print("object${Get.find<MainScreenController>().tabIndex.value}");
+            //
+            //     if (Get.find<MainScreenController>().tabIndex.value == 0) {
+            //       // Navigate to HomeScreenView with AllBookingsView already visible
+            //       Get.close(2);
+            //       // Get.offAll(() => HomeScreenView(), transition: Transition.fade, arguments: 2);
+            //     } else {
+            //       // Navigate to HomeScreenView
+            //       // Get.offAll(() => HomeScreenView(), transition: Transition.fade);
+            //     }
+            //         }, width: Get.width),)
+            // //buildBook()buildBook
           ],
         ),
+
         // Column(
         //   mainAxisAlignment: MainAxisAlignment.start,
         //   crossAxisAlignment: CrossAxisAlignment.center,
@@ -203,6 +205,31 @@ class PaymentSuccessfulView extends StatelessWidget {
         //   ],
         // ),
       ),
+      bottomNavigationBar: Padding(
+        padding: EdgeInsets.symmetric(horizontal: Get.width * 0.03, vertical: Get.height * 0.03),
+        child: customSubmitBtn(
+          text: strMyBookings,
+          voidCallback: () {
+            var homecont= Get.find<MainScreenController>();
+                homecont.tabIndex.value=0;
+                homecont.update();
+                var bookingcont= Get.find<AllBookingsController>();
+                bookingcont.onInit();
+                print("object${Get.find<MainScreenController>().tabIndex.value}");
+
+                if (Get.find<MainScreenController>().tabIndex.value == 0) {
+                  // Navigate to HomeScreenView with AllBookingsView already visible
+                  Get.close(2);
+                  // Get.offAll(() => HomeScreenView(), transition: Transition.fade, arguments: 2);
+                } else {
+                  // Navigate to HomeScreenView
+                  // Get.offAll(() => HomeScreenView(), transition: Transition.fade);
+                }
+          },
+          width: Get.width,
+        ),
+      ),
+
     );
   }
 

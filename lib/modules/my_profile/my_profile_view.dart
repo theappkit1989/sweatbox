@@ -32,6 +32,7 @@ class MyProfileView extends StatelessWidget {
     username = storage.read(userName);
     useremail = storage.read(userEmail);
     userImage = storage.read(image);
+
     print("image profile url is ${ApiEndpoint.baseUrlImage+userImage}");
     return Scaffold(
         backgroundColor: ColorLight.black,
@@ -54,6 +55,7 @@ class MyProfileView extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
+
                   SizedBox(height: 10,),
                   buildUserDetails(username, useremail),
                   buildMembership(myProfileController.memberships.value),
@@ -92,10 +94,11 @@ class MyProfileView extends StatelessWidget {
             //     child: Image.asset(ImageConstant.userEditIcon),
             //   ),*/
             // ),
-            Align(
+
+      Obx(()=> Align(
               alignment: Alignment.topCenter,
               child: SizedBox(
-                  child: userImage!=''? Container(
+                  child: myProfileController.imagee.value!=''? Container(
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       border: Border.all(
@@ -111,7 +114,7 @@ class MyProfileView extends StatelessWidget {
                         height: 100,
                         color: Colors.grey,
                         child: Image.network(
-                          "${ApiEndpoint.baseUrlImage+userImage}",
+                          myProfileController.imagee.value,
                           width: 100,
                           height: 100,
                           fit: BoxFit.cover,
@@ -148,8 +151,8 @@ class MyProfileView extends StatelessWidget {
                             ); // You can replace this with your custom error widget
                           },
                         ),
-                      ),
-                    ),
+                      ),)
+
 
                     //
                     // child: CircleAvatar(
@@ -194,7 +197,7 @@ class MyProfileView extends StatelessWidget {
                         width: 1.0, // Set the border width here
                       ),
                     ),)),
-            ),
+            ),)
           ],
         ));
   }

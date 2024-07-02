@@ -143,26 +143,48 @@ class MassagePaymentSuccessfulView extends StatelessWidget {
             SizedBox(
               height: Get.height * 0.02,
             ),
-            Padding(padding: EdgeInsets.symmetric(horizontal:
-            Get.width * 0.03,vertical: Get.height*0.03),
-              child: customSubmitBtn(
-                  text: strAllBookings, voidCallback: () {
-               var homecont= Get.find<MainScreenController>();
-               homecont.tabIndex.value=2;
-                homecont.update();
-                    print("object${Get.find<MainScreenController>().tabIndex.value}");
-               var bookingcont= Get.find<AllBookingsController>();
-               bookingcont.onInit();
-                if (Get.find<MainScreenController>().tabIndex.value == 2) {
-                  // Navigate to HomeScreenView with AllBookingsView already visible
-                  Get.close(4);
-                } else {
-                  // Navigate to HomeScreenView
-                  // Get.offAll(() => HomeScreenView(), transition: Transition.fade);
-                }
-                    }, width: Get.width),)
+            // Padding(padding: EdgeInsets.symmetric(horizontal:
+            // Get.width * 0.03,vertical: Get.height*0.03),
+            //   child: customSubmitBtn(
+            //       text: strAllBookings, voidCallback: () {
+            //    var homecont= Get.find<MainScreenController>();
+            //    homecont.tabIndex.value=2;
+            //     homecont.update();
+            //         print("object${Get.find<MainScreenController>().tabIndex.value}");
+            //    var bookingcont= Get.find<AllBookingsController>();
+            //    bookingcont.onInit();
+            //     if (Get.find<MainScreenController>().tabIndex.value == 2) {
+            //       // Navigate to HomeScreenView with AllBookingsView already visible
+            //       Get.close(4);
+            //     } else {
+            //       // Navigate to HomeScreenView
+            //       // Get.offAll(() => HomeScreenView(), transition: Transition.fade);
+            //     }
+            //         }, width: Get.width),)
             //buildBook()
           ],
+        ),
+      ),
+      bottomNavigationBar: Padding(
+        padding: EdgeInsets.symmetric(horizontal: Get.width * 0.03, vertical: Get.height * 0.03),
+        child: customSubmitBtn(
+          text: strMyBookings,
+          voidCallback: () {
+            var homecont= Get.find<MainScreenController>();
+            homecont.tabIndex.value=2;
+            homecont.update();
+            print("object${Get.find<MainScreenController>().tabIndex.value}");
+            var bookingcont= Get.find<AllBookingsController>();
+            bookingcont.onInit();
+            if (Get.find<MainScreenController>().tabIndex.value == 2) {
+              // Navigate to HomeScreenView with AllBookingsView already visible
+              Get.close(4);
+            } else {
+              // Navigate to HomeScreenView
+              // Get.offAll(() => HomeScreenView(), transition: Transition.fade);
+            }
+          },
+          width: Get.width,
         ),
       ),
     );
@@ -393,7 +415,7 @@ class MassagePaymentSuccessfulView extends StatelessWidget {
   }
   String formatDateString(String dateString) {
     DateTime date = DateTime.parse(dateString);
-    String formattedDate = DateFormat('d MMMM yyyy').format(date);
+    String formattedDate = DateFormat('dd MMMM yyyy').format(date);
     return formattedDate;
   }
 }

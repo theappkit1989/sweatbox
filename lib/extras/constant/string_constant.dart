@@ -362,6 +362,7 @@ const strReportSubtitle = 'Are you sure you want to report. this action can’t 
 const strBlockSubtitle = 'Are you sure you want to block. this action can’t be reversed.';
 const strNotNow = 'Not Now';
 const strAllBookings = 'All Bookings';
+const strMyBookings = 'My Bookings';
 const strActive = 'Active';
 const strHistory = 'History';
 const strSendMsg = 'Send Message';

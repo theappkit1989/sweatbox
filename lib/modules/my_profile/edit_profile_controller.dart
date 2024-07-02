@@ -2,10 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:s_box/modules/my_profile/my_profile_view.dart';
 import 'dart:io';
 import '../../extras/constant/shared_pref_constant.dart';
+import '../../services/api/api_endpoint.dart';
 import '../../services/repo/common_repo.dart';
 import '../../themes/loading_dialofg.dart';
+import '../home_screen/home_controller.dart';
 import 'my_profile_controller.dart';
 
 class EditProfileController extends GetxController {
@@ -81,7 +84,21 @@ class EditProfileController extends GetxController {
 
         print("message is ${_response.message}");
         // Get.snackbar("Success", _response.message ?? '');
+        // var homecont= Get.find<MainScreenController>();
+        // homecont.tabIndex.value=3;
+        // homecont.update();
+        // var bookingcont= Get.find<MyProfileController>();
+        // bookingcont.imagee.value = '${ApiEndpoint.baseUrlImage + _response.user!.image!} ' ;
+        // bookingcont.onInit();
+        // bookingcont.update();
+        // print("object${Get.find<MainScreenController>().tabIndex.value}");
+        // Get.close(0);
+
+
         var homeCont = Get.find<MyProfileController>();
+
+        homeCont.onInit();
+        homeCont.imagee.value='${ApiEndpoint.baseUrlImage + _response.user!.image!}';
         homeCont.update();
         Get.back();
       } else {

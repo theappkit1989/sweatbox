@@ -51,7 +51,7 @@ class MassageSummaryController extends GetxController{
     _showLoadingDialog();
     print("payment data is ${massage.value.price.toString()}\n${cardNumber.value.replaceAll(' ', '').toString()}\n${cardName.toString()}\n${cardExpiryMonth.toString()}\n${cardCvv.toString()}\n${cardExpiryYear.toString()}");
  try{
-    final result = await PaymentService().makePayment(massage.value.price.toString(), "GBP", "VISA", cardNumber.value.replaceAll(' ', '').toString(), cardName.value.toString(),
+    final result = await PaymentService().makePayment((totalAmount.value.round()).toString(), "GBP", "VISA", cardNumber.value.replaceAll(' ', '').toString(), cardName.value.toString(),
         cardExpiryMonth.value.toString(), cardExpiryYear.value.toString(), cardCvv.value.toString());
     print("payment result is $result");
     if(result==200){

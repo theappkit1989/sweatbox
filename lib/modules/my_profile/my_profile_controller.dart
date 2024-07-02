@@ -13,6 +13,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/material.dart';
 
 import '../../extras/constant/shared_pref_constant.dart';
+import '../../services/api/api_endpoint.dart';
 import '../../services/commonModels/userAllData.dart';
 import '../../services/repo/common_repo.dart';
 
@@ -20,6 +21,8 @@ class MyProfileController extends GetxController {
   var storage = GetStorage();
   String token = '';
   String user_id = '';
+  String img = '';
+  RxString imagee = ''.obs;
   RxList<Membership> memberships = <Membership>[].obs;
   RxString countdownText = ''.obs;
   Timer? countdownTimer;
@@ -29,9 +32,19 @@ class MyProfileController extends GetxController {
     super.onInit();
     storage.writeIfNull(userToken, '');
     storage.writeIfNull(userid, '');
+    storage.writeIfNull(image, '');
     token = storage.read(userToken);
     user_id = storage.read(userid).toString();
+    imagee.value = ApiEndpoint.baseUrlImage + storage.read(image);
+
     fetchUserServices();
+    update();
+  }
+  @override
+  void update([List<Object>? ids, bool condition = true]) {
+    // TODO: implement update
+    super.update(ids, condition);
+    imagee.value = ApiEndpoint.baseUrlImage + storage.read(image);
   }
 
   List<String> titles = [

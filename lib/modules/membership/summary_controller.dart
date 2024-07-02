@@ -118,7 +118,7 @@ class MembershipSummaryController extends GetxController {
         "payment data is ${membership.value.price.toString()}\n${cardNumber.toString()}\n${cardName.toString()}\n${cardExpiryMonth.toString()}\n${cardCvv.toString()}\n${cardExpiryYear.toString()}");
     try {
       final result = await PaymentService().makePayment(
-          membership.value.price.toString(),
+          (totalAmount.value.round()).toString(),
           "GBP",
           "VISA",
           cardNumber.replaceAll(' ', '').toString(),
