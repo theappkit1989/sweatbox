@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -97,8 +99,10 @@ class EditProfileController extends GetxController {
 
         var homeCont = Get.find<MyProfileController>();
 
-        homeCont.onInit();
+
         homeCont.imagee.value='${ApiEndpoint.baseUrlImage + _response.user!.image!}';
+        log('test');
+        print(homeCont.imagee.value);
         homeCont.update();
         Get.back();
       } else {
