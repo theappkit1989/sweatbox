@@ -172,7 +172,7 @@ class MyProfileController extends GetxController {
         var remainingTime = expireTime.difference(now).inSeconds;
         progress.value = remainingTime / totalTime;
       } else {
-        countdownText.value = 'Membership expired';
+        countdownText.value = 'Membership Expired';
         progress.value = 0.0;
         if (countdownTimer != null) {
           countdownTimer!.cancel();

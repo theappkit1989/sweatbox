@@ -104,7 +104,7 @@ class SummaryView extends StatelessWidget {
 
                         paymentItems: [
                           PaymentItem(
-                            label: 'Total',
+                            label: 'Sweatbox',
                             amount: summaryController.totalAmount.value.toStringAsFixed(2),
                             status: PaymentItemStatus.final_price,
                           )

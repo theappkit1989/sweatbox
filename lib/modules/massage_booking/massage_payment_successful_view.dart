@@ -40,20 +40,7 @@ class MassagePaymentSuccessfulView extends StatelessWidget {
     ''';
     return Scaffold(
       backgroundColor: ColorLight.white,
-      appBar: AppBar(
-        backgroundColor: ColorLight.white,
-        centerTitle: true,
-        title: const Text(
-          strPaymentSuccess,
-        ),
-        automaticallyImplyLeading: false,
-        titleTextStyle: const TextStyle(
-          color: ColorLight.black,
-          fontWeight: FontWeight.w700,
-          fontFamily: fontType,
-          fontSize: 18.0,
-        ),
-      ),
+
       body: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,

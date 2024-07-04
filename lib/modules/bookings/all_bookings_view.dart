@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:s_box/extras/constant/string_constant.dart';
 import 'package:s_box/modules/bookings/all_bookings_controller.dart';
 import 'package:s_box/themes/colors/color_light.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../extras/constant/app_color.dart';
 import '../../extras/constant/app_constant.dart';
 import '../../extras/constant/app_images.dart';
@@ -32,141 +33,283 @@ class AllBookingsView extends StatelessWidget {
         backgroundColor: ColorLight.black,
         automaticallyImplyLeading: false,
       ),
-      body: Obx(() {
+      body: DefaultTabController(
+        length: 2,
+        child: Column(
+          children: [
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: Get.width * 0.05),
+              margin:
+              EdgeInsets.symmetric(horizontal: Get.width * 0.05, vertical: Get.height * 0.02),
+              decoration: BoxDecoration(
+                color: appPrimaryColor,
+                borderRadius: BorderRadius.circular(40),
+              ),
+              width: Get.width,
+              height: kToolbarHeight,
+              child: TabBar(
+                tabs: [
+                  Tab(text: strActive,), // Tab for active bookings
+                  Tab(text: strHistory), // Tab for history bookings
+                ],
+                indicatorColor: ColorLight.white,
+                indicatorSize: TabBarIndicatorSize.tab,
+                labelColor: ColorLight.white, // Selected tab text color
+                unselectedLabelColor: Colors.white,
+              ),
+            ),
+            Expanded(
+              child: TabBarView(
+                children: [
+                  // Content for Active Bookings tab
+                  Obx(()  {
+                    List<Services> activeBookings = [];
+                    List<Services> historyBookings = [];
 
+                    final now = DateTime.now();
 
-        List<Services> activeBookings = [];
-        List<Services> historyBookings = [];
+                    for (var service in allBookingsController.servicesList) {
+                      final serviceDateTime = DateTime.parse('${service.date} ${service.time}');
+                      if (serviceDateTime.isBefore(now)) {
+                        historyBookings.add(service);
+                      } else {
+                        activeBookings.add(service);
+                      }
+                    }
+                    List<Services> displayBookings =activeBookings ;
 
-        final now = DateTime.now();
-
-        for (var service in allBookingsController.servicesList) {
-          final serviceDateTime = DateTime.parse('${service.date} ${service.time}');
-          if (serviceDateTime.isBefore(now)) {
-            historyBookings.add(service);
-          } else {
-            activeBookings.add(service);
-          }
-        }
-        // if (activeBookings.isEmpty||historyBookings.isEmpty) {
-        //   return Center(
-        //     child: Text(
-        //       allBookingsController.isActive.value
-        //           ? 'No active bookings at this time'
-        //           : 'No booking history',
-        //       style: TextStyle(
-        //         color: ColorLight.white,
-        //         fontSize: 16,
-        //         fontWeight: FontWeight.w600,
-        //       ),
-        //     ),
-        //   );
-        // }
-        List<Services> displayBookings =
-        allBookingsController.isActive.value ? activeBookings : historyBookings;
-
-        return SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: Get.width * 0.05),
-                margin: EdgeInsets.symmetric(horizontal: Get.width * 0.05, vertical: Get.height * 0.02),
-                decoration: BoxDecoration(
-                  color: appPrimaryColor,
-                  borderRadius: BorderRadius.circular(40),
-                ),
-                width: Get.width,
-                height: kToolbarHeight,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    GestureDetector(
-                      onTap: () {
-                        allBookingsController.isActive.value = true;
-                      },
+                    return SingleChildScrollView(
                       child: Column(
-                        mainAxisAlignment: MainAxisAlignment.end,
+                        mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          text(
-                            text: strActive,
-                            size: 14,
-                            fontWeight: FontWeight.w700,
-                            color: ColorLight.white,
+
+                          Container(
+                            width: Get.width,
+                            padding: EdgeInsets.symmetric(horizontal: Get.width * 0.05, vertical: Get.height * 0.04),
+                            decoration: BoxDecoration(
+                              color: ColorLight.black,
+                              borderRadius: BorderRadius.circular(25),
+                            ),
+                            child: displayBookings.isEmpty?Center(
+                              child: Text(
+                                allBookingsController.isActive.value
+                                    ? 'No active bookings at this time'
+                                    : 'No booking history',
+                                style: TextStyle(
+                                  color: ColorLight.white,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ):ListView.separated(
+                              itemBuilder: (context, index) => buildActiveWidget(displayBookings[index]),
+                              shrinkWrap: true,
+                              primary: false,
+                              itemCount: displayBookings.length,
+                              separatorBuilder: (BuildContext context, int index) => Divider(
+                                color: textFieldColor,
+                              ),
+                            ),
                           ),
-                          SizedBox(height: Get.height * 0.02),
-                          allBookingsController.isActive.value
-                              ? Container(
-                            width: Get.width * 0.2,
-                            height: 2,
-                            color: ColorLight.white,
-                          )
-                              : SizedBox(),
                         ],
                       ),
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        allBookingsController.isActive.value = false;
-                      },
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          text(
-                            text: strHistory,
-                            size: 14,
-                            fontWeight: FontWeight.w700,
-                            color: ColorLight.white,
+                    );
+                  }
+
+                  ),
+                  // Content for History Bookings tab
+                  Obx(() {
+
+                  List<Services> historyBookings = [];
+
+                  final now = DateTime.now();
+
+                  for (var service in allBookingsController.servicesList) {
+                    final serviceDateTime = DateTime.parse('${service.date} ${service.time}');
+                    if (serviceDateTime.isBefore(now)) {
+                      historyBookings.add(service);
+                    }
+                  }
+                  List<Services> displayBookings = historyBookings;
+
+                    return SingleChildScrollView(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+
+                        Container(
+                          width: Get.width,
+                          padding: EdgeInsets.symmetric(horizontal: Get.width * 0.05, vertical: Get.height * 0.04),
+                          decoration: BoxDecoration(
+                            color: ColorLight.black,
+                            borderRadius: BorderRadius.circular(25),
                           ),
-                          SizedBox(height: Get.height * 0.02),
-                          allBookingsController.isActive.value == false
-                              ? Container(
-                            width: Get.width * 0.2,
-                            height: 2,
-                            color: ColorLight.white,
-                          )
-                              : SizedBox(),
-                        ],
-                      ),
+                          child: displayBookings.isEmpty?Center(
+                            child: Text(
+                              allBookingsController.isActive.value
+                                  ? 'No active bookings at this time'
+                                  : 'No booking history',
+                              style: TextStyle(
+                                color: ColorLight.white,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ):ListView.separated(
+                            itemBuilder: (context, index) => buildActiveWidget(displayBookings[index]),
+                            shrinkWrap: true,
+                            primary: false,
+                            itemCount: displayBookings.length,
+                            separatorBuilder: (BuildContext context, int index) => Divider(
+                              color: textFieldColor,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
+                  );}),
+                ],
               ),
-              Container(
-                width: Get.width,
-                padding: EdgeInsets.symmetric(horizontal: Get.width * 0.05, vertical: Get.height * 0.04),
-                decoration: BoxDecoration(
-                  color: ColorLight.black,
-                  borderRadius: BorderRadius.circular(25),
-                ),
-                child: displayBookings.isEmpty?Center(
-                  child: Text(
-                    allBookingsController.isActive.value
-                        ? 'No active bookings at this time'
-                        : 'No booking history',
-                    style: TextStyle(
-                      color: ColorLight.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ):ListView.separated(
-                  itemBuilder: (context, index) => buildActiveWidget(displayBookings[index]),
-                  shrinkWrap: true,
-                  primary: false,
-                  itemCount: displayBookings.length,
-                  separatorBuilder: (BuildContext context, int index) => Divider(
-                    color: textFieldColor,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        );
-      }),
+            ),
+            // Obx(() {
+            //
+            //
+            //   List<Services> activeBookings = [];
+            //   List<Services> historyBookings = [];
+            //
+            //   final now = DateTime.now();
+            //
+            //   for (var service in allBookingsController.servicesList) {
+            //     final serviceDateTime = DateTime.parse('${service.date} ${service.time}');
+            //     if (serviceDateTime.isBefore(now)) {
+            //       historyBookings.add(service);
+            //     } else {
+            //       activeBookings.add(service);
+            //     }
+            //   }
+            //   // if (activeBookings.isEmpty||historyBookings.isEmpty) {
+            //   //   return Center(
+            //   //     child: Text(
+            //   //       allBookingsController.isActive.value
+            //   //           ? 'No active bookings at this time'
+            //   //           : 'No booking history',
+            //   //       style: TextStyle(
+            //   //         color: ColorLight.white,
+            //   //         fontSize: 16,
+            //   //         fontWeight: FontWeight.w600,
+            //   //       ),
+            //   //     ),
+            //   //   );
+            //   // }
+            //
+            //
+            //   return SingleChildScrollView(
+            //     child: Column(
+            //       mainAxisAlignment: MainAxisAlignment.start,
+            //       crossAxisAlignment: CrossAxisAlignment.center,
+            //       children: [
+            //         Container(
+            //           padding: EdgeInsets.symmetric(horizontal: Get.width * 0.05),
+            //           margin: EdgeInsets.symmetric(horizontal: Get.width * 0.05, vertical: Get.height * 0.02),
+            //           decoration: BoxDecoration(
+            //             color: appPrimaryColor,
+            //             borderRadius: BorderRadius.circular(40),
+            //           ),
+            //           width: Get.width,
+            //           height: kToolbarHeight,
+            //           child: Row(
+            //             mainAxisAlignment: MainAxisAlignment.spaceAround,
+            //             children: [
+            //               GestureDetector(
+            //                 onTap: () {
+            //                   allBookingsController.isActive.value = true;
+            //                 },
+            //                 child: Column(
+            //                   mainAxisAlignment: MainAxisAlignment.end,
+            //                   crossAxisAlignment: CrossAxisAlignment.center,
+            //                   children: [
+            //                     text(
+            //                       text: strActive,
+            //                       size: 14,
+            //                       fontWeight: FontWeight.w700,
+            //                       color: ColorLight.white,
+            //                     ),
+            //                     SizedBox(height: Get.height * 0.02),
+            //                     allBookingsController.isActive.value
+            //                         ? Container(
+            //                       width: Get.width * 0.2,
+            //                       height: 2,
+            //                       color: ColorLight.white,
+            //                     )
+            //                         : SizedBox(),
+            //                   ],
+            //                 ),
+            //               ),
+            //               GestureDetector(
+            //                 onTap: () {
+            //                   allBookingsController.isActive.value = false;
+            //                 },
+            //                 child: Column(
+            //                   mainAxisAlignment: MainAxisAlignment.end,
+            //                   crossAxisAlignment: CrossAxisAlignment.center,
+            //                   children: [
+            //                     text(
+            //                       text: strHistory,
+            //                       size: 14,
+            //                       fontWeight: FontWeight.w700,
+            //                       color: ColorLight.white,
+            //                     ),
+            //                     SizedBox(height: Get.height * 0.02),
+            //                     allBookingsController.isActive.value == false
+            //                         ? Container(
+            //                       width: Get.width * 0.2,
+            //                       height: 2,
+            //                       color: ColorLight.white,
+            //                     )
+            //                         : SizedBox(),
+            //                   ],
+            //                 ),
+            //               ),
+            //             ],
+            //           ),
+            //         ),
+            //         Container(
+            //           width: Get.width,
+            //           padding: EdgeInsets.symmetric(horizontal: Get.width * 0.05, vertical: Get.height * 0.04),
+            //           decoration: BoxDecoration(
+            //             color: ColorLight.black,
+            //             borderRadius: BorderRadius.circular(25),
+            //           ),
+            //           child: displayBookings.isEmpty?Center(
+            //             child: Text(
+            //               allBookingsController.isActive.value
+            //                   ? 'No active bookings at this time'
+            //                   : 'No booking history',
+            //               style: TextStyle(
+            //                 color: ColorLight.white,
+            //                 fontSize: 16,
+            //                 fontWeight: FontWeight.w600,
+            //               ),
+            //             ),
+            //           ):ListView.separated(
+            //             itemBuilder: (context, index) => buildActiveWidget(displayBookings[index]),
+            //             shrinkWrap: true,
+            //             primary: false,
+            //             itemCount: displayBookings.length,
+            //             separatorBuilder: (BuildContext context, int index) => Divider(
+            //               color: textFieldColor,
+            //             ),
+            //           ),
+            //         ),
+            //       ],
+            //     ),
+            //   );
+            // }),
+          ],
+        ),
+      ),
     );
   }
 
@@ -329,6 +472,23 @@ class AllBookingsView extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  // Function to launch email app
+  void _launchEmailApp(Services service) async {
+    final Uri params = Uri(
+      scheme: 'mailto',
+      path: 'info@sweatbox.com',
+      query: 'subject=Booking Inquiry&body=Hello,%20I%20would%20like%20to%20inquire%20about%20my%20booking%20details%20for%20service:%20${service.code}',
+    );
+
+    String url = params.toString();
+
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 }
 String formatDateString(String dateString) {

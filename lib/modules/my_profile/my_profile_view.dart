@@ -113,7 +113,7 @@ class MyProfileView extends StatelessWidget {
                         width: 100,
                         height: 100,
                         color: Colors.grey,
-                        child: Image.network(
+                        child: Obx(()=>Image.network(
                           myProfileController.imagee.value,
                           width: 100,
                           height: 100,
@@ -150,7 +150,7 @@ class MyProfileView extends StatelessWidget {
                               ),
                             ); // You can replace this with your custom error widget
                           },
-                        ),
+                        )),
                       ),)
 
 

@@ -130,7 +130,7 @@ class MassageSummaryView extends StatelessWidget {
 
                       paymentItems: [
                         PaymentItem(
-                          label: 'Total',
+                          label: 'Sweatbox',
                           type: PaymentItemType.total,
                           amount: summaryController.totalAmount.value.toStringAsFixed(2),
                           status: PaymentItemStatus.final_price,

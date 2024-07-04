@@ -50,6 +50,7 @@ class ManageSubscriptionView extends StatelessWidget {
         ),
       ),
       body: SingleChildScrollView(
+        physics: NeverScrollableScrollPhysics(),
         child: Container(
           height: Get.height,
           decoration: BoxDecoration(

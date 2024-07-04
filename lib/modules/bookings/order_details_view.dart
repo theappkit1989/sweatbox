@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:intl/intl.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:s_box/modules/bookings/order_details_controller.dart';
 import 'package:s_box/services/commonModels/userAllData.dart';
+import 'package:ticket_widget/ticket_widget.dart';
 
 import '../../extras/constant/app_color.dart';
 import '../../extras/constant/app_constant.dart';
@@ -59,19 +61,58 @@ class OrderDetailsView extends StatelessWidget {
             Container(
               width: Get.width,
               padding: EdgeInsets.symmetric(
-                  horizontal: Get.width * 0.05, vertical: Get.height * 0.04),
+                  horizontal: Get.width * 0.05),
               margin: EdgeInsets.symmetric(
-                  horizontal: Get.width * 0.05, vertical: Get.height * 0.02),
+                  horizontal: Get.width * 0.05),
               decoration: BoxDecoration(
-                color: ColorLight.black,
+                color: ColorLight.white,
                 borderRadius: BorderRadius.circular(25),
               ),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  buildQrCode(username,qrData,selectedService),
-                  buildDetails(selectedService),
+                Container(
+                width: Get.width,
+                padding: EdgeInsets.symmetric(
+                    horizontal: Get.width * 0.05, vertical: Get.height * 0.02),
+
+                decoration: BoxDecoration(
+                  color: ColorLight.black,
+                  borderRadius: BorderRadius.only(topLeft: Radius.circular(25),topRight: Radius.circular(25)),
+                ),
+                child:
+                  buildDetails(selectedService),),
+                  TicketWidget(
+                    color: Colors.black,
+                    width: Get.width,
+                    height: 40,
+
+                    padding: EdgeInsets.all(10),
+                    child:  Row(
+                      children: List.generate(
+                          150 ~/ 1,
+                              (index) => Expanded(
+                            child: Container(
+                              color: index % 2 == 0 ? Colors.transparent : Colors.grey,
+                              height: 1,
+                            ),
+                          )),
+                    ),
+                  ),
+              Container(
+                width: Get.width,
+                padding: EdgeInsets.symmetric(
+                    horizontal: Get.width * 0.05),
+
+                decoration: BoxDecoration(
+                  color: ColorLight.black,
+                  borderRadius: BorderRadius.only(bottomRight: Radius.circular(25),bottomLeft: Radius.circular(25)),
+                ),
+                child:
+                  buildQrCode(username,qrData,selectedService),),
+
+
                 ],
               ),
             ),
@@ -147,7 +188,7 @@ class OrderDetailsView extends StatelessWidget {
             children: [
               Container(
                   width: Get.width * 0.6,
-                  height: Get.height * 0.35,
+                  height: Get.height * 0.3,
                   padding: EdgeInsets.symmetric(
                       horizontal: Get.width * 0.03,
                       vertical: Get.height * 0.03),
@@ -163,51 +204,58 @@ class OrderDetailsView extends StatelessWidget {
                   ),),
               Align(
                 alignment: Alignment.topCenter,
-                child: Container(
-                  width: Get.width * 0.45,
-                  height: Get.height * 0.05,
-                  alignment: Alignment.center,
-                  //margin: EdgeInsets.only(top: Get.height * 0.05),
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(40),
-                      color: ColorLight.white),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Image.asset(
-                        ImageConstant.profileIcon,
-                        width: 24,
-                        height: 24,
+                child: Column(
+                  children: [
+
+                    Container(
+                      width: Get.width * 0.45,
+                      height: Get.height * 0.05,
+                      alignment: Alignment.center,
+                      //margin: EdgeInsets.only(top: Get.height * 0.05),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(40),
+                          color: ColorLight.white),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Image.asset(
+                            ImageConstant.profileIcon,
+                            width: 24,
+                            height: 24,
+                          ),
+                          const SizedBox(
+                            width: 10,
+                          ),
+                           Text(
+                            username,
+                            style: TextStyle(
+                                fontWeight: FontWeight.w600,
+                                color: ColorLight.black,
+                                fontFamily: fontType,
+                                fontSize: 12),
+                          )
+                        ],
                       ),
-                      const SizedBox(
-                        width: 10,
-                      ),
-                       Text(
-                        username,
-                        style: TextStyle(
-                            fontWeight: FontWeight.w600,
-                            color: ColorLight.black,
-                            fontFamily: fontType,
-                            fontSize: 12),
-                      )
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
             ],
           ),
         ),
-         Text(
-          "Your Sweatbox unique code is ${selectedService.code} ",
-          style: TextStyle(
-            fontSize: 12,
-            color: ColorLight.white,
-            fontFamily: fontType,
-            fontWeight: FontWeight.w400,
-          ),
+
+        Row(
+          children: List.generate(
+              150 ~/ 1,
+                  (index) => Expanded(
+                child: Container(
+                  color: index % 2 == 0 ? Colors.transparent : Colors.grey,
+                  height: 1,
+                ),
+              )),
         ),
         SizedBox(
-          height: Get.height * 0.02,
+          height: Get.height * 0.04,
         ),
       ],
     );
@@ -218,19 +266,7 @@ class OrderDetailsView extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
-          children: List.generate(
-              150 ~/ 1,
-              (index) => Expanded(
-                    child: Container(
-                      color: index % 2 == 0 ? Colors.transparent : Colors.grey,
-                      height: 1,
-                    ),
-                  )),
-        ),
-        SizedBox(
-          height: Get.height * 0.04,
-        ),
+
         SizedBox(
           width: Get.width,
           child: Row(
@@ -252,7 +288,7 @@ class OrderDetailsView extends StatelessWidget {
                     height: Get.height * 0.01,
                   ),
                    Text(
-                     selectedService.date!,
+                     formatDateString(selectedService.date!),
                     style: TextStyle(
                         fontSize: 13,
                         fontFamily: fontType,
@@ -315,7 +351,7 @@ class OrderDetailsView extends StatelessWidget {
           ),
         ),
         SizedBox(
-          height: Get.height * 0.04,
+          height: Get.height * 0.02,
         ),
         Column(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -343,21 +379,21 @@ class OrderDetailsView extends StatelessWidget {
           ],
         ),
         SizedBox(
-          height: Get.height * 0.04,
+          height: Get.height * 0.02,
         ),
-        Row(
-          children: List.generate(
-              150 ~/ 1,
-              (index) => Expanded(
-                    child: Container(
-                      color: index % 2 == 0 ? Colors.transparent : Colors.grey,
-                      height: 1,
-                    ),
-                  )),
+
+        Center(
+          child: Text(
+            "Your Sweatbox unique code is ${selectedService.code} ",
+            style: TextStyle(
+              fontSize: 12,
+              color: ColorLight.white,
+              fontFamily: fontType,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
         ),
-        SizedBox(
-          height: Get.height * 0.04,
-        ),
+
         // const Text(
         //   strPaymentMethod,
         //   style: TextStyle(
@@ -402,5 +438,10 @@ class OrderDetailsView extends StatelessWidget {
         // ),
       ],
     );
+  }
+  String formatDateString(String dateString) {
+    DateTime date = DateTime.parse(dateString);
+    String formattedDate = DateFormat('dd MMMM yyyy').format(date);
+    return formattedDate;
   }
 }

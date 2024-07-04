@@ -191,7 +191,7 @@ class _MyAppState extends State<MyApp> {
     WidgetsFlutterBinding.ensureInitialized();
     final controller = Get.put(Controller());
     return GetMaterialApp(
-        defaultTransition: Transition.leftToRightWithFade,
+        defaultTransition: Transition.rightToLeftWithFade,
         debugShowCheckedModeBanner: false,
         home: controller.getPage());
   }

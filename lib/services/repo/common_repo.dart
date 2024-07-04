@@ -289,7 +289,7 @@ class ApiController extends BaseRepository {
       }
     } catch (e) {
       print('Error occurred: $e');
-      return EditProfileResponse(status:false,message: 'please uplaod picture Less than 2 MB');
+      return EditProfileResponse(status:false,message: 'Week Internet Connection');
     }
   }
 

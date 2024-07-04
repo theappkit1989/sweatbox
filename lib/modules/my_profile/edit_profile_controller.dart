@@ -84,7 +84,7 @@ class EditProfileController extends GetxController {
         storage.write(userName, usernameCont.value.text ?? '');
         storage.write(image,_response.user?.image ?? '');
 
-        print("message is ${_response.message}");
+        print("message is ${_response.user?.image}");
         // Get.snackbar("Success", _response.message ?? '');
         // var homecont= Get.find<MainScreenController>();
         // homecont.tabIndex.value=3;
@@ -97,13 +97,9 @@ class EditProfileController extends GetxController {
         // Get.close(0);
 
 
-        var homeCont = Get.find<MyProfileController>();
-
-
+        MyProfileController homeCont = Get.find<MyProfileController>();
         homeCont.imagee.value='${ApiEndpoint.baseUrlImage + _response.user!.image!}';
-        log('test');
-        print(homeCont.imagee.value);
-        homeCont.update();
+        log('umar test ');
         Get.back();
       } else {
         _dismissDialog();
