@@ -15,6 +15,7 @@ import '../my_profile/my_profile_controller.dart';
 class AllBookingsController extends GetxController {
   RxBool isActive = true.obs;
   RxList<Services> servicesList = <Services>[].obs;
+  RxList<Membership> membershipList = <Membership>[].obs;
   var storage = GetStorage();
   String token='';
   String user_id='';

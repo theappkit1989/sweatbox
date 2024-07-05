@@ -46,151 +46,153 @@ class PaymentSuccessfulView extends StatelessWidget {
     return Scaffold(
       backgroundColor: ColorLight.white,
 
-      body: SingleChildScrollView(
-        child:
-        Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Container(
-              width: Get.width,
-              padding: EdgeInsets.symmetric(
-                  horizontal: Get.width * 0.05, vertical: Get.height * 0.02),
-              margin: EdgeInsets.symmetric(
-                  horizontal: Get.width * 0.05),
-              decoration: BoxDecoration(
-                color: ColorLight.white,
-                borderRadius: BorderRadius.circular(25),
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Container(
-                      width: Get.width,
-                      padding: EdgeInsets.symmetric(
-                          horizontal: Get.width * 0.05, vertical: Get.height * 0.02),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child:
+          Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Container(
+                width: Get.width,
+                padding: EdgeInsets.symmetric(
+                    horizontal: Get.width * 0.05, vertical: Get.height * 0.02),
+                margin: EdgeInsets.symmetric(
+                    horizontal: Get.width * 0.05),
+                decoration: BoxDecoration(
+                  color: ColorLight.white,
+                  borderRadius: BorderRadius.circular(25),
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Container(
+                        width: Get.width,
+                        padding: EdgeInsets.symmetric(
+                            horizontal: Get.width * 0.05, vertical: Get.height * 0.02),
 
-                      decoration: BoxDecoration(
-                        color: ColorLight.black,
-                        borderRadius: BorderRadius.only(topLeft: Radius.circular(25),topRight: Radius.circular(25)),
+                        decoration: BoxDecoration(
+                          color: ColorLight.black,
+                          borderRadius: BorderRadius.only(topLeft: Radius.circular(25),topRight: Radius.circular(25)),
+                        ),
+                        child:buildPaymentSuccess(membership)),
+                    TicketWidget(
+                      color: Colors.black,
+                      width: Get.width,
+                      height: 40,
+
+                      padding: EdgeInsets.all(10),
+                      child:  Row(
+                        children: List.generate(
+                            150 ~/ 1,
+                                (index) => Expanded(
+                              child: Container(
+                                color: index % 2 == 0 ? Colors.transparent : Colors.grey,
+                                height: 1,
+                              ),
+                            )),
                       ),
-                      child:buildPaymentSuccess(membership)),
-                  TicketWidget(
-                    color: Colors.black,
-                    width: Get.width,
-                    height: 40,
-
-                    padding: EdgeInsets.all(10),
-                    child:  Row(
-                      children: List.generate(
-                          150 ~/ 1,
-                              (index) => Expanded(
-                            child: Container(
-                              color: index % 2 == 0 ? Colors.transparent : Colors.grey,
-                              height: 1,
-                            ),
-                          )),
                     ),
-                  ),
-                  Container(
-                    width: Get.width,
-                    padding: EdgeInsets.symmetric(
-                        horizontal: Get.width * 0.05, vertical: Get.height * 0.02),
-
-                    decoration: BoxDecoration(
-                      color: ColorLight.black,
-
-                    ),child:
-                  buildQrCode(username,qrData),),
-                  TicketWidget(
-                    color: Colors.black,
-                    width: Get.width,
-                    height: 40,
-
-                    padding: EdgeInsets.all(10),
-                    child:  Row(
-                      children: List.generate(
-                          150 ~/ 1,
-                              (index) => Expanded(
-                            child: Container(
-                              color: index % 2 == 0 ? Colors.transparent : Colors.grey,
-                              height: 1,
-                            ),
-                          )),
-                    ),
-                  ),
-                  Container(
+                    Container(
                       width: Get.width,
                       padding: EdgeInsets.symmetric(
                           horizontal: Get.width * 0.05, vertical: Get.height * 0.02),
 
                       decoration: BoxDecoration(
                         color: ColorLight.black,
-                        borderRadius: BorderRadius.only(bottomLeft: Radius.circular(25),bottomRight: Radius.circular(25)),
+
                       ),child:
-                  buildDetails(membership))
-                ],
+                    buildQrCode(username,qrData),),
+                    TicketWidget(
+                      color: Colors.black,
+                      width: Get.width,
+                      height: 40,
+
+                      padding: EdgeInsets.all(10),
+                      child:  Row(
+                        children: List.generate(
+                            150 ~/ 1,
+                                (index) => Expanded(
+                              child: Container(
+                                color: index % 2 == 0 ? Colors.transparent : Colors.grey,
+                                height: 1,
+                              ),
+                            )),
+                      ),
+                    ),
+                    Container(
+                        width: Get.width,
+                        padding: EdgeInsets.symmetric(
+                            horizontal: Get.width * 0.05, vertical: Get.height * 0.02),
+
+                        decoration: BoxDecoration(
+                          color: ColorLight.black,
+                          borderRadius: BorderRadius.only(bottomLeft: Radius.circular(25),bottomRight: Radius.circular(25)),
+                        ),child:
+                    buildDetails(membership))
+                  ],
+                ),
               ),
-            ),
-            SizedBox(
-              height: Get.height * 0.02,
-            ),
+              SizedBox(
+                height: Get.height * 0.02,
+              ),
 
-            // Padding(padding: EdgeInsets.symmetric(horizontal:
-            // Get.width * 0.03,vertical: Get.height*0.03),
-            //   child: customSubmitBtn(
-            //       text: strAllBookings, voidCallback: () {
-            //     var homecont= Get.find<MainScreenController>();
-            //     homecont.tabIndex.value=0;
-            //     homecont.update();
-            //     var bookingcont= Get.find<AllBookingsController>();
-            //     bookingcont.onInit();
-            //     print("object${Get.find<MainScreenController>().tabIndex.value}");
-            //
-            //     if (Get.find<MainScreenController>().tabIndex.value == 0) {
-            //       // Navigate to HomeScreenView with AllBookingsView already visible
-            //       Get.close(2);
-            //       // Get.offAll(() => HomeScreenView(), transition: Transition.fade, arguments: 2);
-            //     } else {
-            //       // Navigate to HomeScreenView
-            //       // Get.offAll(() => HomeScreenView(), transition: Transition.fade);
-            //     }
-            //         }, width: Get.width),)
-            // //buildBook()buildBook
-          ],
+              // Padding(padding: EdgeInsets.symmetric(horizontal:
+              // Get.width * 0.03,vertical: Get.height*0.03),
+              //   child: customSubmitBtn(
+              //       text: strAllBookings, voidCallback: () {
+              //     var homecont= Get.find<MainScreenController>();
+              //     homecont.tabIndex.value=0;
+              //     homecont.update();
+              //     var bookingcont= Get.find<AllBookingsController>();
+              //     bookingcont.onInit();
+              //     print("object${Get.find<MainScreenController>().tabIndex.value}");
+              //
+              //     if (Get.find<MainScreenController>().tabIndex.value == 0) {
+              //       // Navigate to HomeScreenView with AllBookingsView already visible
+              //       Get.close(2);
+              //       // Get.offAll(() => HomeScreenView(), transition: Transition.fade, arguments: 2);
+              //     } else {
+              //       // Navigate to HomeScreenView
+              //       // Get.offAll(() => HomeScreenView(), transition: Transition.fade);
+              //     }
+              //         }, width: Get.width),)
+              // //buildBook()buildBook
+            ],
+          ),
+
+          // Column(
+          //   mainAxisAlignment: MainAxisAlignment.start,
+          //   crossAxisAlignment: CrossAxisAlignment.center,
+          //   children: [
+          //     Container(
+          //       width: Get.width,
+          //       padding: EdgeInsets.symmetric(
+          //           horizontal: Get.width * 0.05, vertical: Get.height * 0.04),
+          //       margin: EdgeInsets.symmetric(
+          //           horizontal: Get.width * 0.05, vertical: Get.height * 0.02),
+          //       decoration: BoxDecoration(
+          //         color: ColorLight.black,
+          //         borderRadius: BorderRadius.circular(25),
+          //       ),
+          //       child: Column(
+          //         mainAxisAlignment: MainAxisAlignment.start,
+          //         crossAxisAlignment: CrossAxisAlignment.center,
+          //         children: [
+          //           buildPaymentSuccess(membership),
+          //           buildQrCode(username,qrData),
+          //           buildDetails(membership)
+          //         ],
+          //       ),
+          //     ),
+          //     SizedBox(
+          //       height: Get.height * 0.05,
+          //     ),
+          //     // customSubmitBtn(text: "Home", voidCallback: (){Get.offAll(HomeScreenView());}, width: Get.width)
+          //   ],
+          // ),
         ),
-
-        // Column(
-        //   mainAxisAlignment: MainAxisAlignment.start,
-        //   crossAxisAlignment: CrossAxisAlignment.center,
-        //   children: [
-        //     Container(
-        //       width: Get.width,
-        //       padding: EdgeInsets.symmetric(
-        //           horizontal: Get.width * 0.05, vertical: Get.height * 0.04),
-        //       margin: EdgeInsets.symmetric(
-        //           horizontal: Get.width * 0.05, vertical: Get.height * 0.02),
-        //       decoration: BoxDecoration(
-        //         color: ColorLight.black,
-        //         borderRadius: BorderRadius.circular(25),
-        //       ),
-        //       child: Column(
-        //         mainAxisAlignment: MainAxisAlignment.start,
-        //         crossAxisAlignment: CrossAxisAlignment.center,
-        //         children: [
-        //           buildPaymentSuccess(membership),
-        //           buildQrCode(username,qrData),
-        //           buildDetails(membership)
-        //         ],
-        //       ),
-        //     ),
-        //     SizedBox(
-        //       height: Get.height * 0.05,
-        //     ),
-        //     // customSubmitBtn(text: "Home", voidCallback: (){Get.offAll(HomeScreenView());}, width: Get.width)
-        //   ],
-        // ),
       ),
       bottomNavigationBar: Padding(
         padding: EdgeInsets.symmetric(horizontal: Get.width * 0.03, vertical: Get.height * 0.03),

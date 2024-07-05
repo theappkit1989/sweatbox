@@ -75,7 +75,7 @@ class ManageSubscriptionView extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    buildQrCode(username,qrData),
+                    buildQrCode(username,qrData,membership),
                     buildDetails(membership),
                   ],
                 ),
@@ -139,9 +139,38 @@ class ManageSubscriptionView extends StatelessWidget {
     );
   }
 
-  buildQrCode(String username, String qrData) {
+  buildQrCode(String username, String qrData, Membership membership) {
     return Column(
       children: [
+
+
+        Center(
+          child: Text(
+            "Your Sweatbox unique code is ${membership.code} ",
+            style: TextStyle(
+                fontSize: 16,
+                fontFamily: fontType,
+                color: ColorLight.white,
+                fontWeight: FontWeight.bold),
+          ),
+        ),
+        SizedBox(
+          height: Get.height * 0.04,
+        ),
+        Row(
+          children: List.generate(
+              150 ~/ 1,
+                  (index) => Expanded(
+                child: Container(
+                  color: index % 2 == 0 ? Colors.transparent : Colors.grey,
+                  height: 1,
+                ),
+              )),
+        ),
+        SizedBox(
+          height: Get.height * 0.04,
+        ),
+
         SizedBox(
           width: Get.width * 0.8,
           height: Get.height * 0.4,
@@ -308,32 +337,7 @@ class ManageSubscriptionView extends StatelessWidget {
             ],
           ),
         ),
-        SizedBox(
-          height: Get.height * 0.04,
-        ),
-        Row(
-          children: List.generate(
-              150 ~/ 1,
-                  (index) => Expanded(
-                child: Container(
-                  color: index % 2 == 0 ? Colors.transparent : Colors.grey,
-                  height: 1,
-                ),
-              )),
-        ),
-        SizedBox(
-          height: Get.height * 0.04,
-        ),
-         Center(
-           child: Text(
-            "Your Sweatbox unique code is ${membership.code} ",
-            style: TextStyle(
-                fontSize: 13,
-                fontFamily: fontType,
-                color: ColorLight.white,
-                fontWeight: FontWeight.w700),
-                   ),
-         ),
+
         // SizedBox(
         //   height: Get.height * 0.01,
         // ),

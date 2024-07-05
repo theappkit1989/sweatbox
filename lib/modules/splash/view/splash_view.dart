@@ -18,8 +18,8 @@ class SplashView extends StatelessWidget {
         backgroundColor: Colors.black,
         body:  Center(
           child: SizedBox(
-            child: Image.asset(ImageConstant.splashIcon, width: Get.width*0.6,
-              height: Get.height*0.11,fit: BoxFit.fill,),
+            child: Image.asset(ImageConstant.splashIcon, width: Get.width,
+              height: Get.height*0.11,),
           ),
         ));
     widgetList.add(child);

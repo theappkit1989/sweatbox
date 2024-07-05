@@ -1,6 +1,6 @@
 class ApiEndpoint {
-static String baseUrl = "http://13.51.255.89/api/";
-static String baseUrlImage = "http://13.51.255.89/user/";
+static String baseUrl = "https://server.sweatboxsoho.com/api/";
+static String baseUrlImage = "https://server.sweatboxsoho.com/user/";
   static String loginUser = baseUrl+'login';
   static String registerUser = baseUrl+'register';
   static String selectUser = baseUrl+'select_user_type';
