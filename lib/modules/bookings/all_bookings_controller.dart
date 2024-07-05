@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:intl/intl.dart';
 import 'package:s_box/modules/bookings/order_details_view.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -16,6 +17,7 @@ class AllBookingsController extends GetxController {
   RxBool isActive = true.obs;
   RxList<Services> servicesList = <Services>[].obs;
   RxList<Membership> membershipList = <Membership>[].obs;
+  RxList<BookingItem> bookingItems = <BookingItem>[].obs;
   var storage = GetStorage();
   String token='';
   String user_id='';
@@ -29,7 +31,7 @@ class AllBookingsController extends GetxController {
     user_id = storage.read(userid).toString();
     fetchUserServices();
   }
-  void goToOrderDetails(Services service) {
+  void goToOrderDetails(BookingItem service) {
     Get.to(OrderDetailsView(),arguments: {"service":service});
   }
 
@@ -87,7 +89,13 @@ class AllBookingsController extends GetxController {
     if (_response.status == true) {
       // _dismissDialog();
       if (_response.status == true) {
+        List<BookingItem> items = [];
+        items.addAll(_response.services!.map((s) => BookingItem.fromService(s)));
+        items.addAll(_response.membership!.map((m) => BookingItem.fromMembership(m)));
+        bookingItems.value = items;
+        print('booking item are ${items.first.date}');
         servicesList.value = _response.services!;
+        membershipList.value = _response.membership!;
       } else {
         // Handle error
         Get.snackbar('Error', _response.message ?? 'Unknown error occurred',colorText: Colors.white);
@@ -100,4 +108,65 @@ class AllBookingsController extends GetxController {
       Get.snackbar("Sweatbox", _response.message ?? 'Something went wrong!',colorText: Colors.white);
     }
   }
+}
+class BookingItem {
+  int? id;
+  int? appuserId;
+  String? name;
+  String? date;
+  String? time;
+  String? code;
+  String? duration;
+  String? price;
+  String? type; // 'service' or 'membership'
+  String? discount;
+  String? activeTime;
+  String? expireTime;
+
+  BookingItem({
+    this.id,
+    this.appuserId,
+    this.name,
+    this.date,
+    this.time,
+    this.code,
+    this.duration,
+    this.price,
+    this.type,
+    this.discount,
+    this.activeTime,
+    this.expireTime,
+  });
+
+  factory BookingItem.fromService(Services service) {
+    return BookingItem(
+      id: service.id,
+      appuserId: service.appuserId,
+      name: service.name,
+      date: service.date,
+      time: service.time,
+      code: service.code,
+      duration: service.duration,
+      price: service.price,
+      type: 'service',
+    );
+  }
+
+  factory BookingItem.fromMembership(Membership membership) {
+    return BookingItem(
+      id: membership.id,
+      appuserId: membership.appuserId,
+      name: membership.name,
+      date: membership.expireTime,
+
+      time: membership.expireTime,
+      code: membership.code,
+      price: membership.price,
+      type: 'membership',
+      discount: membership.discount,
+      activeTime: membership.activeTime,
+      expireTime: membership.expireTime,
+    );
+  }
+
 }

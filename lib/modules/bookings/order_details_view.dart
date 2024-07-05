@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:intl/intl.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import 'package:s_box/modules/bookings/all_bookings_controller.dart';
 import 'package:s_box/modules/bookings/order_details_controller.dart';
 import 'package:s_box/services/commonModels/userAllData.dart';
 import 'package:ticket_widget/ticket_widget.dart';
@@ -26,7 +27,7 @@ class OrderDetailsView extends StatelessWidget {
     _userid=storage.read(userid);
     final arguments = Get.arguments as Map<String, dynamic>;
     // final MembershipDataclass membership = arguments['membership'];
-    final Services selectedService =arguments['service'];
+    final BookingItem selectedService =arguments['service'];
     String qrData = '''
       Title: ${selectedService.name}
       User ID: ${_userid}
@@ -176,7 +177,7 @@ class OrderDetailsView extends StatelessWidget {
     );
   }
 
-  buildQrCode(String username, String qrData, Services selectedService) {
+  buildQrCode(String username, String qrData, BookingItem selectedService) {
     return Column(
       children: [
         Container(
@@ -261,7 +262,7 @@ class OrderDetailsView extends StatelessWidget {
     );
   }
 
-  buildDetails(Services selectedService) {
+  buildDetails(BookingItem selectedService) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -287,14 +288,14 @@ class OrderDetailsView extends StatelessWidget {
                   SizedBox(
                     height: Get.height * 0.01,
                   ),
-                   Text(
-                     formatDateString(selectedService.date!),
-                    style: TextStyle(
-                        fontSize: 13,
-                        fontFamily: fontType,
-                        color: ColorLight.white,
-                        fontWeight: FontWeight.w700),
-                  ),
+                  //  Text(
+                  //    formatDateString(selectedService.date!),
+                  //   style: TextStyle(
+                  //       fontSize: 13,
+                  //       fontFamily: fontType,
+                  //       color: ColorLight.white,
+                  //       fontWeight: FontWeight.w700),
+                  // ),
                 ],
               ),
               Column(

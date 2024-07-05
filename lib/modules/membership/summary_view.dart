@@ -150,38 +150,42 @@ class SummaryView extends StatelessWidget {
                   paymentType == 'Google Pay' ?
                   Obx(() {
                     return
-                      GooglePayButton(
+                      Container(
+                        width: Get.width*0.5,
+                        height: Get.width*0.13,
+                        child: GooglePayButton(
 
-                        paymentItems: [
-                          PaymentItem(
-                            label: 'Total',
-                            amount: summaryController.totalAmount.value.toStringAsFixed(2),
-                            status: PaymentItemStatus.final_price,
-                          )
-                        ],
+                          paymentItems: [
+                            PaymentItem(
+                              label: 'Total',
+                              amount: summaryController.totalAmount.value.toStringAsFixed(2),
+                              status: PaymentItemStatus.final_price,
+                            )
+                          ],
 
-                        type: GooglePayButtonType.book,
-                        margin: const EdgeInsets.only(top: 15.0),
-                        onPaymentResult: (result)
-                        {
-                          print("result is ${result['paymentMethodData']['tokenizationData']['token']}");
-                          if(result['paymentMethodData']['tokenizationData']['token']=={}){
-                            print("payment failed");
+                          type: GooglePayButtonType.book,
+                          margin: const EdgeInsets.only(top: 15.0),
+                          onPaymentResult: (result)
+                          {
+                            print("result is ${result['paymentMethodData']['tokenizationData']['token']}");
+                            if(result['paymentMethodData']['tokenizationData']['token']=={}){
+                              print("payment failed");
+                              Get.to(PaymentDeclinedView());
+                            }else{
+                              print("payment successful");
+                              summaryController.addMembership();
+
+                            }
+
+                          },
+                          onError: (e){
+                            Get.snackbar("Sweatbox", e.toString(),colorText: Colors.white);
                             Get.to(PaymentDeclinedView());
-                          }else{
-                            print("payment successful");
-                            summaryController.addMembership();
-
-                          }
-
-                        },
-                        onError: (e){
-                          Get.snackbar("Sweatbox", e.toString(),colorText: Colors.white);
-                          Get.to(PaymentDeclinedView());
-                        },
-                        loadingIndicator: const Center(
-                          child: CircularProgressIndicator(),
-                        ), paymentConfiguration: PaymentConfiguration.fromJsonString(defaultGooglePay),
+                          },
+                          loadingIndicator: const Center(
+                            child: CircularProgressIndicator(),
+                          ), paymentConfiguration: PaymentConfiguration.fromJsonString(defaultGooglePay),
+                        ),
                       );
 
                   })

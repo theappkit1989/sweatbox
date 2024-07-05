@@ -63,20 +63,21 @@ class AllBookingsView extends StatelessWidget {
                 children: [
                   // Content for Active Bookings tab
                   Obx(()  {
-                    List<Services> activeBookings = [];
-                    List<Services> historyBookings = [];
+                    List<BookingItem> activeBookings = [];
+                    List<BookingItem> historyBookings = [];
 
                     final now = DateTime.now();
 
-                    for (var service in allBookingsController.servicesList) {
-                      final serviceDateTime = DateTime.parse('${service.date} ${service.time}');
+                    for (var service in allBookingsController.bookingItems) {
+                      print("crash date is ${service.date}");
+                      final serviceDateTime = DateTime.parse('${formatDate(service.date!)} ${formatTime(service.time!)}');
                       if (serviceDateTime.isBefore(now)) {
                         historyBookings.add(service);
                       } else {
                         activeBookings.add(service);
                       }
                     }
-                    List<Services> displayBookings =activeBookings ;
+                    List<BookingItem> displayBookings =activeBookings ;
 
                     return SingleChildScrollView(
                       child: Column(
@@ -121,17 +122,17 @@ class AllBookingsView extends StatelessWidget {
                   // Content for History Bookings tab
                   Obx(() {
 
-                  List<Services> historyBookings = [];
+                  List<BookingItem> historyBookings = [];
 
                   final now = DateTime.now();
 
-                  for (var service in allBookingsController.servicesList) {
-                    final serviceDateTime = DateTime.parse('${service.date} ${service.time}');
+                  for (var service in allBookingsController.bookingItems) {
+                    final serviceDateTime = DateTime.parse('${formatDate(service.date!)} ${formatTime(service.time!)}');
                     if (serviceDateTime.isBefore(now)) {
                       historyBookings.add(service);
                     }
                   }
-                  List<Services> displayBookings = historyBookings;
+                  List<BookingItem> displayBookings = historyBookings;
 
                     return SingleChildScrollView(
                     child: Column(
@@ -312,8 +313,37 @@ class AllBookingsView extends StatelessWidget {
       ),
     );
   }
+  String formatDate(String dateString) {
+    // Regular expression to check if the date string is already in the format "yyyy-MM-dd"
+    RegExp regExp = RegExp(r'^\d{4}-\d{2}-\d{2}$');
+    if (regExp.hasMatch(dateString)) {
+      return dateString;
+    }
 
-  Widget buildActiveWidget(Services service) {
+    // Parse the input date string to a DateTime object
+    DateTime parsedDate = DateFormat('d MMMM yyyy HH:mm').parse(dateString);
+
+    // Format the DateTime object to the desired date format
+    DateFormat dateFormatter = DateFormat('yyyy-MM-dd');
+    return dateFormatter.format(parsedDate);
+  }
+
+  String formatTime(String dateString) {
+    // Regular expression to check if the time string is already in the format "HH:mm"
+    RegExp timeRegExp = RegExp(r'^\d{2}:\d{2}$');
+    if (timeRegExp.hasMatch(dateString)) {
+      return dateString;
+    }
+
+    // Parse the input date string to a DateTime object
+    DateTime parsedDate = DateFormat('d MMMM yyyy HH:mm').parse(dateString);
+
+    // Format the DateTime object to the desired time format
+    DateFormat timeFormatter = DateFormat('HH:mm');
+    return timeFormatter.format(parsedDate);
+  }
+
+  Widget buildActiveWidget(BookingItem service) {
     return SizedBox(
       width: Get.width,
       child: Column(
@@ -350,6 +380,7 @@ class AllBookingsView extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 5),
                     child: Text(
+                      service.duration==null?'Membership ':
                       'Details: ${service.duration} min',
                       style: TextStyle(
                         fontSize: 12,
@@ -371,7 +402,7 @@ class AllBookingsView extends StatelessWidget {
                           ),
                           SizedBox(width: 5),
                           Text(
-                            formatDateString(service.date??"2024-09-01") ?? 'Date',
+                            formatDateString(formatDate(service.date!)??"2024-09-01") ?? 'Date',
                             style: TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.w400,
@@ -440,7 +471,9 @@ class AllBookingsView extends StatelessWidget {
                       borderRadius: BorderRadius.circular(40.0)),
                 ),
                 MaterialButton(
-                  onPressed: () => {allBookingsController.goToOrderDetails(service)},
+                  onPressed: () => {
+                    allBookingsController.goToOrderDetails(service)
+                  },
                   child: const Text(
                     strViewDetails,
                     style: TextStyle(

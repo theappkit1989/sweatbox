@@ -178,34 +178,38 @@ class MassageSummaryView extends StatelessWidget {
                 paymentType == 'Google Pay' ?
                 Obx(() {
                   return
-                    GooglePayButton(
+                    Container(
+                      width: Get.width*0.5,
+                      height: Get.width*0.13,
+                      child: GooglePayButton(
 
-                      paymentItems: [
-                        PaymentItem(
-                          label: 'Total',
-                          amount: summaryController.totalAmount.value.toStringAsFixed(2),
-                          status: PaymentItemStatus.final_price,
-                        )
-                      ],
+                        paymentItems: [
+                          PaymentItem(
+                            label: 'Total',
+                            amount: summaryController.totalAmount.value.toStringAsFixed(2),
+                            status: PaymentItemStatus.final_price,
+                          )
+                        ],
 
-                      type: GooglePayButtonType.pay,
-                      margin: const EdgeInsets.only(top: 15.0),
-                      onPaymentResult: (result)
-                      {
-                        print("result is ${result['paymentMethodData']['tokenizationData']['token']}");
-                        if(result['paymentMethodData']['tokenizationData']['token']=={}){
-                          print("payment failed");
-                          Get.to(PaymentDeclinedView());
-                        }else{
-                          print("payment successful");
-                          summaryController.addService();
+                        type: GooglePayButtonType.pay,
+                        margin: const EdgeInsets.only(top: 15.0),
+                        onPaymentResult: (result)
+                        {
+                          print("result is ${result['paymentMethodData']['tokenizationData']['token']}");
+                          if(result['paymentMethodData']['tokenizationData']['token']=={}){
+                            print("payment failed");
+                            Get.to(PaymentDeclinedView());
+                          }else{
+                            print("payment successful");
+                            summaryController.addService();
 
-                        }
+                          }
 
-                      },
-                      loadingIndicator: const Center(
-                        child: CircularProgressIndicator(),
-                      ), paymentConfiguration: PaymentConfiguration.fromJsonString(defaultGooglePay),
+                        },
+                        loadingIndicator: const Center(
+                          child: CircularProgressIndicator(),
+                        ), paymentConfiguration: PaymentConfiguration.fromJsonString(defaultGooglePay),
+                      ),
                     );
 
                 })
