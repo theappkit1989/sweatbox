@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "551348139860",
+    "project_id": "sweatbox-be8ee",
+    "storage_bucket": "sweatbox-be8ee.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:551348139860:android:bf758ee334d21ce23d3ac1",
+        "android_client_info": {
+          "package_name": "com.cc.sweatbox"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAMF3rKgGcLpNdcVPHdvNHjjQMfGUlJo68"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
