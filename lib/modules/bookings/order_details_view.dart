@@ -277,8 +277,8 @@ class OrderDetailsView extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    strDate,
+                   Text(
+                    selectedService.type=='membership'?stractiveDate:strDate,
                     style: TextStyle(
                         fontSize: 13,
                         fontFamily: fontType,
@@ -288,22 +288,22 @@ class OrderDetailsView extends StatelessWidget {
                   SizedBox(
                     height: Get.height * 0.01,
                   ),
-                  //  Text(
-                  //    formatDateString(selectedService.date!),
-                  //   style: TextStyle(
-                  //       fontSize: 13,
-                  //       fontFamily: fontType,
-                  //       color: ColorLight.white,
-                  //       fontWeight: FontWeight.w700),
-                  // ),
+                   Text(
+                     selectedService.type=='membership'?selectedService.activeTime!:formatDateString(selectedService.date!),
+                    style: TextStyle(
+                        fontSize: 13,
+                        fontFamily: fontType,
+                        color: ColorLight.white,
+                        fontWeight: FontWeight.w700),
+                  ),
                 ],
               ),
               Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    strTime,
+                   Text(
+                    selectedService.type=='membership'?strexpireDate:strTime,
                     style: TextStyle(
                         fontSize: 13,
                         fontFamily: fontType,
@@ -369,8 +369,8 @@ class OrderDetailsView extends StatelessWidget {
             SizedBox(
               height: Get.height * 0.01,
             ),
-            const Text(
-              'Full Body Massage',
+             Text(
+              selectedService.type=='membership'?'Membership':'Full Body Massage',
               style: TextStyle(
                   fontSize: 13,
                   fontFamily: fontType,
