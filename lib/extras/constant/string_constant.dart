@@ -355,6 +355,7 @@ const strDeclinedSubtitle = 'Oops! It looks like your payment hasn’t gone thro
 const strTryAgain = 'Try Again';
 const strFreshFaces = 'Fresh Faces';
 const strNearBy = 'Who\'s nearby';
+const strAllMembers = 'All Members';
 const strOnline = 'Online';
 const strTypeSomething = 'Type Something...';
 const strDelete = 'Delete';

@@ -1,33 +1,30 @@
-class FreshFacesResponse {
+import 'dart:async';
+
+class SpecificUserResponse {
   bool? status;
-  List<Users>? users;
   String? message;
+  User? user;
 
-  FreshFacesResponse({this.status, this.users, this.message});
+  SpecificUserResponse({this.status,this.message, this.user});
 
-  FreshFacesResponse.fromJson(Map<String, dynamic> json) {
+  SpecificUserResponse.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     message = json['message'];
-    if (json['users'] != null) {
-      users = <Users>[];
-      json['users'].forEach((v) {
-        users!.add(new Users.fromJson(v));
-      });
-    }
+    user = json['user'] != null ? new User.fromJson(json['user']) : null;
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['status'] = this.status;
     data['message'] = this.message;
-    if (this.users != null) {
-      data['users'] = this.users!.map((v) => v.toJson()).toList();
+    if (this.user != null) {
+      data['user'] = this.user!.toJson();
     }
     return data;
   }
 }
 
-class Users {
+class User {
   int? id;
   String? email;
   String? image;
@@ -35,13 +32,13 @@ class Users {
   String? fName;
   String? lName;
   String? username;
-  String? socket;
   int? status;
   String? token;
   String? createdAt;
   String? updatedAt;
+  String? socket;
 
-  Users(
+  User(
       {this.id,
         this.email,
         this.image,
@@ -50,12 +47,12 @@ class Users {
         this.lName,
         this.username,
         this.status,
-        this.socket,
         this.token,
         this.createdAt,
-        this.updatedAt});
+        this.updatedAt,
+        this.socket});
 
-  Users.fromJson(Map<String, dynamic> json) {
+  User.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     email = json['email'];
     image = json['image'];
@@ -64,10 +61,10 @@ class Users {
     lName = json['l_name'];
     username = json['username'];
     status = json['status'];
-    socket = json['socket'];
     token = json['token'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
+    socket = json['socket'];
   }
 
   Map<String, dynamic> toJson() {
@@ -80,10 +77,10 @@ class Users {
     data['l_name'] = this.lName;
     data['username'] = this.username;
     data['status'] = this.status;
-    data['socket'] = this.socket;
     data['token'] = this.token;
     data['created_at'] = this.createdAt;
     data['updated_at'] = this.updatedAt;
+    data['socket'] = this.socket;
     return data;
   }
 }

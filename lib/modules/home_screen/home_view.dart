@@ -81,22 +81,22 @@ class HomeScreenView extends StatelessWidget {
               ),
             ),
             label: '.'),
-        // BottomNavigationBarItem(
-        //     icon: Image.asset(
-        //       ImageConstant.msgIcon,
-        //       width: Get.width * 0.08,
-        //     ),
-        //     activeIcon: ColorFiltered(
-        //       colorFilter: ColorFilter.mode(
-        //         Colors.red, // Change this to your desired active color
-        //         BlendMode.srcIn,
-        //       ),
-        //       child: Image.asset(
-        //         ImageConstant.msgIcon,
-        //         width: Get.width * 0.08,
-        //       ),
-        //     ),
-        //     label: '.'),
+        BottomNavigationBarItem(
+            icon: Image.asset(
+              ImageConstant.msgIcon,
+              width: Get.width * 0.08,
+            ),
+            activeIcon: ColorFiltered(
+              colorFilter: ColorFilter.mode(
+                Colors.red, // Change this to your desired active color
+                BlendMode.srcIn,
+              ),
+              child: Image.asset(
+                ImageConstant.msgIcon,
+                width: Get.width * 0.08,
+              ),
+            ),
+            label: '.'),
         BottomNavigationBarItem(
             icon: Image.asset(
               ImageConstant.calendarIcon,

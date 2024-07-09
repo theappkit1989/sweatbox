@@ -117,7 +117,7 @@ class AllMessagesView extends StatelessWidget {
             final imageUrl = '${ApiEndpoint.baseUrlImage}${user.image}';
 
             return GestureDetector(
-              // onTap: () => allMessagesController.goToChatScreen(user),
+              onTap: () => allMessagesController.goToChatScreen(user),
               child: Container(
                 width: Get.width * 0.16,
                 height: Get.height * 0.1,

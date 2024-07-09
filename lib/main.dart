@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:firebase_core/firebase_core.dart';
 import 'package:pay/pay.dart';
 import 'package:s_box/modules/massage_booking/date_time_view.dart';
 import 'package:s_box/modules/massage_booking/get_access_view.dart';
@@ -102,6 +103,21 @@ Future<void> setupFlutterNotifications() async {
 void main() async {
   await GetStorage.init();
   WidgetsFlutterBinding.ensureInitialized();
+  Platform.isAndroid?
+  await Firebase.initializeApp(
+    options: const FirebaseOptions(
+      apiKey: "AIzaSyAMF3rKgGcLpNdcVPHdvNHjjQMfGUlJo68",
+      appId: "1:551348139860:android:bf758ee334d21ce23d3ac1",
+      messagingSenderId: "551348139860",
+      projectId: "sweatbox-be8ee",
+    ),
+  ):
+  await Firebase.initializeApp(
+      options: const FirebaseOptions(
+          apiKey: "AIzaSyCwC-KSzl0x5xRzf4NDvvQKHxzP-YW8FWQ",
+          appId: "1:551348139860:ios:606880c03aa53c003d3ac1",
+          messagingSenderId: "551348139860",
+          projectId: "sweatbox-be8ee"));
  // await Firebase.initializeApp();
   runApp(MyApp());
   // Pay.instance.initialize(paymentConfigurationAsset: 'payment_profile_google_pay.json');

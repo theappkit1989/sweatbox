@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:s_box/extras/constant/app_color.dart';
 import 'package:s_box/extras/constant/app_images.dart';
@@ -14,12 +15,17 @@ import '../../services/api/api_endpoint.dart';
 
 class ChatView extends StatelessWidget {
   final chatController = Get.put(ChatController());
+
   ChatView({super.key});
 
   @override
   Widget build(BuildContext context) {
     final arguments = Get.arguments as Map<String, dynamic>;
     final Users user = arguments['user'];
+    chatController.user.value = user;
+    var controller=TextEditingController();
+    chatController.fetchSpecificUser();
+    chatController.fetchAllMessages();
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: buildAppBar(user),
@@ -33,16 +39,18 @@ class ChatView extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Align(
-                  alignment: Alignment.center,
-                  child: buildDateWidget(date: 'Today'),
-                ),
+
                 buildChatWidget(),
               ],
             ),
           ),
-          buildTextBox(),
+
+          Positioned(
+            bottom: 0,
+            left: 0,
+            right: 0,child: buildTextBox(),)
         ],
+
       ),
     );
   }
@@ -56,7 +64,8 @@ class ChatView extends StatelessWidget {
           onTap: () {
             Get.back();
           },
-          child: Icon(Icons.arrow_back , size: Get.width*0.065,color: Colors.white,)),
+          child: Icon(
+            Icons.arrow_back, size: Get.width * 0.065, color: Colors.white,)),
       title: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -64,17 +73,17 @@ class ChatView extends StatelessWidget {
           Stack(
             children: [
               Container(
-                width: Get.width * 0.12,
-                height: kToolbarHeight,
-                decoration:  BoxDecoration(
-                  shape: BoxShape.circle,
-                  image: user.image!=null?DecorationImage(
-                    image: NetworkImage(imageUrl),
-                    fit: BoxFit.cover,
-                  ):DecorationImage(
-                      image: AssetImage(defaultImage),
-                      fit: BoxFit.cover),
-                )
+                  width: Get.width * 0.12,
+                  height: kToolbarHeight,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    image: user.image != null ? DecorationImage(
+                      image: NetworkImage(imageUrl),
+                      fit: BoxFit.cover,
+                    ) : DecorationImage(
+                        image: AssetImage(defaultImage),
+                        fit: BoxFit.cover),
+                  )
               ),
               Container(
                 width: 10,
@@ -96,7 +105,7 @@ class ChatView extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               text(
-                  text: user.fName??"",
+                  text: user.fName ?? "",
                   size: 15,
                   fontWeight: FontWeight.w800,
                   color: ColorLight.white),
@@ -118,8 +127,8 @@ class ChatView extends StatelessWidget {
             margin: const EdgeInsets.all(12.0),
             decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                border: Border.all(color:  Colors.grey)),
-            child:  Icon(Icons.more_vert,color: Colors.white,),
+                border: Border.all(color: Colors.grey)),
+            child: Icon(Icons.more_vert, color: Colors.white,),
           ),
         ),
       ],
@@ -142,91 +151,71 @@ class ChatView extends StatelessWidget {
     );
   }
 
-  buildChatWidget() {
+  Widget buildChatWidget() {
     return Column(
       children: [
-        ListView.builder(
-          itemBuilder: (context, index) => index % 2 == 0
-              ? Align(
-                  alignment: Alignment.centerRight,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.all(12.0),
-                        margin:
-                            EdgeInsets.symmetric(vertical: Get.height * 0.01),
-                        decoration: const BoxDecoration(
-                            color: appPrimaryColor,
-                            borderRadius: BorderRadius.only(
-                                topRight: Radius.circular(20),
-                                topLeft: Radius.circular(20),
-                                bottomLeft: Radius.circular(20),
-                                bottomRight: Radius.zero)),
-                        child: const Text(
-                          'It is a long established fact that a reader will be distracted by the readable',
-                          style: TextStyle(
-                            fontSize: 13,
-                            fontFamily: fontType,
-                            color: ColorLight.white,
-                            fontWeight: FontWeight.w400,
-                          ),
+        Obx(() {
+          return ListView.builder(
+            itemBuilder: (context, index) {
+              final message = chatController.messages[index];
+              final isCurrentUser = message.senderId == chatController.user_id;
+              return Align(
+                alignment: isCurrentUser
+                    ? Alignment.centerRight
+                    : Alignment.centerLeft,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: isCurrentUser
+                      ? CrossAxisAlignment.end
+                      : CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(12.0),
+                      margin:
+                      EdgeInsets.symmetric(vertical: Get.height * 0.01),
+                      decoration: BoxDecoration(
+                        color: isCurrentUser ? appPrimaryColor : greyChat,
+                        borderRadius: BorderRadius.only(
+                          topRight: Radius.circular(20),
+                          topLeft: Radius.circular(20),
+                          bottomLeft: isCurrentUser
+                              ? Radius.circular(20)
+                              : Radius.zero,
+                          bottomRight: isCurrentUser
+                              ? Radius.zero
+                              : Radius.circular(20),
                         ),
                       ),
-                      const Text(
-                        '8:50 PM',
-                        style: TextStyle(
-                            fontWeight: FontWeight.w500,
-                            color: ColorLight.white,
-                            fontFamily: fontType,
-                            fontSize: 11),
-                      )
-                    ],
-                  ),
-                )
-              : Align(
-                  alignment: Alignment.centerLeft,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.all(12.0),
-                        margin:
-                            EdgeInsets.symmetric(vertical: Get.height * 0.01),
-                        decoration: const BoxDecoration(
-                            color: greyChat,
-                            borderRadius: BorderRadius.only(
-                                topRight: Radius.circular(20),
-                                topLeft: Radius.circular(20),
-                                bottomLeft: Radius.zero,
-                                bottomRight: Radius.circular(20))),
-                        child: const Text(
-                          'It is a long established fact that a reader',
-                          style: TextStyle(
-                            fontSize: 13,
-                            fontFamily: fontType,
-                            color: ColorLight.white,
-                            fontWeight: FontWeight.w400,
-                          ),
+                      child: Text(
+                        message.message ?? '',
+                        style: const TextStyle(
+                          fontSize: 13,
+                          fontFamily: fontType,
+                          color: ColorLight.white,
+                          fontWeight: FontWeight.w400,
                         ),
                       ),
-                      const Text(
-                        '8:50 PM',
-                        style: TextStyle(
-                            fontWeight: FontWeight.w400,
-                            color: ColorLight.black,
-                            fontFamily: fontType,
-                            fontSize: 11),
-                      )
-                    ],
-                  ),
+                    ),
+                    Text(
+                      '8:50 PM',
+                      // Ideally, format the actual message timestamp here
+                      style: TextStyle(
+                          fontWeight: FontWeight.w400,
+                          color: isCurrentUser
+                              ? ColorLight.white
+                              : ColorLight.black,
+                          fontFamily: fontType,
+                          fontSize: 11),
+                    )
+                  ],
                 ),
-          primary: false,
-          shrinkWrap: true,
-          itemCount: 10,
-        ),
+              );
+            },
+            primary: false,
+            shrinkWrap: true,
+            itemCount: chatController.messages.length,
+          );
+        }),
         SizedBox(
           height: Get.height * 0.1,
         ),
@@ -234,7 +223,100 @@ class ChatView extends StatelessWidget {
     );
   }
 
+  // buildChatWidget() {
+  //   return Column(
+  //     children: [
+  //       ListView.builder(
+  //         itemBuilder: (context, index) => index % 2 == 0
+  //             ? Align(
+  //                 alignment: Alignment.centerRight,
+  //                 child: Column(
+  //                   mainAxisAlignment: MainAxisAlignment.start,
+  //                   crossAxisAlignment: CrossAxisAlignment.end,
+  //                   children: [
+  //                     Container(
+  //                       padding: const EdgeInsets.all(12.0),
+  //                       margin:
+  //                           EdgeInsets.symmetric(vertical: Get.height * 0.01),
+  //                       decoration: const BoxDecoration(
+  //                           color: appPrimaryColor,
+  //                           borderRadius: BorderRadius.only(
+  //                               topRight: Radius.circular(20),
+  //                               topLeft: Radius.circular(20),
+  //                               bottomLeft: Radius.circular(20),
+  //                               bottomRight: Radius.zero)),
+  //                       child: const Text(
+  //                         'It is a long established fact that a reader will be distracted by the readable',
+  //                         style: TextStyle(
+  //                           fontSize: 13,
+  //                           fontFamily: fontType,
+  //                           color: ColorLight.white,
+  //                           fontWeight: FontWeight.w400,
+  //                         ),
+  //                       ),
+  //                     ),
+  //                     const Text(
+  //                       '8:50 PM',
+  //                       style: TextStyle(
+  //                           fontWeight: FontWeight.w500,
+  //                           color: ColorLight.white,
+  //                           fontFamily: fontType,
+  //                           fontSize: 11),
+  //                     )
+  //                   ],
+  //                 ),
+  //               )
+  //             : Align(
+  //                 alignment: Alignment.centerLeft,
+  //                 child: Column(
+  //                   mainAxisAlignment: MainAxisAlignment.start,
+  //                   crossAxisAlignment: CrossAxisAlignment.start,
+  //                   children: [
+  //                     Container(
+  //                       padding: const EdgeInsets.all(12.0),
+  //                       margin:
+  //                           EdgeInsets.symmetric(vertical: Get.height * 0.01),
+  //                       decoration: const BoxDecoration(
+  //                           color: greyChat,
+  //                           borderRadius: BorderRadius.only(
+  //                               topRight: Radius.circular(20),
+  //                               topLeft: Radius.circular(20),
+  //                               bottomLeft: Radius.zero,
+  //                               bottomRight: Radius.circular(20))),
+  //                       child: const Text(
+  //                         'It is a long established fact that a reader',
+  //                         style: TextStyle(
+  //                           fontSize: 13,
+  //                           fontFamily: fontType,
+  //                           color: ColorLight.white,
+  //                           fontWeight: FontWeight.w400,
+  //                         ),
+  //                       ),
+  //                     ),
+  //                     const Text(
+  //                       '8:50 PM',
+  //                       style: TextStyle(
+  //                           fontWeight: FontWeight.w400,
+  //                           color: ColorLight.black,
+  //                           fontFamily: fontType,
+  //                           fontSize: 11),
+  //                     )
+  //                   ],
+  //                 ),
+  //               ),
+  //         primary: false,
+  //         shrinkWrap: true,
+  //         itemCount: 10,
+  //       ),
+  //       SizedBox(
+  //         height: Get.height * 0.1,
+  //       ),
+  //     ],
+  //   );
+  // }
+
   buildTextBox() {
+
     return Container(
       color: ColorLight.black,
       padding: EdgeInsets.only(
@@ -244,11 +326,12 @@ class ChatView extends StatelessWidget {
       ),
       child: Container(
         width: Get.width,
-        padding: EdgeInsets.symmetric(horizontal: Get.width * 0.05,vertical: Get.height*0.005),
+        padding: EdgeInsets.symmetric(
+            horizontal: Get.width * 0.05, vertical: Get.height * 0.005),
         decoration: BoxDecoration(
             color: ColorLight.black,
             borderRadius: BorderRadius.circular(40),
-            border: Border.all(color:  Colors.white.withOpacity(0.3))),
+            border: Border.all(color: Colors.white.withOpacity(0.3))),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
@@ -256,17 +339,24 @@ class ChatView extends StatelessWidget {
               width: Get.width * 0.6,
               child: Row(
                 children: [
-                  Image.asset(
-                    ImageConstant.emojiIcon,
-                    width: 30,
-                    color: Colors.white,
-                  ),
+                  // GestureDetector(
+                  //   onTap: () {
+                  //
+                  //   },
+                  //
+                  //   child: Image.asset(
+                  //     ImageConstant.emojiIcon,
+                  //     width: 30,
+                  //     color: Colors.white,
+                  //   ),
+                  // ),
                   const SizedBox(
                     width: 10,
                   ),
                   SizedBox(
                     width: Get.width * 0.45,
-                    child: const TextField(
+                    child:  TextField(
+                      controller: chatController.textController.value,
                       textInputAction: TextInputAction.done,
                       style: TextStyle(
                           fontSize: 14,
@@ -286,18 +376,23 @@ class ChatView extends StatelessWidget {
                 ],
               ),
             ),
-            Image.asset(
-              ImageConstant.attachmentIcon,
-              width: 30,
-              color: ColorLight.white,
-            ),
+            // Image.asset(
+            //   ImageConstant.attachmentIcon,
+            //   width: 30,
+            //   color: ColorLight.white,
+            // ),
             const SizedBox(
               width: 10,
             ),
-            Image.asset(
-              ImageConstant.cameraIcon,
-              width: 30,
-              color: ColorLight.white,
+            GestureDetector(
+              onTap: (){
+                chatController.sendMessage();
+              },
+              child: Image.asset(
+                ImageConstant.sendIcon,
+                width: 30,
+                color: ColorLight.white,
+              ),
             ),
           ],
         ),

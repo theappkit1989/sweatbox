@@ -1,5 +1,5 @@
 class AllUsersResponse {
-  List<Data>? data;
+  List<UserData>? data;
   bool? status;
   String? message;
 
@@ -7,9 +7,9 @@ class AllUsersResponse {
 
   AllUsersResponse.fromJson(Map<String, dynamic> json) {
     if (json['data'] != null) {
-      data = <Data>[];
+      data = <UserData>[];
       json['data'].forEach((v) {
-        data!.add(new Data.fromJson(v));
+        data!.add(new UserData.fromJson(v));
       });
     }
     status = json['status'];
@@ -27,7 +27,7 @@ class AllUsersResponse {
   }
 }
 
-class Data {
+class UserData {
   int? id;
   String? email;
   String? image;
@@ -40,7 +40,7 @@ class Data {
   String? createdAt;
   String? updatedAt;
 
-  Data(
+  UserData(
       {this.id,
         this.email,
         this.image,
@@ -53,7 +53,7 @@ class Data {
         this.createdAt,
         this.updatedAt});
 
-  Data.fromJson(Map<String, dynamic> json) {
+  UserData.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     email = json['email'];
     image = json['image'];
