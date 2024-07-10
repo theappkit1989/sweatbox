@@ -444,7 +444,7 @@ class AllBookingsView extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 MaterialButton(
-                  onPressed: () {},
+                  onPressed: () {_launchEmailApp(service);},
                   child: Row(
                     children: [
                       Image.asset(
@@ -508,7 +508,7 @@ class AllBookingsView extends StatelessWidget {
   }
 
   // Function to launch email app
-  void _launchEmailApp(Services service) async {
+  void _launchEmailApp(BookingItem service) async {
     final Uri params = Uri(
       scheme: 'mailto',
       path: 'info@sweatbox.com',

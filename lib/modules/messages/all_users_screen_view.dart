@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:s_box/modules/messages/all_user_screen_controller.dart';
 import '../../extras/constant/app_constant.dart';
 import '../../extras/constant/string_constant.dart';
+import '../../services/api/api_endpoint.dart';
 import '../../themes/colors/color_light.dart';
 import '../commonWidgets/common.dart';
 
@@ -29,6 +30,7 @@ class AllUserScreenView extends StatelessWidget {
 
       ),
       body: Obx(() {
+
         if (allUserScreenController.allUserList.isEmpty) {
           return Center(
             child: CircularProgressIndicator(),
@@ -46,16 +48,20 @@ class AllUserScreenView extends StatelessWidget {
               itemCount: allUserScreenController.allUserList.length,
               itemBuilder: (context, index) {
                 final user = allUserScreenController.allUserList[index];
+                final imageUrl = '${ApiEndpoint.baseUrlImage}${user.image}';
                 return GestureDetector(
                   onTap: () {
                     // Navigate to the chat screen
                    allUserScreenController.goToChatScreen(user);
                   },
+
                   child: GridTile(
                     child:Container(
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(12.0),
-                        image: DecorationImage(
+                        image: user.image!=null?DecorationImage(
+                            image: NetworkImage(imageUrl),
+                          fit: BoxFit.cover):DecorationImage(
                             image: AssetImage(
                               'assets/images/Rectangle 39988 (1).png',),
                             fit: BoxFit.cover),

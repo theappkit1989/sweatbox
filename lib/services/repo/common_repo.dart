@@ -7,6 +7,7 @@ import 'package:s_box/services/api/api_endpoint.dart';
 import 'package:s_box/services/base/base_repository.dart';
 import 'package:http/http.dart' as http;
 import 'package:s_box/services/commonModels/allUsersResponse.dart';
+import 'package:s_box/services/commonModels/chatListResponse.dart';
 import 'package:s_box/services/commonModels/common_reposne_model.dart';
 import 'package:s_box/services/commonModels/editProfileResponse.dart';
 import 'package:s_box/services/commonModels/freshFacesResponse.dart';
@@ -739,6 +740,48 @@ class ApiController extends BaseRepository {
         print('Error decoding error response: $e');
         return MessageResponse(
           success: false,
+          message: 'Error: ${apiResponse.body}',
+        );
+      }
+    }
+  }
+  Future<ChatListResponse> getAllChats(String token,String user_id )async {
+    var uri =  Uri.parse(ApiEndpoint.getChatList).replace(queryParameters: {
+      'user_id': user_id,
+
+    });
+
+    var apiResponse = await http.get(
+     uri,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    print('Response status: ${apiResponse.statusCode}');
+    print('Response body: ${apiResponse.body}');
+
+    if (apiResponse.statusCode == 200) {
+      try {
+        var decodedResponse = jsonDecode(utf8.decode(apiResponse.bodyBytes));
+        return ChatListResponse.fromJson(decodedResponse);
+      } catch (e) {
+        print('Error decoding response: $e');
+        return ChatListResponse(status: false, message: 'Error decoding response');
+      }
+    } else {
+      // return CommonResponseEntity(status: false, message: 'Error: ${apiResponse.body}');
+      try {
+        var decodedResponse = jsonDecode(utf8.decode(apiResponse.bodyBytes));
+        return ChatListResponse(
+          status: false,
+          message: decodedResponse['error'] ?? 'Unknown error occurred',
+        );
+      } catch (e) {
+        print('Error decoding error response: $e');
+        return ChatListResponse(
+          status: false,
           message: 'Error: ${apiResponse.body}',
         );
       }

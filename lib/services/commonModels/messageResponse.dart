@@ -29,8 +29,8 @@ class MessageResponse {
 }
 
 class MessageData {
-  String? senderId;
-  String? receiverId;
+  dynamic? senderId;
+  dynamic? receiverId;
   String? message;
   DateTime? updatedAt;
   DateTime? createdAt;

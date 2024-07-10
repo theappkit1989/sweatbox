@@ -11,6 +11,7 @@ import 'package:s_box/modules/messages/menu_view.dart';
 
 import '../../extras/constant/shared_pref_constant.dart';
 import '../../services/repo/common_repo.dart';
+import '../../themes/loading_dialofg.dart';
 import '../my_profile/my_profile_controller.dart';
 
 class ChatController extends GetxController{
@@ -19,6 +20,9 @@ class ChatController extends GetxController{
   var storage = GetStorage();
   RxList<MessageData> messages=<MessageData>[].obs;
   var textController = TextEditingController().obs;
+  RxBool isloading=false.obs;
+  final ScrollController _scrollController = ScrollController();
+  ScrollController get scrollController => _scrollController;
   String token='';
   String receiver_socket_id='';
   String user_id='';
@@ -54,12 +58,10 @@ class ChatController extends GetxController{
 
     };
     socket.emit('set_online',set_online);
-    socket.emit('testing',set_online);
+
 
     socket.onConnect((_) {
-      socket.on('testing',(data){
-        print("user is online testing event$data");
-      });
+
       socket.on('user_got_online',(data){
         print("user is online$data");
       });
@@ -67,7 +69,9 @@ class ChatController extends GetxController{
 
 
         print("get new message$newMessage");
-        messages.add(MessageData.fromJson(newMessage['data']['response']));
+        var _m_data=MessageData.fromJson(newMessage['data']['response']);
+        var message=MessageData(receiverId: _m_data.receiverId,senderId: _m_data.senderId,message: _m_data.message,id: _m_data.id,updatedAt: _m_data.updatedAt,createdAt: _m_data.createdAt);
+        messages.add(message);
         update();
         // messageList.add(MessageModel.fromJson(data));
       });
@@ -84,22 +88,39 @@ class ChatController extends GetxController{
   }
   @override
   void dispose() {
+    print('on dispose calls');
     socket.disconnect();
-    socket.dispose();
+
+    // socket.close();
     super.dispose();
   }
+
+  @override
+  void onClose(){
+    print('on close calls');
+    socket.disconnect();
+    // socket.close();
+  }
+
+  void _showLoadingDialog() {
+    CustomLoadingDialog.showLoadingDialog();
+  }
+
+  void _dismissDialog() {
+    Navigator.of(Get.overlayContext!).pop();
+  }
   sendMessage() {
-    String message = textController.value.toString();
+    String message = textController.value.text;
     if (message.isEmpty) return;
     Map messageMap = {
-      'receiver_socket_id':receiver_socket_id,
+      'receiver_socket_id':user.value.id.toString(),
       'token':token,
       'message': message,
       'sender_id': user_id,
-      'receiver_id': user.value.id,
+      'receiver_id': user.value.id.toString(),
 
     };
-
+    textController.value.clear();
     socket.emit('send_message_user', messageMap);
     print('send message called');
   }
@@ -111,7 +132,7 @@ class ChatController extends GetxController{
 
     var _response = await ApiController().getSpecificUser(token,user.value.id.toString());
     if (_response.status == true) {
-      if(_response.user!.socket!=null){
+      if(_response.user!.socket!.isNotEmpty){
         receiver_socket_id=_response.user!.socket!;
       }{
         print("user is ofline");
@@ -138,9 +159,20 @@ class ChatController extends GetxController{
 
       print('message data is ${_response.response}');
       messages.value=_response.response!;
-
+      isloading.value=false;
+      // WidgetsBinding.instance.addPostFrameCallback((_) {
+      //
+      // });
+      // WidgetsBinding.instance.addPostFrameCallback((_) {
+      //   Future.delayed(Duration(seconds: 2), () {
+      //     // _scrollToBottom();
+      //     scrollController.jumpTo(scrollController.position.maxScrollExtent);
+      //   });
+      //
+      //
+      // });
     } else {
-
+      isloading.value=false;
       if(_response.message=='The Selected appuserid is invalid '){
         Get.find<MyProfileController>().logout();
       }
@@ -148,4 +180,9 @@ class ChatController extends GetxController{
       return null;
     }
   }
+  // void _scrollToBottom() {
+  //   if (_scrollController.hasClients) {
+  //     _scrollController.jumpTo(_scrollController.position.minScrollExtent);
+  //   }
+  // }
 }

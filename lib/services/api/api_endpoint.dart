@@ -19,6 +19,7 @@ static String baseUrlImage = "https://server.sweatboxsoho.com/user/";
   static String promo= baseUrl+'promo';
   static String getSpecificUser= baseUrl+'getSpecficUser';
   static String getUserChat= baseUrl+'message_list';
+  static String getChatList= baseUrl+'chat_list_user';
   static String socket= 'http://16.16.199.105';
 
   static String propertyList = baseUrl+'listing-properties-type';

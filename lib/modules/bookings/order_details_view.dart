@@ -55,73 +55,43 @@ class OrderDetailsView extends StatelessWidget {
         ),
       ),
       body: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
+        child: Container(
+          height: Get.height,
+          decoration: BoxDecoration(
+              color: ColorLight.black,
+              borderRadius: BorderRadius.circular(25)
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
             Container(
-              width: Get.width,
-              padding: EdgeInsets.symmetric(
-                  horizontal: Get.width * 0.05),
-              margin: EdgeInsets.symmetric(
-                  horizontal: Get.width * 0.05),
-              decoration: BoxDecoration(
-                color: ColorLight.white,
-                borderRadius: BorderRadius.circular(25),
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                Container(
-                width: Get.width,
-                padding: EdgeInsets.symmetric(
-                    horizontal: Get.width * 0.05, vertical: Get.height * 0.02),
+            width: Get.width,
+            padding: EdgeInsets.symmetric(
+                horizontal: Get.width * 0.05, vertical: Get.height * 0.02),
 
-                decoration: BoxDecoration(
-                  color: ColorLight.black,
-                  borderRadius: BorderRadius.only(topLeft: Radius.circular(25),topRight: Radius.circular(25)),
-                ),
-                child:
-                  buildDetails(selectedService),),
-                  TicketWidget(
-                    color: Colors.black,
-                    width: Get.width,
-                    height: 40,
-
-                    padding: EdgeInsets.all(10),
-                    child:  Row(
-                      children: List.generate(
-                          150 ~/ 1,
-                              (index) => Expanded(
-                            child: Container(
-                              color: index % 2 == 0 ? Colors.transparent : Colors.grey,
-                              height: 1,
-                            ),
-                          )),
-                    ),
-                  ),
-              Container(
-                width: Get.width,
-                padding: EdgeInsets.symmetric(
-                    horizontal: Get.width * 0.05),
-
-                decoration: BoxDecoration(
-                  color: ColorLight.black,
-                  borderRadius: BorderRadius.only(bottomRight: Radius.circular(25),bottomLeft: Radius.circular(25)),
-                ),
-                child:
-                  buildQrCode(username,qrData,selectedService),),
-
-
-                ],
-              ),
+            decoration: BoxDecoration(
+              color: ColorLight.black,
+              borderRadius: BorderRadius.only(topLeft: Radius.circular(25),topRight: Radius.circular(25)),
             ),
-            SizedBox(
-              height: Get.height * 0.05,
+            child:
+              buildDetails(selectedService),),
+
+          Container(
+            width: Get.width,
+            padding: EdgeInsets.symmetric(
+                horizontal: Get.width * 0.05),
+
+            decoration: BoxDecoration(
+              color: ColorLight.black,
+              borderRadius: BorderRadius.only(bottomRight: Radius.circular(25),bottomLeft: Radius.circular(25)),
             ),
-            //buildBook()
-          ],
+            child:
+              buildQrCode(username,qrData,selectedService),),
+
+
+            ],
+          ),
         ),
       ),
     );
@@ -394,7 +364,17 @@ class OrderDetailsView extends StatelessWidget {
             ),
           ),
         ),
-
+        SizedBox(height: 20,),
+        Row(
+          children: List.generate(
+              150 ~/ 1,
+                  (index) => Expanded(
+                child: Container(
+                  color: index % 2 == 0 ? Colors.transparent : Colors.grey,
+                  height: 1,
+                ),
+              )),
+        ),
         // const Text(
         //   strPaymentMethod,
         //   style: TextStyle(

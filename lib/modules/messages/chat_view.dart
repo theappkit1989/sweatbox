@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:s_box/extras/constant/app_color.dart';
 import 'package:s_box/extras/constant/app_images.dart';
 import 'package:s_box/extras/constant/string_constant.dart';
@@ -24,33 +26,23 @@ class ChatView extends StatelessWidget {
     final Users user = arguments['user'];
     chatController.user.value = user;
     var controller=TextEditingController();
-    chatController.fetchSpecificUser();
+    // chatController.fetchSpecificUser();
+    chatController.isloading.value=true;
     chatController.fetchAllMessages();
+
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: buildAppBar(user),
-      body: Stack(
-        alignment: Alignment.bottomCenter,
-        children: [
-          SingleChildScrollView(
-            padding: EdgeInsets.symmetric(
-                horizontal: Get.width * 0.05, vertical: Get.height * 0.02),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
 
-                buildChatWidget(),
-              ],
+      body: Container(
+        child: Column(
+          children: [
+            Expanded(
+              child: buildChatWidget(),
             ),
-          ),
-
-          Positioned(
-            bottom: 0,
-            left: 0,
-            right: 0,child: buildTextBox(),)
-        ],
-
+            buildTextBox(),
+          ],
+        ),
       ),
     );
   }
@@ -62,6 +54,8 @@ class ChatView extends StatelessWidget {
       backgroundColor: ColorLight.black,
       leading: GestureDetector(
           onTap: () {
+            // chatController.messages.clear();
+            // chatController.dispose();
             Get.back();
           },
           child: Icon(
@@ -152,77 +146,155 @@ class ChatView extends StatelessWidget {
   }
 
   Widget buildChatWidget() {
-    return Column(
-      children: [
-        Obx(() {
-          return ListView.builder(
-            itemBuilder: (context, index) {
-              final message = chatController.messages[index];
-              final isCurrentUser = message.senderId == chatController.user_id;
-              return Align(
-                alignment: isCurrentUser
-                    ? Alignment.centerRight
-                    : Alignment.centerLeft,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: isCurrentUser
-                      ? CrossAxisAlignment.end
-                      : CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.all(12.0),
-                      margin:
-                      EdgeInsets.symmetric(vertical: Get.height * 0.01),
-                      decoration: BoxDecoration(
-                        color: isCurrentUser ? appPrimaryColor : greyChat,
-                        borderRadius: BorderRadius.only(
-                          topRight: Radius.circular(20),
-                          topLeft: Radius.circular(20),
-                          bottomLeft: isCurrentUser
-                              ? Radius.circular(20)
-                              : Radius.zero,
-                          bottomRight: isCurrentUser
-                              ? Radius.zero
-                              : Radius.circular(20),
+    return SingleChildScrollView(
+      physics: ScrollPhysics(),
+      reverse: true,
+      child: Column(
+        children: [
+          // ...chatController.messages.map((element) {
+          //   final message =element;
+          //   final isCurrentUser = message.senderId == chatController.user_id;
+          //   return Align(
+          //     alignment: isCurrentUser
+          //         ? Alignment.centerRight
+          //         : Alignment.centerLeft,
+          //     child: Column(
+          //       mainAxisAlignment: MainAxisAlignment.start,
+          //       crossAxisAlignment: isCurrentUser
+          //           ? CrossAxisAlignment.end
+          //           : CrossAxisAlignment.start,
+          //       children: [
+          //         Container(
+          //           padding: const EdgeInsets.all(12.0),
+          //           margin:
+          //           EdgeInsets.symmetric(vertical: Get.height * 0.01),
+          //           decoration: BoxDecoration(
+          //             color: isCurrentUser ? appPrimaryColor : greyChat,
+          //             borderRadius: BorderRadius.only(
+          //               topRight: Radius.circular(20),
+          //               topLeft: Radius.circular(20),
+          //               bottomLeft: isCurrentUser
+          //                   ? Radius.circular(20)
+          //                   : Radius.zero,
+          //               bottomRight: isCurrentUser
+          //                   ? Radius.zero
+          //                   : Radius.circular(20),
+          //             ),
+          //           ),
+          //           child: Text(
+          //             message.message ?? '',
+          //             style: const TextStyle(
+          //               fontSize: 13,
+          //               fontFamily: fontType,
+          //               color: ColorLight.white,
+          //               fontWeight: FontWeight.w400,
+          //             ),
+          //           ),
+          //         ),
+          //         Text(
+          //           '8:50 PM',
+          //           // Ideally, format the actual message timestamp here
+          //           style: TextStyle(
+          //               fontWeight: FontWeight.w400,
+          //               color: isCurrentUser
+          //                   ? ColorLight.white
+          //                   : ColorLight.black,
+          //               fontFamily: fontType,
+          //               fontSize: 11),
+          //         )
+          //       ],
+          //     ),
+          //   );
+          // }),
+          Obx(() {
+
+            return chatController.isloading==true?CircularProgressIndicator():ListView.builder(
+
+              // controller: chatController.scrollController,
+              itemBuilder: (context, index) {
+                final message = chatController.messages[index];
+                final isCurrentUser = message.senderId == chatController.user_id;
+                return Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: Align(
+                    alignment: isCurrentUser
+                        ? Alignment.centerRight
+                        : Alignment.centerLeft,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: isCurrentUser
+                          ? CrossAxisAlignment.end
+                          : CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(12.0),
+                          margin:
+                          EdgeInsets.symmetric(vertical: Get.height * 0.01),
+                          decoration: BoxDecoration(
+                            color: isCurrentUser ? appPrimaryColor : greyChat,
+                            borderRadius: BorderRadius.only(
+                              topRight: Radius.circular(20),
+                              topLeft: Radius.circular(20),
+                              bottomLeft: isCurrentUser
+                                  ? Radius.circular(20)
+                                  : Radius.zero,
+                              bottomRight: isCurrentUser
+                                  ? Radius.zero
+                                  : Radius.circular(20),
+                            ),
+                          ),
+                          child: Text(
+                            message.message ?? '',
+                            style: const TextStyle(
+                              fontSize: 13,
+                              fontFamily: fontType,
+                              color: ColorLight.white,
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
                         ),
-                      ),
-                      child: Text(
-                        message.message ?? '',
-                        style: const TextStyle(
-                          fontSize: 13,
-                          fontFamily: fontType,
-                          color: ColorLight.white,
-                          fontWeight: FontWeight.w400,
-                        ),
-                      ),
+                        Text(
+                          formatTime(message.createdAt.toString()),
+                          // Ideally, format the actual message timestamp here
+                          style: TextStyle(
+                              fontWeight: FontWeight.w400,
+                              color: isCurrentUser
+                                  ? ColorLight.white
+                                  : ColorLight.white,
+                              fontFamily: fontType,
+                              fontSize: 11),
+                        )
+                      ],
                     ),
-                    Text(
-                      '8:50 PM',
-                      // Ideally, format the actual message timestamp here
-                      style: TextStyle(
-                          fontWeight: FontWeight.w400,
-                          color: isCurrentUser
-                              ? ColorLight.white
-                              : ColorLight.black,
-                          fontFamily: fontType,
-                          fontSize: 11),
-                    )
-                  ],
-                ),
-              );
-            },
-            primary: false,
-            shrinkWrap: true,
-            itemCount: chatController.messages.length,
-          );
-        }),
-        SizedBox(
-          height: Get.height * 0.1,
-        ),
-      ],
+                  ),
+                );
+              },
+              primary: false,
+              shrinkWrap: true,
+              itemCount: chatController.messages.length,
+            );
+          }),
+
+        ],
+      ),
     );
   }
+  String formatDate(String dateTime) {
+    DateTime parsedDate = DateTime.parse(dateTime);
 
+    String formattedDate = DateFormat('dd MMMM yyyy').format(parsedDate);
+
+
+    return '$formattedDate';
+  }
+  String formatTime(String dateTime) {
+    DateTime parsedDate = DateTime.parse(dateTime);
+
+
+    String formattedTime = DateFormat('hh:mm a').format(parsedDate);
+
+    return '$formattedTime';
+  }
   // buildChatWidget() {
   //   return Column(
   //     children: [
@@ -381,9 +453,7 @@ class ChatView extends StatelessWidget {
             //   width: 30,
             //   color: ColorLight.white,
             // ),
-            const SizedBox(
-              width: 10,
-            ),
+            Spacer(),
             GestureDetector(
               onTap: (){
                 chatController.sendMessage();
