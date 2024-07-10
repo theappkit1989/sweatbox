@@ -21,6 +21,7 @@ class AllMessagesView extends StatelessWidget {
     return Scaffold(
       backgroundColor: ColorLight.black,
       appBar: AppBar(
+        centerTitle: false,
         title: Padding(
           padding: const EdgeInsets.all(12.0),
           child: const Text(
@@ -177,6 +178,14 @@ class AllMessagesView extends StatelessWidget {
                     color: ColorLight.white,
                     fontWeight: FontWeight.w600,
                     fontSize: 16,
+                  ),
+                ),
+                subtitle: Text(
+                   'new message',
+                  style: TextStyle(
+                    color: ColorLight.white,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 13,
                   ),
                 ),
                 contentPadding: EdgeInsets.zero,

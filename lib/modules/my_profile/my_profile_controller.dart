@@ -9,7 +9,7 @@ import 'package:s_box/modules/my_profile/edit_profile_view.dart';
 import 'package:s_box/modules/my_profile/manage_subscription_controller.dart';
 import 'package:s_box/modules/my_profile/manage_subscription_view.dart';
 import 'package:s_box/modules/update_password/update_password_view.dart';
-import 'package:url_launcher/url_launcher.dart';
+// import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/material.dart';
 
 import '../../extras/constant/shared_pref_constant.dart';
@@ -83,11 +83,11 @@ class MyProfileController extends GetxController {
 
   void rateApp() async {
     const url = 'https://play.google.com/store/apps/details?id=com.example.your_app';
-    if (await canLaunch(url)) {
-      await launch(url);
-    } else {
-      throw 'Could not launch $url';
-    }
+    // if (await canLaunch(url)) {
+    //   await launch(url);
+    // } else {
+    //   throw 'Could not launch $url';
+    // }
   }
   void goToOrderDetails(Membership membership) {
     Get.to(ManageSubscriptionView(),arguments: {"membership":membership});

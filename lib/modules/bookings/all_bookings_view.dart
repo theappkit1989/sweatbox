@@ -422,7 +422,7 @@ class AllBookingsView extends StatelessWidget {
                           ),
                           SizedBox(width: 5),
                           Text(
-                            service.time ?? 'Time',
+                           service.type=='membership'?formatTime(service.time!): service.time ?? 'Time',
                             style: TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.w400,
