@@ -184,17 +184,15 @@ class AllMessagesView extends StatelessWidget {
                     fontSize: 16,
                   ),
                 ),
-                subtitle: Obx(() {
-                  return Text(
+                subtitle: Text(
                     chat.lastMessage.toString()??"",
                     style: TextStyle(
                       color: ColorLight.white,
                       fontWeight: FontWeight.w600,
                       fontSize: 13,
                     ),
-                  );
-                }),
-                dense: true,
+                  ),
+
 
                 contentPadding: EdgeInsets.zero,
 

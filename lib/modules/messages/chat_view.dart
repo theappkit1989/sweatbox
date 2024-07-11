@@ -87,20 +87,20 @@ class ChatView extends StatelessWidget {
                       image: NetworkImage(imageUrl),
                       fit: BoxFit.cover,
                     ) : DecorationImage(
-                        image: AssetImage(defaultImage),
+                        image: AssetImage(ImageConstant.placeholderImage),
                         fit: BoxFit.cover),
                   )
               ),
-              Container(
-                width: 10,
-                height: 10,
-                margin: EdgeInsets.only(
-                    top: kToolbarHeight - 15, left: Get.width * 0.09),
-                decoration: BoxDecoration(
-                    color: Colors.green,
-                    shape: BoxShape.circle,
-                    border: Border.all(color: ColorLight.white)),
-              ),
+              // Container(
+              //   width: 10,
+              //   height: 10,
+              //   margin: EdgeInsets.only(
+              //       top: kToolbarHeight - 15, left: Get.width * 0.09),
+              //   decoration: BoxDecoration(
+              //       color: Colors.green,
+              //       shape: BoxShape.circle,
+              //       border: Border.all(color: ColorLight.white)),
+              // ),
             ],
           ),
           SizedBox(
@@ -442,6 +442,7 @@ class ChatView extends StatelessWidget {
                     child:  TextField(
                       controller: chatController.textController.value,
                       textInputAction: TextInputAction.done,
+                      keyboardType: TextInputType.text,
                       style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w400,
