@@ -3,17 +3,17 @@
 <plist version="1.0">
 <dict>
 	<key>API_KEY</key>
-	<string>AIzaSyCwC-KSzl0x5xRzf4NDvvQKHxzP-YW8FWQ</string>
+	<string>AIzaSyBxJQO0z_1xkvrEuWnPygkDXlQwPZ8fYoM</string>
 	<key>GCM_SENDER_ID</key>
-	<string>551348139860</string>
+	<string>847542643614</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.cc.sweatbox</string>
+	<string>com.cc.sbox</string>
 	<key>PROJECT_ID</key>
-	<string>sweatbox-be8ee</string>
+	<string>sbox-ac5ff</string>
 	<key>STORAGE_BUCKET</key>
-	<string>sweatbox-be8ee.appspot.com</string>
+	<string>sbox-ac5ff.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -25,6 +25,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:551348139860:ios:606880c03aa53c003d3ac1</string>
+	<string>1:847542643614:ios:8d7c4150d118889288c48f</string>
 </dict>
 </plist>
