@@ -1,5 +1,3 @@
-import 'dart:async';
-
 class ChatListResponse {
   bool? status;
   String? message;
@@ -42,6 +40,8 @@ class Chats {
   String? createdAt;
   String? updatedAt;
   String? socket;
+  String? lastMessage;
+  String? lastMessageTime;
 
   Chats(
       {this.id,
@@ -55,7 +55,9 @@ class Chats {
         this.token,
         this.createdAt,
         this.updatedAt,
-        this.socket});
+        this.socket,
+        this.lastMessage,
+        this.lastMessageTime});
 
   Chats.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -70,6 +72,8 @@ class Chats {
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
     socket = json['socket'];
+    lastMessage = json['last_message'];
+    lastMessageTime = json['last_message_time'];
   }
 
   Map<String, dynamic> toJson() {
@@ -86,6 +90,8 @@ class Chats {
     data['created_at'] = this.createdAt;
     data['updated_at'] = this.updatedAt;
     data['socket'] = this.socket;
+    data['last_message'] = this.lastMessage;
+    data['last_message_time'] = this.lastMessageTime;
     return data;
   }
 }

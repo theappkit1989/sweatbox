@@ -29,6 +29,7 @@ class MyProfileView extends StatelessWidget {
     storage.writeIfNull(userToken, '');
     storage.writeIfNull(userid, '');
     storage.writeIfNull(image, '');
+    storage.writeIfNull(userName, '');
     username = storage.read(userName);
     useremail = storage.read(userEmail);
     userImage = storage.read(image);
@@ -143,11 +144,13 @@ class MyProfileView extends StatelessWidget {
                           errorBuilder: (context, error, stackTrace) {
                             // If there is an error loading the network image, show a placeholder image
                             return Center(
-                              child: Icon(
-                                Icons.person,
-                                size: 50.0,
-                                color: appPrimaryColor, // Color of the person icon
-                              ),
+                              child: Image.asset( ImageConstant.placeholderImage)
+
+                              // Icon(
+                              //   Icons.person,
+                              //   size: 50.0,
+                              //   color: appPrimaryColor, // Color of the person icon
+                              // ),
                             ); // You can replace this with your custom error widget
                           },
                         )),

@@ -93,7 +93,7 @@ class AllBookingsController extends GetxController {
         items.addAll(_response.services!.map((s) => BookingItem.fromService(s)));
         items.addAll(_response.membership!.map((m) => BookingItem.fromMembership(m)));
         bookingItems.value = items;
-        print('booking item are ${items.first.date}');
+        // print('booking item are ${items.first.date}');
         servicesList.value = _response.services!;
         membershipList.value = _response.membership!;
       } else {

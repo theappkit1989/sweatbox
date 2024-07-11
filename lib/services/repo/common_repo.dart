@@ -537,11 +537,15 @@ class ApiController extends BaseRepository {
       }
     }
   }
-  Future<FreshFacesResponse> getAllUsers(String token) async {
+  Future<FreshFacesResponse> getAllUsers(String user_id,String token) async {
+
+    var uri = Uri.parse(ApiEndpoint.allUser).replace(queryParameters: {
+      'id': user_id,
 
 
+    });
     var apiResponse = await http.get(
-      Uri.parse(ApiEndpoint.allUser),
+     uri,
       headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer $token',
@@ -792,6 +796,48 @@ class ApiController extends BaseRepository {
       'id': userId,
 
 
+    });
+
+    var apiResponse = await http.delete(
+      uri,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    print('Response status: ${apiResponse.statusCode}');
+    print('Response body: ${apiResponse.body}');
+
+    if (apiResponse.statusCode == 200) {
+      try {
+        var decodedResponse = jsonDecode(utf8.decode(apiResponse.bodyBytes));
+        return CommonResponseEntity.fromJson(decodedResponse);
+      } catch (e) {
+        print('Error decoding response: $e');
+        return CommonResponseEntity(status: false, message: 'Error decoding response');
+      }
+    } else {
+      // return CommonResponseEntity(status: false, message: 'Error: ${apiResponse.body}');
+      try {
+        var decodedResponse = jsonDecode(utf8.decode(apiResponse.bodyBytes));
+        return CommonResponseEntity(
+          status: false,
+          message: decodedResponse['error'] ?? 'Unknown error occurred',
+        );
+      } catch (e) {
+        print('Error decoding error response: $e');
+        return CommonResponseEntity(
+          status: false,
+          message: 'Error: ${apiResponse.body}',
+        );
+      }
+    }
+  }
+  Future<CommonResponseEntity> deleteUserChat(String userId,String receiver_id, String token) async {
+    var uri = Uri.parse(ApiEndpoint.deleteChat).replace(queryParameters: {
+      'user_id': userId,
+      'receiver_id': receiver_id,
     });
 
     var apiResponse = await http.delete(

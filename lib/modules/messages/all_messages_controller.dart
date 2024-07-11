@@ -5,16 +5,21 @@ import 'package:get_storage/get_storage.dart';
 import 'package:s_box/modules/messages/chat_view.dart';
 
 import '../../extras/constant/shared_pref_constant.dart';
+import '../../services/api/api_endpoint.dart';
 import '../../services/commonModels/chatListResponse.dart';
 import '../../services/commonModels/freshFacesResponse.dart';
+import '../../services/commonModels/messageResponse.dart';
 import '../../services/repo/common_repo.dart';
 import '../../themes/loading_dialofg.dart';
 import '../my_profile/my_profile_controller.dart';
+import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 class AllMessagesController extends GetxController {
   var storage = GetStorage();
   String token='';
   String user_id='';
+  RxString lastmessage=''.obs;
+  late IO.Socket socket;
   RxList<Users> freshUserList = <Users>[].obs;
   RxList<Chats> allChatList = <Chats>[].obs;
   final String defaultImage = 'assets/images/Ellipse 2.png';
@@ -60,13 +65,66 @@ class AllMessagesController extends GetxController {
     storage.writeIfNull(userid, '');
     token = storage.read(userToken);
     user_id = storage.read(userid).toString();
+
     // Future.delayed(Duration(seconds: 1), () {
       fetchFreshFaces(token);
     fetchAllChatList();
+    // initSocket();
     // });
 
   }
-
+  // initSocket() {
+  //   socket = IO.io(ApiEndpoint.socket, <String, dynamic>{
+  //     'autoConnect': false,
+  //     'transports': ['websocket'],
+  //   });
+  //
+  //   socket.connect();
+  //   // Map set_online = {
+  //   //
+  //   //   'token':token,
+  //   //
+  //   //   'user_id': user_id,
+  //   //
+  //   //
+  //   //
+  //   // };
+  //   // socket.emit('set_online',set_online);
+  //
+  //
+  //   socket.onConnect((_) {
+  //
+  //     socket.on('user_got_online',(data){
+  //       print("user is online$data");
+  //     });
+  //     socket.on('get_conversation', (newMessage) {
+  //
+  //       print("get new message$newMessage");
+  //
+  //       var _m_data=MessageData.fromJson(newMessage['data']['response']);
+  //       if (_m_data.senderId == user_id) {
+  //         print('********** message On Not sender ****************');
+  //         var message=MessageData(receiverId: _m_data.receiverId,senderId: _m_data.senderId,message: _m_data.message,id: _m_data.id,updatedAt: _m_data.updatedAt,createdAt: _m_data.createdAt);
+  //         lastmessage.value=(message.message.toString()) ;
+  //         update();
+  //       }
+  //       // if (_m_data.senderId == user.value.id.toString()) {
+  //       //   print('********** message On Not sender ****************');
+  //       //   var message=MessageData(receiverId: _m_data.receiverId,senderId: _m_data.senderId,message: _m_data.message,id: _m_data.id,updatedAt: _m_data.updatedAt,createdAt: _m_data.createdAt);
+  //       //   messages.add(message);
+  //       //   update();
+  //       // }
+  //
+  //       // messageList.add(MessageModel.fromJson(data));
+  //     });
+  //     print('Connection established${socket.id}');
+  //
+  //   });
+  //
+  //   socket.onDisconnect((_) => print('Connection Disconnection'));
+  //   socket.onConnectError((err) => print(err));
+  //   socket.onError((err) => print(err));
+  // }
   void fetchFreshFaces(String token) async {
     // _showLoadingDialog();
     FocusScope.of(Get.context!).unfocus();
@@ -82,7 +140,7 @@ class AllMessagesController extends GetxController {
 
     } else {
       // _dismissDialog();
-      Get.snackbar("Sweatbox", _response.message ?? 'Something went wrong!',colorText: Colors.white);
+      // Get.snackbar("Sweatbox", _response.message ?? 'Something went wrong!',colorText: Colors.white);
     }
   }
 
@@ -105,7 +163,7 @@ class AllMessagesController extends GetxController {
       if(_response.message=='The selected user id is invalid.'){
         Get.find<MyProfileController>().logout();
       }
-      Get.snackbar("Sweatbox", _response.message ?? 'Something went wrong!',colorText: Colors.white);
+      // Get.snackbar("Sweatbox", _response.message ?? 'Something went wrong!',colorText: Colors.white);
       return null;
     }
   }

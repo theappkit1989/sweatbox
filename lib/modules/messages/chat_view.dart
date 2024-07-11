@@ -14,6 +14,7 @@ import 'package:s_box/themes/colors/color_light.dart';
 
 import '../../extras/constant/app_constant.dart';
 import '../../services/api/api_endpoint.dart';
+import 'all_messages_controller.dart';
 
 class ChatView extends StatelessWidget {
   final chatController = Get.put(ChatController());
@@ -30,18 +31,27 @@ class ChatView extends StatelessWidget {
     chatController.isloading.value=true;
     chatController.fetchAllMessages();
 
-    return Scaffold(
-      backgroundColor: Colors.black,
-      appBar: buildAppBar(user),
+    return WillPopScope(
+      onWillPop: () {
 
-      body: Container(
-        child: Column(
-          children: [
-            Expanded(
-              child: buildChatWidget(),
-            ),
-            buildTextBox(),
-          ],
+        var homeCont = Get.find<AllMessagesController>();
+      homeCont.allChatList.clear();
+      homeCont.fetchAllChatList();
+      homeCont.update();
+        return Future(() => true);},
+      child: Scaffold(
+        backgroundColor: Colors.black,
+        appBar: buildAppBar(user),
+
+        body: Container(
+          child: Column(
+            children: [
+              Expanded(
+                child: buildChatWidget(),
+              ),
+              buildTextBox(),
+            ],
+          ),
         ),
       ),
     );
@@ -54,8 +64,10 @@ class ChatView extends StatelessWidget {
       backgroundColor: ColorLight.black,
       leading: GestureDetector(
           onTap: () {
-            // chatController.messages.clear();
-            // chatController.dispose();
+            var homeCont = Get.find<AllMessagesController>();
+            homeCont.allChatList.clear();
+            homeCont.fetchAllChatList();
+            homeCont.update();
             Get.back();
           },
           child: Icon(

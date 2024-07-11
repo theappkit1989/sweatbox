@@ -65,6 +65,7 @@ class ImageConstant {
   static const logoutWhite = 'assets/icons/logout_white.png';
   static const commentIcon = 'assets/comment.svg';
   static const onboardImage4 = 'assets/onboard4.jpeg';
+  static const placeholderImage = 'assets/images/placeholder.jpg';
   static const splashIcon = 'assets/images/logo.png';
   static const homeNavIcon = 'assets/icons/home.svg';
   static const homeWhiteNavIcon = 'assets/icons/home_white.svg';

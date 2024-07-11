@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:s_box/extras/constant/app_constant.dart';
 import 'package:s_box/themes/colors/color_light.dart';
 
+import '../../services/commonModels/freshFacesResponse.dart';
 import 'menu_controller.dart';
 
 class MenuView extends StatelessWidget {
@@ -11,6 +12,9 @@ class MenuView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final arguments = Get.arguments as Map<String, dynamic>;
+    final Users user = arguments['user'];
+    menuController.user.value = user;
     return Scaffold(
       backgroundColor: ColorLight.black,
       appBar: AppBar(automaticallyImplyLeading: true,),

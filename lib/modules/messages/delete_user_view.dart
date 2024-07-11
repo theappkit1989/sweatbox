@@ -9,6 +9,7 @@ import 'package:s_box/themes/colors/color_light.dart';
 
 import '../../extras/constant/app_color.dart';
 import '../../extras/constant/app_constant.dart';
+import '../../services/commonModels/freshFacesResponse.dart';
 
 class DeleteUserView extends StatelessWidget {
   final deleteUserController = Get.put(DeleteUserController());
@@ -16,8 +17,12 @@ class DeleteUserView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final arguments = Get.arguments as Map<String, dynamic>;
+    final Users user = arguments['user'];
+    deleteUserController.user.value = user;
     return Scaffold(
       backgroundColor: ColorLight.black,
+      appBar: AppBar(automaticallyImplyLeading: true,),
       body: Padding(
         padding: EdgeInsets.symmetric(
             horizontal: Get.width * 0.05, vertical: Get.height * 0.02),
@@ -47,7 +52,7 @@ class DeleteUserView extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 MaterialButton(
-                  onPressed: () {},
+                  onPressed: () {deleteUserController.deleteChat();},
                   child: Text(
                     strDelete,
                     style: TextStyle(

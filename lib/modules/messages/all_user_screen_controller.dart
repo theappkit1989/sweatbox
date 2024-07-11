@@ -74,7 +74,7 @@ class AllUserScreenCotroller extends GetxController {
     FocusScope.of(Get.context!).unfocus();
 
 
-    var _response = await ApiController().getAllUsers( token);
+    var _response = await ApiController().getAllUsers(user_id, token);
     if (_response.status == true) {
       // _dismissDialog();
       if (_response.status == true) {

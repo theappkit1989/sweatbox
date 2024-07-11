@@ -14,10 +14,13 @@ import '../../extras/constant/app_constant.dart';
 
 class AllMessagesView extends StatelessWidget {
   final allMessagesController = Get.put(AllMessagesController());
+
   AllMessagesView({super.key});
 
   @override
   Widget build(BuildContext context) {
+    allMessagesController.fetchAllChatList();
+
     return Scaffold(
       backgroundColor: ColorLight.black,
       appBar: AppBar(
@@ -44,7 +47,8 @@ class AllMessagesView extends StatelessWidget {
             child: Padding(
               padding: EdgeInsets.symmetric(
                   horizontal: Get.width * 0.05, vertical: Get.height * 0.02),
-              child: Image.asset(ImageConstant.searchIcon, width: 24, height: 24),
+              child: Image.asset(
+                  ImageConstant.searchIcon, width: 24, height: 24),
             ),
           )
         ],
@@ -54,22 +58,22 @@ class AllMessagesView extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-        Padding(
-        padding: EdgeInsets.symmetric(horizontal: Get.width * 0.05),
-          child:   buildFreshFaces(),
-        ),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: Get.width * 0.05),
+              child: buildFreshFaces(),
+            ),
             SizedBox(height: 20,),
             Padding(
-        padding: EdgeInsets.symmetric(horizontal: Get.width * 0.05),
-          child:    Text(
-            'All Chats',
-            style: TextStyle(
-              color: ColorLight.white,
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
+              padding: EdgeInsets.symmetric(horizontal: Get.width * 0.05),
+              child: Text(
+                'All Chats',
+                style: TextStyle(
+                  color: ColorLight.white,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             ),
-          ),
-        ),
             SizedBox(height: 20,),
 
             buildChatList()
@@ -117,7 +121,7 @@ class AllMessagesView extends StatelessWidget {
                     fit: BoxFit.cover,
                   )
                       : DecorationImage(
-                      image: AssetImage(allMessagesController.defaultImage),
+                      image: AssetImage(ImageConstant.placeholderImage),
                       fit: BoxFit.cover),
                 ),
                 margin: EdgeInsets.only(right: Get.width * 0.026),
@@ -134,7 +138,6 @@ class AllMessagesView extends StatelessWidget {
   }
 
   buildChatList() {
-
     return Obx(() {
       if (allMessagesController.allChatList.isEmpty) {
         return Center(
@@ -170,7 +173,8 @@ class AllMessagesView extends StatelessWidget {
                   radius: 35,
                   backgroundImage: chat?.image != null
                       ? NetworkImage(imageUrl)
-                      : AssetImage(allMessagesController.defaultImage) as ImageProvider,
+                      : AssetImage(
+                      ImageConstant.placeholderImage) as ImageProvider,
                 ),
                 title: Text(
                   chat?.fName ?? 'User name',
@@ -180,15 +184,20 @@ class AllMessagesView extends StatelessWidget {
                     fontSize: 16,
                   ),
                 ),
-                subtitle: Text(
-                   'new message',
-                  style: TextStyle(
-                    color: ColorLight.white,
-                    fontWeight: FontWeight.w600,
-                    fontSize: 13,
-                  ),
-                ),
+                subtitle: Obx(() {
+                  return Text(
+                    chat.lastMessage.toString()??"",
+                    style: TextStyle(
+                      color: ColorLight.white,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 13,
+                    ),
+                  );
+                }),
+                dense: true,
+
                 contentPadding: EdgeInsets.zero,
+
               ),
             ),
           );

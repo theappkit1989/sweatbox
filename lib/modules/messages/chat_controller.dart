@@ -13,11 +13,13 @@ import '../../extras/constant/shared_pref_constant.dart';
 import '../../services/repo/common_repo.dart';
 import '../../themes/loading_dialofg.dart';
 import '../my_profile/my_profile_controller.dart';
+import 'all_messages_controller.dart';
 
 class ChatController extends GetxController{
   var  user = Users().obs;
   late IO.Socket socket;
   var storage = GetStorage();
+  String user_id='';
   RxList<MessageData> messages=<MessageData>[].obs;
   var textController = TextEditingController().obs;
   RxBool isloading=false.obs;
@@ -25,9 +27,9 @@ class ChatController extends GetxController{
   ScrollController get scrollController => _scrollController;
   String token='';
   String receiver_socket_id='';
-  String user_id='';
+
   void goToMenu(){
-    Get.to(MenuView());
+    Get.to(MenuView(),arguments:{'user':user.value} );
   }
 
   @override
@@ -67,12 +69,33 @@ class ChatController extends GetxController{
       });
       socket.on('get_conversation', (newMessage) {
 
-
         print("get new message$newMessage");
+
+
         var _m_data=MessageData.fromJson(newMessage['data']['response']);
-        var message=MessageData(receiverId: _m_data.receiverId,senderId: _m_data.senderId,message: _m_data.message,id: _m_data.id,updatedAt: _m_data.updatedAt,createdAt: _m_data.createdAt);
-        messages.add(message);
-        update();
+        if (_m_data.senderId == user_id) {
+          print('********** message On Not sender ****************');
+          var message=MessageData(receiverId: _m_data.receiverId,senderId: _m_data.senderId,message: _m_data.message,id: _m_data.id,updatedAt: _m_data.updatedAt,createdAt: _m_data.createdAt);
+          messages.add(message);
+          var homeCont = Get.find<AllMessagesController>();
+          homeCont.allChatList.clear();
+          homeCont.fetchAllChatList();
+          homeCont.lastmessage.value=message.message.toString();
+          homeCont.update();
+          update();
+        }
+        if (_m_data.senderId == user.value.id.toString()) {
+          print('********** message On Not sender ****************');
+          var message=MessageData(receiverId: _m_data.receiverId,senderId: _m_data.senderId,message: _m_data.message,id: _m_data.id,updatedAt: _m_data.updatedAt,createdAt: _m_data.createdAt);
+          messages.add(message);
+          var homeCont = Get.find<AllMessagesController>();
+          homeCont.allChatList.clear();
+          homeCont.fetchAllChatList();
+          homeCont.lastmessage.value=message.message.toString();
+          homeCont.update();
+          update();
+        }
+
         // messageList.add(MessageModel.fromJson(data));
       });
       print('Connection established${socket.id}');
@@ -113,7 +136,7 @@ class ChatController extends GetxController{
     String message = textController.value.text;
     if (message.isEmpty) return;
     Map messageMap = {
-      'receiver_socket_id':user.value.id.toString(),
+      // 'receiver_socket_id':user.value.id.toString(),
       'token':token,
       'message': message,
       'sender_id': user_id,

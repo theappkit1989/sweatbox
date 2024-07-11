@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:s_box/modules/messages/all_user_screen_controller.dart';
 import '../../extras/constant/app_constant.dart';
+import '../../extras/constant/app_images.dart';
 import '../../extras/constant/string_constant.dart';
 import '../../services/api/api_endpoint.dart';
 import '../../themes/colors/color_light.dart';
@@ -63,7 +64,7 @@ class AllUserScreenView extends StatelessWidget {
                             image: NetworkImage(imageUrl),
                           fit: BoxFit.cover):DecorationImage(
                             image: AssetImage(
-                              'assets/images/Rectangle 39988 (1).png',),
+                              ImageConstant.placeholderImage,),
                             fit: BoxFit.cover),
                       ),
                       alignment: Alignment.bottomLeft,
