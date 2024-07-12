@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 
+import '../../../fcmNotification/FirebaseMessaging.dart';
 import '../../home_screen/home_view.dart';
 
 
@@ -96,7 +97,7 @@ class SignUpController extends GetxController{
           storage.write(firstName, nameCont.value.text);
           storage.write(lastName, lastNameCont.value.text);
           storage.write(userToken, response.accessToken);
-
+          NotificationsSubscription.fcmSubscribe( response.user?.id.toString());
           Get.offAll(() => HomeScreenView());
         } else {
           _dismissDialog();

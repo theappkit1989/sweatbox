@@ -581,19 +581,14 @@ class ApiController extends BaseRepository {
     }
   }
   Future<FreshFacesResponse> getFreshFaces(String token) async {
-    // var uri = Uri.parse(ApiEndpoint.freshFaces).replace(queryParameters: {
-    //   'id': userId,
-    //
-    //
-    // });
 
-    var apiResponse = await http.get(
+try{   var apiResponse = await http.get(
       Uri.parse(ApiEndpoint.freshFaces),
       headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer $token',
       },
-    );
+    ).timeout((const Duration(seconds: 10)));
 
     print('Response status: ${apiResponse.statusCode}');
     print('Response body: ${apiResponse.body}');
@@ -622,6 +617,11 @@ class ApiController extends BaseRepository {
         );
       }
     }
+}catch(e) {print('Error decoding error response: $e');
+return FreshFacesResponse(
+  status: false,
+  message: 'Error: ${e.toString()}',
+);}
   }
   Future<PromoCodeResponse> getPromoCode(String token,String promoCode) async {
     var uri =  Uri.parse(ApiEndpoint.promo).replace(queryParameters: {
@@ -755,41 +755,48 @@ class ApiController extends BaseRepository {
 
     });
 
-    var apiResponse = await http.get(
-     uri,
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer $token',
-      },
-    );
+    try {
+      var apiResponse = await http.get(
+        uri,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      ).timeout((const Duration(seconds: 10)));
 
-    print('Response status: ${apiResponse.statusCode}');
-    print('Response body: ${apiResponse.body}');
+      print('Response status: ${apiResponse.statusCode}');
+      print('Response body: ${apiResponse.body}');
 
-    if (apiResponse.statusCode == 200) {
-      try {
-        var decodedResponse = jsonDecode(utf8.decode(apiResponse.bodyBytes));
-        return ChatListResponse.fromJson(decodedResponse);
-      } catch (e) {
-        print('Error decoding response: $e');
-        return ChatListResponse(status: false, message: 'Error decoding response');
+      if (apiResponse.statusCode == 200) {
+        try {
+          var decodedResponse = jsonDecode(utf8.decode(apiResponse.bodyBytes));
+          return ChatListResponse.fromJson(decodedResponse);
+        } catch (e) {
+          print('Error decoding response: $e');
+          return ChatListResponse(
+              status: false, message: 'Error decoding response');
+        }
+      } else {
+        // return CommonResponseEntity(status: false, message: 'Error: ${apiResponse.body}');
+        try {
+          var decodedResponse = jsonDecode(utf8.decode(apiResponse.bodyBytes));
+          return ChatListResponse(
+            status: false,
+            message: decodedResponse['error'] ?? 'Unknown error occurred',
+          );
+        } catch (e) {
+          print('Error decoding error response: $e');
+          return ChatListResponse(
+            status: false,
+            message: 'Error: ${apiResponse.body}',
+          );
+        }
       }
-    } else {
-      // return CommonResponseEntity(status: false, message: 'Error: ${apiResponse.body}');
-      try {
-        var decodedResponse = jsonDecode(utf8.decode(apiResponse.bodyBytes));
-        return ChatListResponse(
-          status: false,
-          message: decodedResponse['error'] ?? 'Unknown error occurred',
-        );
-      } catch (e) {
-        print('Error decoding error response: $e');
-        return ChatListResponse(
-          status: false,
-          message: 'Error: ${apiResponse.body}',
-        );
-      }
+    }catch(e){
+      print('Error occurred: $e');
+      return ChatListResponse(status:false,message: 'Week Internet Connection');
     }
+
   }
   Future<CommonResponseEntity> deleteUser(String userId, String token) async {
     var uri = Uri.parse(ApiEndpoint.deleteUser).replace(queryParameters: {

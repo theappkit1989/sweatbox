@@ -69,32 +69,35 @@ class ChatController extends GetxController{
       });
       socket.on('get_conversation', (newMessage) {
 
-        print("get new message$newMessage");
+        print("get new message in cchat$newMessage");
 
 
         var _m_data=MessageData.fromJson(newMessage['data']['response']);
-        if (_m_data.senderId == user_id) {
-          print('********** message On Not sender ****************');
+        print('message data after decode$_m_data');
+        // if (_m_data.senderId == user_id) {
+          print('********** message On Not sender **************** $_m_data');
           var message=MessageData(receiverId: _m_data.receiverId,senderId: _m_data.senderId,message: _m_data.message,id: _m_data.id,updatedAt: _m_data.updatedAt,createdAt: _m_data.createdAt);
           messages.add(message);
+          print('********** message On Not sender called after add message ****************');
           var homeCont = Get.find<AllMessagesController>();
           homeCont.allChatList.clear();
           homeCont.fetchAllChatList();
           homeCont.lastmessage.value=message.message.toString();
           homeCont.update();
           update();
-        }
-        if (_m_data.senderId == user.value.id.toString()) {
-          print('********** message On Not sender ****************');
-          var message=MessageData(receiverId: _m_data.receiverId,senderId: _m_data.senderId,message: _m_data.message,id: _m_data.id,updatedAt: _m_data.updatedAt,createdAt: _m_data.createdAt);
-          messages.add(message);
-          var homeCont = Get.find<AllMessagesController>();
-          homeCont.allChatList.clear();
-          homeCont.fetchAllChatList();
-          homeCont.lastmessage.value=message.message.toString();
-          homeCont.update();
-          update();
-        }
+        // }
+        // if (_m_data.senderId == user.value.id.toString()) {
+        //   print('********** message On Not sender user ****************');
+        //   var message=MessageData(receiverId: _m_data.receiverId,senderId: _m_data.senderId,message: _m_data.message,id: _m_data.id,updatedAt: _m_data.updatedAt,createdAt: _m_data.createdAt);
+        //   messages.add(message);
+        //   print('********** message On Not sender user called after add message ****************');
+        //   var homeCont = Get.find<AllMessagesController>();
+        //   homeCont.allChatList.clear();
+        //   homeCont.fetchAllChatList();
+        //   homeCont.lastmessage.value=message.message.toString();
+        //   homeCont.update();
+        //   update();
+        // }
 
         // messageList.add(MessageModel.fromJson(data));
       });

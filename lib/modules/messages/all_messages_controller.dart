@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get/get_rx/get_rx.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:s_box/modules/messages/chat_view.dart';
 
@@ -18,6 +19,8 @@ class AllMessagesController extends GetxController {
   var storage = GetStorage();
   String token='';
   String user_id='';
+  RxBool isloadingFreshfaces=false.obs;
+  RxBool isloadingallchats=false.obs;
   RxString lastmessage=''.obs;
   late IO.Socket socket;
   RxList<Users> freshUserList = <Users>[].obs;
@@ -73,58 +76,58 @@ class AllMessagesController extends GetxController {
     // });
 
   }
-  // initSocket() {
-  //   socket = IO.io(ApiEndpoint.socket, <String, dynamic>{
-  //     'autoConnect': false,
-  //     'transports': ['websocket'],
-  //   });
-  //
-  //   socket.connect();
-  //   // Map set_online = {
-  //   //
-  //   //   'token':token,
-  //   //
-  //   //   'user_id': user_id,
-  //   //
-  //   //
-  //   //
-  //   // };
-  //   // socket.emit('set_online',set_online);
-  //
-  //
-  //   socket.onConnect((_) {
-  //
-  //     socket.on('user_got_online',(data){
-  //       print("user is online$data");
-  //     });
-  //     socket.on('get_conversation', (newMessage) {
-  //
-  //       print("get new message$newMessage");
-  //
-  //       var _m_data=MessageData.fromJson(newMessage['data']['response']);
-  //       if (_m_data.senderId == user_id) {
-  //         print('********** message On Not sender ****************');
-  //         var message=MessageData(receiverId: _m_data.receiverId,senderId: _m_data.senderId,message: _m_data.message,id: _m_data.id,updatedAt: _m_data.updatedAt,createdAt: _m_data.createdAt);
-  //         lastmessage.value=(message.message.toString()) ;
-  //         update();
-  //       }
-  //       // if (_m_data.senderId == user.value.id.toString()) {
-  //       //   print('********** message On Not sender ****************');
-  //       //   var message=MessageData(receiverId: _m_data.receiverId,senderId: _m_data.senderId,message: _m_data.message,id: _m_data.id,updatedAt: _m_data.updatedAt,createdAt: _m_data.createdAt);
-  //       //   messages.add(message);
-  //       //   update();
-  //       // }
-  //
-  //       // messageList.add(MessageModel.fromJson(data));
-  //     });
-  //     print('Connection established${socket.id}');
-  //
-  //   });
-  //
-  //   socket.onDisconnect((_) => print('Connection Disconnection'));
-  //   socket.onConnectError((err) => print(err));
-  //   socket.onError((err) => print(err));
-  // }
+  initSocket() {
+    socket = IO.io(ApiEndpoint.socket, <String, dynamic>{
+      'autoConnect': false,
+      'transports': ['websocket'],
+    });
+
+    socket.connect();
+    Map set_online = {
+
+      'token':token,
+
+      'user_id': user_id,
+
+
+
+    };
+    socket.emit('set_online',set_online);
+
+
+    socket.onConnect((_) {
+
+      socket.on('user_got_online',(data){
+        print("user is online$data");
+      });
+      socket.on('get_conversation', (newMessage) {
+
+        print("get new message$newMessage");
+
+        var _m_data=MessageData.fromJson(newMessage['data']['response']);
+        if (_m_data.senderId == user_id) {
+          print('********** message On Not sender ****************');
+          var message=MessageData(receiverId: _m_data.receiverId,senderId: _m_data.senderId,message: _m_data.message,id: _m_data.id,updatedAt: _m_data.updatedAt,createdAt: _m_data.createdAt);
+          lastmessage.value=(message.message.toString()) ;
+          update();
+        }
+        // if (_m_data.senderId == user.value.id.toString()) {
+        //   print('********** message On Not sender ****************');
+        //   var message=MessageData(receiverId: _m_data.receiverId,senderId: _m_data.senderId,message: _m_data.message,id: _m_data.id,updatedAt: _m_data.updatedAt,createdAt: _m_data.createdAt);
+        //   messages.add(message);
+        //   update();
+        // }
+
+        // messageList.add(MessageModel.fromJson(data));
+      });
+      print('Connection established${socket.id}');
+
+    });
+
+    socket.onDisconnect((_) => print('Connection Disconnection'));
+    socket.onConnectError((err) => print(err));
+    socket.onError((err) => print(err));
+  }
   void fetchFreshFaces(String token) async {
     // _showLoadingDialog();
     FocusScope.of(Get.context!).unfocus();
@@ -135,10 +138,12 @@ class AllMessagesController extends GetxController {
       // _dismissDialog();
       if(!_response.users!.isEmpty){
         freshUserList.value=_response.users!;
+        isloadingFreshfaces.value=false;
       }
 
 
     } else {
+      isloadingFreshfaces.value=false;
       // _dismissDialog();
       // Get.snackbar("Sweatbox", _response.message ?? 'Something went wrong!',colorText: Colors.white);
     }
@@ -156,10 +161,11 @@ class AllMessagesController extends GetxController {
       if(!_response.response!.isEmpty){
 
         allChatList.value=_response.response!;
+        isloadingallchats.value=false;
       }
 
     } else {
-
+      isloadingallchats.value=false;
       if(_response.message=='The selected user id is invalid.'){
         Get.find<MyProfileController>().logout();
       }
@@ -176,7 +182,7 @@ class AllMessagesController extends GetxController {
     Get.to(ChatView(),arguments: {"user":user});
   }
 
-  void _showLoadingDialog() {
+  void _showLoadingDialog() async{
     CustomLoadingDialog.showLoadingDialog();
   }
 

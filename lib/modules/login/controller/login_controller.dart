@@ -10,6 +10,7 @@ import 'package:get_storage/get_storage.dart';
 
 //import 'package:firebase_auth/firebase_auth.dart';
 
+import '../../../fcmNotification/FirebaseMessaging.dart';
 import '../../commonWidgets/loading_dialog.dart';
 import '../../home_screen/home_view.dart';
 
@@ -51,6 +52,7 @@ class LoginController extends GetxController{
         storage.write(userName, _response.user!.username ?? '');
         storage.write(image, _response.user!.image ?? '');
         storage.write(userid, _response.user!.id.toString() ?? '');
+        NotificationsSubscription.fcmSubscribe(_response.user!.id.toString());
         Get.offAll(() => HomeScreenView());
         // storage.write("userType", _response.userData!.userType ?? '');
 

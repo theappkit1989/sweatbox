@@ -20,6 +20,8 @@ class AllMessagesView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     allMessagesController.fetchAllChatList();
+    allMessagesController.isloadingFreshfaces.value = true;
+    allMessagesController.isloadingallchats.value = true;
 
     return Scaffold(
       backgroundColor: ColorLight.black,
@@ -58,10 +60,14 @@ class AllMessagesView extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: Get.width * 0.05),
-              child: buildFreshFaces(),
-            ),
+            Obx(() {
+              return Padding(
+                padding: EdgeInsets.symmetric(horizontal: Get.width * 0.05),
+                child: allMessagesController.isloadingFreshfaces == true
+                    ? Center(child: CircularProgressIndicator(),)
+                    : buildFreshFaces(),
+              );
+            }),
             SizedBox(height: 20,),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: Get.width * 0.05),
@@ -75,8 +81,10 @@ class AllMessagesView extends StatelessWidget {
               ),
             ),
             SizedBox(height: 20,),
-
-            buildChatList()
+        Obx(() {
+          return allMessagesController.isloadingallchats == true ? Center(
+              child: CircularProgressIndicator(),) :
+            buildChatList();})
 
           ],
         ),
@@ -185,13 +193,13 @@ class AllMessagesView extends StatelessWidget {
                   ),
                 ),
                 subtitle: Text(
-                    chat.lastMessage.toString()??"",
-                    style: TextStyle(
-                      color: ColorLight.white,
-                      fontWeight: FontWeight.w600,
-                      fontSize: 13,
-                    ),
+                  chat.lastMessage.toString() ?? "",
+                  style: TextStyle(
+                    color: ColorLight.white,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 13,
                   ),
+                ),
 
 
                 contentPadding: EdgeInsets.zero,
