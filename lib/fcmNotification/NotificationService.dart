@@ -65,6 +65,7 @@ class NotificationService{
         AndroidNotification? android = message.notification?.android;
 
         log("Notification: ${message.notification?.toMap()}");
+        print('notification received');
 
         if (notification != null && android != null) {
           log("Notification Show  '${message.data}'");

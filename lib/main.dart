@@ -1,6 +1,7 @@
 import 'dart:io';
 
 // import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:pay/pay.dart';
 import 'package:s_box/modules/massage_booking/date_time_view.dart';
 import 'package:s_box/modules/massage_booking/get_access_view.dart';
@@ -19,6 +20,7 @@ import 'package:get_storage/get_storage.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import 'extras/constant/shared_pref_constant.dart';
+import 'fcmNotification/NotificationService.dart';
 
 
 /*
@@ -103,22 +105,16 @@ Future<void> setupFlutterNotifications() async {
 void main() async {
   await GetStorage.init();
   WidgetsFlutterBinding.ensureInitialized();
-  // Platform.isAndroid?
-  // await Firebase.initializeApp(
-  //   options: const FirebaseOptions(
-  //     apiKey: "AIzaSyAMF3rKgGcLpNdcVPHdvNHjjQMfGUlJo68",
-  //     appId: "1:551348139860:android:bf758ee334d21ce23d3ac1",
-  //     messagingSenderId: "551348139860",
-  //     projectId: "sweatbox-be8ee",
-  //   ),
-  // ):
-  // await Firebase.initializeApp(
-  //     options: const FirebaseOptions(
-  //         apiKey: "AIzaSyCwC-KSzl0x5xRzf4NDvvQKHxzP-YW8FWQ",
-  //         appId: "1:551348139860:ios:606880c03aa53c003d3ac1",
-  //         messagingSenderId: "551348139860",
-  //         projectId: "sweatbox-be8ee"));
- // await Firebase.initializeApp();
+  Platform.isAndroid?
+  await Firebase.initializeApp(
+    options: const FirebaseOptions(
+      apiKey: "AIzaSyBHACDBnfB893A4irs2VeAJ0d8Z2bFQu88",
+      appId: "1:847542643614:android:16522a4729bbe2b088c48f",
+      messagingSenderId: "847542643614",
+      projectId: "sbox-ac5ff",
+    ),
+  ): await Firebase.initializeApp();
+  NotificationService().initMessaging();
   runApp(MyApp());
   // Pay.instance.initialize(paymentConfigurationAsset: 'payment_profile_google_pay.json');
 }
