@@ -10,7 +10,8 @@ class NotificationsSubscription {
   }
 
   static void fcmSubscribe(String? topic) {
-    _firebaseMessaging.subscribeToTopic(topic ?? "") ;
+    _firebaseMessaging.subscribeToTopic(topic ?? "").onError((error, stackTrace) => print('error in subscription$error'));
+    
   }
 
   static void fcmUnSubscribe(String? topic) {

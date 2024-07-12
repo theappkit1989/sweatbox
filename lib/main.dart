@@ -2,6 +2,7 @@ import 'dart:io';
 
 // import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:pay/pay.dart';
 import 'package:s_box/modules/massage_booking/date_time_view.dart';
 import 'package:s_box/modules/massage_booking/get_access_view.dart';
@@ -23,7 +24,7 @@ import 'extras/constant/shared_pref_constant.dart';
 import 'fcmNotification/NotificationService.dart';
 
 
-/*
+
 @pragma('vm:entry-point')
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
@@ -37,7 +38,7 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   }
   return;
 
-}*/
+}
 
 
 
@@ -78,7 +79,7 @@ Future<void> setupFlutterNotifications() async {
   );*/
   isFlutterLocalNotificationsInitialized = true;
 }
-/*void showFlutterNotification(RemoteMessage message) {
+void showFlutterNotification(RemoteMessage message) {
   RemoteNotification? notification = message.notification;
   AndroidNotification? android = message.notification?.android;
   if (notification != null && android != null) {
@@ -98,7 +99,7 @@ Future<void> setupFlutterNotifications() async {
       ),
     );
   }
-}*/
+}
 
 
 
@@ -109,7 +110,7 @@ void main() async {
   await Firebase.initializeApp(
     options: const FirebaseOptions(
       apiKey: "AIzaSyBHACDBnfB893A4irs2VeAJ0d8Z2bFQu88",
-      appId: "1:847542643614:android:16522a4729bbe2b088c48f",
+      appId: "1:847542643614:android:e1bcf9d2eab0d91488c48f",
       messagingSenderId: "847542643614",
       projectId: "sbox-ac5ff",
     ),
@@ -149,10 +150,10 @@ class _MyAppState extends State<MyApp> {
         statusBarColor: ColorLight.black.withOpacity(0.25),
         statusBarBrightness: Brightness.dark,
         systemNavigationBarIconBrightness: Brightness.dark));
-   /* getNotification();
-    getiOSPop();*/
+    getNotification();
+    getiOSPop();
   }
-/*
+
   getNotification() async
   {
     PermissionStatus status = await Permission.notification.request();
@@ -196,7 +197,7 @@ class _MyAppState extends State<MyApp> {
         sound: true,
       );
     }
-  }*/
+  }
 
   @override
   Widget build(BuildContext context) {
