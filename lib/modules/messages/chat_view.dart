@@ -34,10 +34,10 @@ class ChatView extends StatelessWidget {
     return WillPopScope(
       onWillPop: () {
 
-        var homeCont = Get.find<AllMessagesController>();
-      homeCont.allChatList.clear();
-      homeCont.fetchAllChatList();
-      homeCont.update();
+      //   var homeCont = Get.find<AllMessagesController>();
+      // homeCont.allChatList.clear();
+      // homeCont.fetchAllChatList();
+      // homeCont.update();
         return Future(() => true);},
       child: Scaffold(
         backgroundColor: Colors.black,

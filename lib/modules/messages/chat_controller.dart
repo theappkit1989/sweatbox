@@ -45,11 +45,11 @@ class ChatController extends GetxController {
         createdAt: _m_data.createdAt,
       );
       messages.add(message);
-      var homeCont = Get.find<AllMessagesController>();
-      homeCont.allChatList.clear();
-      homeCont.fetchAllChatList();
-      homeCont.lastmessage.value = message.message.toString();
-      homeCont.update();
+      // var homeCont = Get.find<AllMessagesController>();
+      // homeCont.allChatList.clear();
+      // homeCont.fetchAllChatList();
+      // homeCont.lastmessage.value = message.message.toString();
+      // homeCont.update();
       update();
     });
 

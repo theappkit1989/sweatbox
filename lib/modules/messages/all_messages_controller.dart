@@ -26,6 +26,7 @@ class AllMessagesController extends GetxController {
   RxList<Users> freshUserList = <Users>[].obs;
   RxList<Chats> allChatList = <Chats>[].obs;
   RxList<String> allLastMessage = <String>[].obs;
+  RxList<bool> isNewMessage = <bool>[].obs; // Add this list
 
 
   @override
@@ -43,6 +44,7 @@ class AllMessagesController extends GetxController {
       print('chats evenlisten');
       var _m_data = MessageData.fromJson(newMessage['data']['response']);
       if (_m_data.receiverId == user_id) {
+        fetchAllChatList();
         var message = MessageData(
           receiverId: _m_data.receiverId,
           senderId: _m_data.senderId,
@@ -52,7 +54,7 @@ class AllMessagesController extends GetxController {
           createdAt: _m_data.createdAt,
         );
         updateChatList(_m_data);
-        // lastmessage.value = message.message.toString();
+        lastmessage.value = message.message.toString();
         // update();
       }
     });
@@ -68,6 +70,7 @@ class AllMessagesController extends GetxController {
     if (index != -1) {
       allChatList[index].lastMessage = newMessage.message;
       allLastMessage[index]=newMessage.message.toString();
+      isNewMessage[index] = true;
       update();
       print('Updated last message for chat at index $index: ${allChatList[index].lastMessage}');
     }
@@ -107,6 +110,7 @@ class AllMessagesController extends GetxController {
         allChatList.value = _response.response!;
         for(var chat in allChatList){
           allLastMessage.add(chat.lastMessage.toString());
+          isNewMessage.add(false);
         }
         isloadingallchats.value = false;
       }
@@ -118,7 +122,7 @@ class AllMessagesController extends GetxController {
     }
   }
 
-  void goToChatScreen(Chats chat) {
+  void goToChatScreen(Chats chat, int index) {
     var _user = Users(
       id: chat.id,
       image: chat.image,
@@ -131,6 +135,8 @@ class AllMessagesController extends GetxController {
       status: chat.status,
       createdAt: chat.createdAt,
     );
+    isNewMessage[index] = false;
+    // update();
     Get.to(ChatView(), arguments: {"user": _user});
   }
 

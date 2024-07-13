@@ -171,7 +171,7 @@ class AllMessagesView extends StatelessWidget {
           // final user = chat.user;
           final imageUrl = '${ApiEndpoint.baseUrlImage}${chat?.image}';
           return GestureDetector(
-            onTap: () => allMessagesController.goToChatScreen(chat!),
+            onTap: () => allMessagesController.goToChatScreen(chat!,index),
             child: Container(
 
               margin: EdgeInsets.symmetric(
@@ -204,9 +204,16 @@ class AllMessagesView extends StatelessWidget {
                     ),
                   );
                 }),
-
-
+                trailing: Obx(() {
+                  return allMessagesController.isNewMessage[index]
+                      ? Icon(Icons.circle, color: Colors.red, size: 12)
+                      : SizedBox.shrink();
+                }),
                 contentPadding: EdgeInsets.zero,
+
+
+
+
 
               ),
             ),
