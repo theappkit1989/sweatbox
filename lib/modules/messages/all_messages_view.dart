@@ -81,10 +81,11 @@ class AllMessagesView extends StatelessWidget {
               ),
             ),
             SizedBox(height: 20,),
-        Obx(() {
-          return allMessagesController.isloadingallchats == true ? Center(
-              child: CircularProgressIndicator(),) :
-            buildChatList();})
+            Obx(() {
+              return allMessagesController.isloadingallchats == true ? Center(
+                child: CircularProgressIndicator(),) :
+              buildChatList();
+            })
 
           ],
         ),
@@ -163,6 +164,7 @@ class AllMessagesView extends StatelessWidget {
 
         primary: false,
         shrinkWrap: true,
+        reverse: true,
         itemCount: allMessagesController.allChatList.length,
         itemBuilder: (context, index) {
           final chat = allMessagesController.allChatList[index];
@@ -192,14 +194,16 @@ class AllMessagesView extends StatelessWidget {
                     fontSize: 16,
                   ),
                 ),
-                subtitle: Text(
-                  chat.lastMessage.toString() ?? "",
-                  style: TextStyle(
-                    color: ColorLight.white,
-                    fontWeight: FontWeight.w600,
-                    fontSize: 13,
-                  ),
-                ),
+                subtitle: Obx(() {
+                  return Text(
+                   allMessagesController.allLastMessage[index] ?? "",
+                    style: TextStyle(
+                      color: ColorLight.white,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 13,
+                    ),
+                  );
+                }),
 
 
                 contentPadding: EdgeInsets.zero,

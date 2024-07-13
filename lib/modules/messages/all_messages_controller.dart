@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:get/get_rx/get_rx.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:s_box/modules/messages/chat_view.dart';
+import 'package:s_box/modules/messages/socket/WebSocketService.dart';
 
 import '../../extras/constant/shared_pref_constant.dart';
 import '../../services/api/api_endpoint.dart';
@@ -17,176 +18,124 @@ import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 class AllMessagesController extends GetxController {
   var storage = GetStorage();
-  String token='';
-  String user_id='';
-  RxBool isloadingFreshfaces=false.obs;
-  RxBool isloadingallchats=false.obs;
-  RxString lastmessage=''.obs;
-  late IO.Socket socket;
+  String token = '';
+  String user_id = '';
+  RxBool isloadingFreshfaces = false.obs;
+  RxBool isloadingallchats = false.obs;
+  RxString lastmessage = ''.obs;
   RxList<Users> freshUserList = <Users>[].obs;
   RxList<Chats> allChatList = <Chats>[].obs;
-  final String defaultImage = 'assets/images/Ellipse 2.png';
-  List<String> freshFacesImg = [
-    'assets/images/Ellipse 2.png',
-    'assets/images/Ellipse 3.png',
-    'assets/images/Ellipse 4.png',
-    'assets/images/Ellipse 5.png',
-    'assets/images/Ellipse 2.png',
-    'assets/images/Ellipse 3.png',
-    'assets/images/Ellipse 4.png',
-    'assets/images/Ellipse 5.png',
-    'assets/images/Ellipse 2.png',
-    'assets/images/Ellipse 3.png',
-    'assets/images/Ellipse 4.png',
-    'assets/images/Ellipse 5.png'
-  ];
+  RxList<String> allLastMessage = <String>[].obs;
 
-  List<String> nearByFaces = [
-    'assets/images/nearby.png',
-    'assets/images/Rectangle 39988 (1).png',
-    'assets/images/nearby.png',
-    'assets/images/Rectangle 39988 (1).png',
-    'assets/images/nearby.png',
-    'assets/images/Rectangle 39988 (1).png',
-    'assets/images/nearby.png',
-    'assets/images/Rectangle 39988 (1).png',
-    'assets/images/nearby.png',
-    'assets/images/Rectangle 39988 (1).png',
-    'assets/images/nearby.png',
-    'assets/images/Rectangle 39988 (1).png',
-    'assets/images/nearby.png',
-    'assets/images/Rectangle 39988 (1).png',
-    'assets/images/nearby.png',
-    'assets/images/Rectangle 39988 (1).png',
-    'assets/images/nearby.png'
-  ];
+
   @override
   void onInit() {
-    // TODO: implement onInit
     super.onInit();
     storage.writeIfNull(userToken, '');
     storage.writeIfNull(userid, '');
     token = storage.read(userToken);
     user_id = storage.read(userid).toString();
 
-    // Future.delayed(Duration(seconds: 1), () {
-      fetchFreshFaces(token);
+    fetchFreshFaces(token);
     fetchAllChatList();
-    // initSocket();
-    // });
 
-  }
-  initSocket() {
-    socket = IO.io(ApiEndpoint.socket, <String, dynamic>{
-      'autoConnect': false,
-      'transports': ['websocket'],
-    });
-
-    socket.connect();
-    Map set_online = {
-
-      'token':token,
-
-      'user_id': user_id,
-
-
-
-    };
-    socket.emit('set_online',set_online);
-
-
-    socket.onConnect((_) {
-
-      socket.on('user_got_online',(data){
-        print("user is online$data");
-      });
-      socket.on('get_conversation', (newMessage) {
-
-        print("get new message$newMessage");
-
-        var _m_data=MessageData.fromJson(newMessage['data']['response']);
-        if (_m_data.senderId == user_id) {
-          print('********** message On Not sender ****************');
-          var message=MessageData(receiverId: _m_data.receiverId,senderId: _m_data.senderId,message: _m_data.message,id: _m_data.id,updatedAt: _m_data.updatedAt,createdAt: _m_data.createdAt);
-          lastmessage.value=(message.message.toString()) ;
-          update();
-        }
-        // if (_m_data.senderId == user.value.id.toString()) {
-        //   print('********** message On Not sender ****************');
-        //   var message=MessageData(receiverId: _m_data.receiverId,senderId: _m_data.senderId,message: _m_data.message,id: _m_data.id,updatedAt: _m_data.updatedAt,createdAt: _m_data.createdAt);
-        //   messages.add(message);
-        //   update();
-        // }
-
-        // messageList.add(MessageModel.fromJson(data));
-      });
-      print('Connection established${socket.id}');
-
-    });
-
-    socket.onDisconnect((_) => print('Connection Disconnection'));
-    socket.onConnectError((err) => print(err));
-    socket.onError((err) => print(err));
-  }
-  void fetchFreshFaces(String token) async {
-    // _showLoadingDialog();
-    FocusScope.of(Get.context!).unfocus();
-
-
-    var _response = await ApiController().getFreshFaces(token);
-    if (_response.status == true) {
-      // _dismissDialog();
-      if(!_response.users!.isEmpty){
-        freshUserList.value=_response.users!;
-        isloadingFreshfaces.value=false;
+    WebSocketService().onEvent('chats', (newMessage) {
+      print('chats evenlisten');
+      var _m_data = MessageData.fromJson(newMessage['data']['response']);
+      if (_m_data.receiverId == user_id) {
+        var message = MessageData(
+          receiverId: _m_data.receiverId,
+          senderId: _m_data.senderId,
+          message: _m_data.message,
+          id: _m_data.id,
+          updatedAt: _m_data.updatedAt,
+          createdAt: _m_data.createdAt,
+        );
+        updateChatList(_m_data);
+        // lastmessage.value = message.message.toString();
+        // update();
       }
+    });
 
+    Map set_online = {
+      'token': token,
+      'user_id': user_id,
+    };
+    WebSocketService().emitEvent('set_online', set_online);
+  }
+  void updateChatList(MessageData newMessage) {
+    int index = allChatList.indexWhere((chat) => chat.id.toString() == newMessage.senderId.toString());
+    if (index != -1) {
+      allChatList[index].lastMessage = newMessage.message;
+      allLastMessage[index]=newMessage.message.toString();
+      update();
+      print('Updated last message for chat at index $index: ${allChatList[index].lastMessage}');
+    }
+  }
 
+  // void updateChatList(MessageData newMessage) {
+  //   for (var chat in allChatList) {
+  //     print('ids are ${chat.id} and sender id is ${newMessage.senderId}');
+  //     if (chat.id.toString() == newMessage.senderId.toString()) {
+  //       chat.lastMessage = newMessage.message;
+  //       update();
+  //       print('last message update ${chat.lastMessage}');
+  //       break;
+  //     }
+  //   }
+  //
+  // }
+
+  void fetchFreshFaces(String token) async {
+    FocusScope.of(Get.context!).unfocus();
+    var _response = await ApiController().getFreshFaces(user_id, token);
+    if (_response.status == true) {
+      if (_response.users!.isNotEmpty) {
+        freshUserList.value = _response.users!;
+        isloadingFreshfaces.value = false;
+      }
     } else {
-      isloadingFreshfaces.value=false;
-      // _dismissDialog();
-      // Get.snackbar("Sweatbox", _response.message ?? 'Something went wrong!',colorText: Colors.white);
+      isloadingFreshfaces.value = false;
     }
   }
 
   void fetchAllChatList() async {
-
     FocusScope.of(Get.context!).unfocus();
-
-
-    var _response = await ApiController().getAllChats(token,user_id);
-
+    var _response = await ApiController().getAllChats(token, user_id);
     if (_response.status == true) {
-
-      if(!_response.response!.isEmpty){
-
-        allChatList.value=_response.response!;
-        isloadingallchats.value=false;
+      if (_response.response!.isNotEmpty) {
+        allChatList.value = _response.response!;
+        for(var chat in allChatList){
+          allLastMessage.add(chat.lastMessage.toString());
+        }
+        isloadingallchats.value = false;
       }
-
     } else {
-      isloadingallchats.value=false;
-      if(_response.message=='The selected user id is invalid.'){
+      isloadingallchats.value = false;
+      if (_response.message == 'The selected user id is invalid.') {
         Get.find<MyProfileController>().logout();
       }
-      // Get.snackbar("Sweatbox", _response.message ?? 'Something went wrong!',colorText: Colors.white);
-      return null;
     }
   }
-  void goToChatScreen(Chats chat){
-    var _user=Users(id: chat.id,image: chat.image,fName: chat.fName,socket: chat.socket,username: chat.username,email: chat.email,lName: chat.lName,token: chat.token,status: chat.status,createdAt: chat.createdAt );
-    Get.to(ChatView(),arguments: {"user":_user});
-  }
-  void goToChatScreenfresh(Users user){
-    // var _user=Users(id: chat.id,image: chat.image,fName: chat.fName,socket: chat.socket,username: chat.username,email: chat.email,lName: chat.lName,token: chat.token,status: chat.status,createdAt: chat.createdAt );
-    Get.to(ChatView(),arguments: {"user":user});
+
+  void goToChatScreen(Chats chat) {
+    var _user = Users(
+      id: chat.id,
+      image: chat.image,
+      fName: chat.fName,
+      socket: chat.socket,
+      username: chat.username,
+      email: chat.email,
+      lName: chat.lName,
+      token: chat.token,
+      status: chat.status,
+      createdAt: chat.createdAt,
+    );
+    Get.to(ChatView(), arguments: {"user": _user});
   }
 
-  void _showLoadingDialog() async{
-    CustomLoadingDialog.showLoadingDialog();
-  }
-
-  void _dismissDialog() {
-    Navigator.of(Get.overlayContext!).pop();
+  void goToChatScreenfresh(Users user) {
+    Get.to(ChatView(), arguments: {"user": user});
   }
 }
+

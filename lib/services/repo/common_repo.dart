@@ -580,10 +580,16 @@ class ApiController extends BaseRepository {
       }
     }
   }
-  Future<FreshFacesResponse> getFreshFaces(String token) async {
+  Future<FreshFacesResponse> getFreshFaces(String user_id,String token) async {
 
-try{   var apiResponse = await http.get(
-      Uri.parse(ApiEndpoint.freshFaces),
+try{
+  var uri = Uri.parse(ApiEndpoint.freshFaces).replace(queryParameters: {
+    'id': user_id,
+
+
+  });
+  var apiResponse = await http.get(
+      uri,
       headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer $token',
