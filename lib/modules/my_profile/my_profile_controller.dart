@@ -13,6 +13,7 @@ import 'package:s_box/modules/update_password/update_password_view.dart';
 import 'package:flutter/material.dart';
 
 import '../../extras/constant/shared_pref_constant.dart';
+import '../../fcmNotification/FirebaseMessaging.dart';
 import '../../services/api/api_endpoint.dart';
 import '../../services/commonModels/userAllData.dart';
 import '../../services/repo/common_repo.dart';
@@ -78,6 +79,7 @@ class MyProfileController extends GetxController {
 
   void logout() async {
     await storage.erase();
+    NotificationsSubscription.fcmUnSubscribe(user_id);
     Get.offAll(LoginView());
   }
 
@@ -120,6 +122,7 @@ class MyProfileController extends GetxController {
     bool success = await _deleteAccountFromServer()??false;
     if (success) {
       await storage.erase();
+      NotificationsSubscription.fcmUnSubscribe(user_id);
       Get.offAll(LoginView());
     } else {
       Get.snackbar('Error', 'Failed to delete account',colorText: Colors.white);

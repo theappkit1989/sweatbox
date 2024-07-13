@@ -70,6 +70,7 @@ class AllMessagesController extends GetxController {
     if (index != -1) {
       allChatList[index].lastMessage = newMessage.message;
       allLastMessage[index]=newMessage.message.toString();
+      allChatList[index].createdAt=newMessage.createdAt.toString();
       isNewMessage[index] = true;
       update();
       print('Updated last message for chat at index $index: ${allChatList[index].lastMessage}');

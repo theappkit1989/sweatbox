@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:s_box/extras/constant/app_images.dart';
 import 'package:s_box/extras/constant/string_constant.dart';
 import 'package:s_box/modules/commonWidgets/common.dart';
@@ -213,9 +214,22 @@ class AllMessagesView extends StatelessWidget {
                     ),
                   ),
                 trailing: Obx(() {
-                  return allMessagesController.isNewMessage[index]
-                      ? Icon(Icons.circle, color: Colors.red, size: 12)
-                      : SizedBox.shrink();
+                  return Column(
+                    children: [
+                      allMessagesController.isNewMessage[index]
+                          ? Icon(Icons.circle, color: Colors.red, size: 12)
+                          : SizedBox.shrink(),
+
+                      Text(
+                        formatTime(chat.createdAt.toString())?? "",
+                        style: TextStyle(
+                          color: ColorLight.white,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 13,
+                        ),
+                      ),
+                    ],
+                  );
                 }),
                 contentPadding: EdgeInsets.zero,
 
@@ -229,5 +243,13 @@ class AllMessagesView extends StatelessWidget {
         },
       );
     });
+  }
+  String formatTime(String dateTime) {
+    DateTime parsedDate = DateTime.parse(dateTime);
+
+
+    String formattedTime = DateFormat('hh:mm a').format(parsedDate);
+
+    return '$formattedTime';
   }
 }
