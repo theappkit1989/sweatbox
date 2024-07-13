@@ -194,16 +194,24 @@ class AllMessagesView extends StatelessWidget {
                     fontSize: 16,
                   ),
                 ),
-                subtitle: Obx(() {
-                  return Text(
-                   allMessagesController.allLastMessage[index] ?? "",
+                // subtitle: Obx(() {
+                //   return Text(
+                //    allMessagesController.allLastMessage[index] ?? "",
+                //     style: TextStyle(
+                //       color: ColorLight.white,
+                //       fontWeight: FontWeight.w600,
+                //       fontSize: 13,
+                //     ),
+                //   );
+                // }),
+                subtitle: Text(
+                   chat.lastMessage ?? "",
                     style: TextStyle(
                       color: ColorLight.white,
                       fontWeight: FontWeight.w600,
                       fontSize: 13,
                     ),
-                  );
-                }),
+                  ),
                 trailing: Obx(() {
                   return allMessagesController.isNewMessage[index]
                       ? Icon(Icons.circle, color: Colors.red, size: 12)

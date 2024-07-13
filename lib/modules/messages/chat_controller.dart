@@ -87,11 +87,11 @@ class ChatController extends GetxController {
       if (_response.message == 'The Selected appuserid is invalid') {
         Get.find<MyProfileController>().logout();
       }
-      Get.snackbar(
-        "Sweatbox",
-        _response.message ?? 'Something went wrong!',
-        colorText: Colors.white,
-      );
+      // Get.snackbar(
+      //   "Sweatbox",
+      //   _response.message ?? 'Something went wrong!',
+      //   colorText: Colors.white,
+      // );
     }
   }
 
