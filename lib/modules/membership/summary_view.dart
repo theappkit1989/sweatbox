@@ -117,7 +117,7 @@ class SummaryView extends StatelessWidget {
                         onPaymentResult: (result) {
 
                           print(result);
-                          if (result['paymentMethod'] == '') {
+                          if (result['token'] != {}) {
                             // Payment was successful
                             print('Payment failed or cancelled');
                             summaryController.addMembership();

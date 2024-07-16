@@ -129,33 +129,56 @@ class AllMessagesView extends StatelessWidget {
             final imageUrl = '${ApiEndpoint.baseUrlImage}${user.image}';
             return GestureDetector(
               onTap: () => allMessagesController.goToChatScreenfresh(user,index),
-              child: Container(
-                width: Get.width * 0.21,
-                // height: Get.height * 0.01,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                ),
-                margin: EdgeInsets.only(right: Get.width * 0.026),
+              child:CircleAvatar(
+                radius: 40,
+                backgroundColor: Colors.transparent,
                 child: ClipOval(
                   child: FadeInImage.assetNetwork(
                     placeholder: ImageConstant.placeholderImage,
                     image: imageUrl,
                     fit: BoxFit.cover,
-                    width: 50,
-                    height: 50,
+                    width: 70,
+                    height: 70,
                     fadeInDuration: Duration(milliseconds: 300),
                     fadeOutDuration: Duration(milliseconds: 100),
                     imageErrorBuilder: (context, error, stackTrace) {
                       return Image.asset(
                         ImageConstant.placeholderImage,
                         fit: BoxFit.cover,
-                        width: 50,
-                        height: 50,
+                        width: 70,
+                        height: 70,
                       );
                     },
                   ),
                 ),
               ),
+              // Container(
+              //   width: Get.width * 0.21,
+              //   // height: Get.height * 0.01,
+              //   decoration: BoxDecoration(
+              //     shape: BoxShape.circle,
+              //   ),
+              //   margin: EdgeInsets.only(right: Get.width * 0.026),
+              //   child: ClipOval(
+              //     child: FadeInImage.assetNetwork(
+              //       placeholder: ImageConstant.placeholderImage,
+              //       image: imageUrl,
+              //       fit: BoxFit.cover,
+              //       width: 50,
+              //       height: 50,
+              //       fadeInDuration: Duration(milliseconds: 300),
+              //       fadeOutDuration: Duration(milliseconds: 100),
+              //       imageErrorBuilder: (context, error, stackTrace) {
+              //         return Image.asset(
+              //           ImageConstant.placeholderImage,
+              //           fit: BoxFit.cover,
+              //           width: 50,
+              //           height: 50,
+              //         );
+              //       },
+              //     ),
+              //   ),
+              // ),
             );
           },
           itemCount: allMessagesController.freshUserList.length,
@@ -187,6 +210,7 @@ class AllMessagesView extends StatelessWidget {
         shrinkWrap: true,
         reverse: true,
         itemCount: allMessagesController.allChatList.length,
+
         itemBuilder: (context, index) {
           final chat = allMessagesController.allChatList[index];
           final imageUrl = '${ApiEndpoint.baseUrlImage}${chat?.image}';

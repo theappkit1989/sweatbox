@@ -101,7 +101,13 @@ void showFlutterNotification(RemoteMessage message) {
   }
 }
 
-
+class MyHttpOverrides extends HttpOverrides{
+  @override
+  HttpClient createHttpClient(SecurityContext? context){
+    return super.createHttpClient(context)
+      ..badCertificateCallback = (X509Certificate cert, String host, int port)=> true;
+  }
+}
 
 void main() async {
   await GetStorage.init();
@@ -116,6 +122,7 @@ void main() async {
     ),
   ): await Firebase.initializeApp();
   NotificationService().initMessaging();
+  HttpOverrides.global = MyHttpOverrides();
   runApp(MyApp());
   // Pay.instance.initialize(paymentConfigurationAsset: 'payment_profile_google_pay.json');
 }

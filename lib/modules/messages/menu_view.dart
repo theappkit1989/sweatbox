@@ -30,8 +30,8 @@ class MenuView extends StatelessWidget {
                   index == 0
                       ? menuController.goToDeleteUser()
                       : index == 1
-                          ? menuController.goToBlockUser()
-                          : menuController.goToReportUser();
+                          ? menuController.goToDeleteUser()
+                          : menuController.goToDeleteUser();
                 }),
             separatorBuilder: (context, index) => const Divider(
               color: Color.fromRGBO(255, 255, 255, 0.3),

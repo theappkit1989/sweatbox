@@ -160,12 +160,12 @@ class MassagePaymentSuccessfulView extends StatelessWidget {
           text: strMyBookings,
           voidCallback: () {
             var homecont= Get.find<MainScreenController>();
-            homecont.tabIndex.value=2;
+            homecont.tabIndex.value=3;
             homecont.update();
             print("object${Get.find<MainScreenController>().tabIndex.value}");
             var bookingcont= Get.find<AllBookingsController>();
             bookingcont.onInit();
-            if (Get.find<MainScreenController>().tabIndex.value == 2) {
+            if (Get.find<MainScreenController>().tabIndex.value == 3) {
               // Navigate to HomeScreenView with AllBookingsView already visible
               Get.close(4);
             } else {

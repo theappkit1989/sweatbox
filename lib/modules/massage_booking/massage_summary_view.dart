@@ -143,11 +143,10 @@ class MassageSummaryView extends StatelessWidget {
                       onPaymentResult: (result) {
 
                         print(result);
-                        if (result['token'] == '') {
+                        if (result['token'] != {}) {
                           // Payment was successful
-                          Get.to(PaymentDeclinedView());
                           print('Payment failed or cancelled');
-
+                          summaryController.addMembership();
                           // You can perform further actions here, such as updating UI or backend
                         } else {
 

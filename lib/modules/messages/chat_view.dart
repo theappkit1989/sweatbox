@@ -115,11 +115,11 @@ class ChatView extends StatelessWidget {
                   size: 15,
                   fontWeight: FontWeight.w800,
                   color: ColorLight.white),
-              text(
-                  text: strOnline,
-                  size: 12,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.white.withOpacity(0.9)),
+              // text(
+              //     text: strOnline,
+              //     size: 12,
+              //     fontWeight: FontWeight.w500,
+              //     color: Colors.white.withOpacity(0.9)),
             ],
           ),
         ],
@@ -450,8 +450,9 @@ class ChatView extends StatelessWidget {
                     width: Get.width * 0.45,
                     child:  TextField(
                       controller: chatController.textController.value,
-                      textInputAction: TextInputAction.done,
-                      keyboardType: TextInputType.text,
+                      textInputAction: TextInputAction.newline,
+                      keyboardType: TextInputType.streetAddress,
+
                       style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w400,
