@@ -27,6 +27,7 @@ class AllMessagesController extends GetxController {
   RxList<Chats> allChatList = <Chats>[].obs;
   RxList<String> allLastMessage = <String>[].obs;
   RxList<bool> isNewMessage = <bool>[].obs; // Add this list
+  List<dynamic> users=[];
 
 
   @override
@@ -36,15 +37,17 @@ class AllMessagesController extends GetxController {
     storage.writeIfNull(userid, '');
     token = storage.read(userToken);
     user_id = storage.read(userid).toString();
-
+    users = storage.read<List<dynamic>>('users')?.toSet().toList() ?? [];
     fetchFreshFaces(token);
     fetchAllChatList();
+
 
     WebSocketService().onEvent('chats', (newMessage) {
       print('chats evenlisten');
       var _m_data = MessageData.fromJson(newMessage['data']['response']);
       if (_m_data.receiverId == user_id) {
-        fetchAllChatList();
+        fetchAllChatListUpdate(_m_data);
+
         var message = MessageData(
           receiverId: _m_data.receiverId,
           senderId: _m_data.senderId,
@@ -53,7 +56,7 @@ class AllMessagesController extends GetxController {
           updatedAt: _m_data.updatedAt,
           createdAt: _m_data.createdAt,
         );
-        updateChatList(_m_data);
+
         lastmessage.value = message.message.toString();
         // update();
       }
@@ -65,17 +68,23 @@ class AllMessagesController extends GetxController {
     };
     WebSocketService().emitEvent('set_online', set_online);
   }
-  void updateChatList(MessageData newMessage) {
-    int index = allChatList.indexWhere((chat) => chat.id.toString() == newMessage.senderId.toString());
-    if (index != -1) {
-      allChatList[index].lastMessage = newMessage.message;
-      allLastMessage[index]=newMessage.message.toString();
-      allChatList[index].createdAt=newMessage.createdAt.toString();
-      isNewMessage[index] = true;
-      update();
-      print('Updated last message for chat at index $index: ${allChatList[index].lastMessage}');
+  void updateChatList( List<dynamic> users) {
+    for (String userId in users) {
+      int index = allChatList.indexWhere((chat) => chat.id.toString() == userId);
+      if (index != -1) {
+        // allChatList[index].lastMessage = newMessage.message;
+        // allLastMessage[index] = newMessage.message.toString();
+        // allChatList[index].createdAt = newMessage.createdAt.toString();
+        allChatList[index].isNewMessage = 1;
+        isNewMessage[index] = true;
+
+
+        print('Updated last message for chat at index $index: ${allChatList[index].lastMessage}');
+      }
     }
+    update();
   }
+
 
   // void updateChatList(MessageData newMessage) {
   //   for (var chat in allChatList) {
@@ -113,6 +122,36 @@ class AllMessagesController extends GetxController {
           allLastMessage.add(chat.lastMessage.toString());
           isNewMessage.add(false);
         }
+        updateChatList(users);
+        isloadingallchats.value = false;
+      }
+    } else {
+      isloadingallchats.value = false;
+      if (_response.message == 'The selected user id is invalid.') {
+        Get.find<MyProfileController>().logout();
+      }
+    }
+  }
+  void fetchAllChatListUpdate(MessageData m_data) async {
+    FocusScope.of(Get.context!).unfocus();
+    var _response = await ApiController().getAllChats(token, user_id);
+    if (_response.status == true) {
+      if (_response.response!.isNotEmpty) {
+        allChatList.value = _response.response!;
+        for(var chat in allChatList){
+          allLastMessage.add(chat.lastMessage.toString());
+          // isNewMessage.add(false);
+        }
+
+
+// Add the new senderId only if it doesn't already exist
+        if (!users.contains(m_data.senderId)) {
+          users.add(m_data.senderId);
+        }
+        storage.write('users', users);
+
+
+        updateChatList(users);
         isloadingallchats.value = false;
       }
     } else {
@@ -138,11 +177,21 @@ class AllMessagesController extends GetxController {
     );
     isNewMessage[index] = false;
     // update();
-    Get.to(ChatView(), arguments: {"user": _user});
+    print('message view users that message$users and other user is ${_user.id}');
+    if(users.contains(_user.id.toString())){
+      print("message view if run");
+      users.remove(_user.id.toString());
+      storage.write('users', users);
+      Get.to(ChatView(), arguments: {"user": _user});
+    }else{
+      print("message view else run");
+      Get.to(ChatView(), arguments: {"user": _user});
+    }
+
   }
 
-  void goToChatScreenfresh(Users user) {
+  void goToChatScreenfresh(Users user, int index) {
+
     Get.to(ChatView(), arguments: {"user": user});
   }
 }
-

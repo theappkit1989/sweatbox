@@ -354,6 +354,7 @@ const strPaymentDeclined = 'Payment Declined';
 const strDeclinedSubtitle = 'Oops! It looks like your payment hasn’t gone through. Please try again or use another payment method';
 const strTryAgain = 'Try Again';
 const strFreshFaces = 'Fresh Faces';
+const strViewall = 'View All';
 const strNearBy = 'Who\'s nearby';
 const strAllMembers = 'All Members';
 const strOnline = 'Online';

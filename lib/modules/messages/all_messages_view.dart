@@ -21,8 +21,8 @@ class AllMessagesView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     allMessagesController.fetchAllChatList();
-    allMessagesController.isloadingFreshfaces.value = true;
-    allMessagesController.isloadingallchats.value = true;
+    // allMessagesController.isloadingFreshfaces.value = true;
+    // allMessagesController.isloadingallchats.value = true;
 
     return Scaffold(
       backgroundColor: ColorLight.black,
@@ -50,8 +50,17 @@ class AllMessagesView extends StatelessWidget {
             child: Padding(
               padding: EdgeInsets.symmetric(
                   horizontal: Get.width * 0.05, vertical: Get.height * 0.02),
-              child: Image.asset(
-                  ImageConstant.searchIcon, width: 24, height: 24),
+              child: const Text(
+                strViewall,
+                style: TextStyle(
+                  color: appPrimaryColor,
+
+                  fontFamily: fontType,
+                  fontSize: 13,
+                ),
+              ),
+              // Image.asset(
+              //   ImageConstant.searchIcon, width: 24, height: 24),
             ),
           )
         ],
@@ -119,22 +128,33 @@ class AllMessagesView extends StatelessWidget {
             final user = allMessagesController.freshUserList[index];
             final imageUrl = '${ApiEndpoint.baseUrlImage}${user.image}';
             return GestureDetector(
-              onTap: () => allMessagesController.goToChatScreenfresh(user),
+              onTap: () => allMessagesController.goToChatScreenfresh(user,index),
               child: Container(
-                width: Get.width * 0.16,
-                height: Get.height * 0.1,
+                width: Get.width * 0.21,
+                // height: Get.height * 0.01,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  image: user.image != null
-                      ? DecorationImage(
-                    image: NetworkImage(imageUrl),
-                    fit: BoxFit.cover,
-                  )
-                      : DecorationImage(
-                      image: AssetImage(ImageConstant.placeholderImage),
-                      fit: BoxFit.cover),
                 ),
                 margin: EdgeInsets.only(right: Get.width * 0.026),
+                child: ClipOval(
+                  child: FadeInImage.assetNetwork(
+                    placeholder: ImageConstant.placeholderImage,
+                    image: imageUrl,
+                    fit: BoxFit.cover,
+                    width: 50,
+                    height: 50,
+                    fadeInDuration: Duration(milliseconds: 300),
+                    fadeOutDuration: Duration(milliseconds: 100),
+                    imageErrorBuilder: (context, error, stackTrace) {
+                      return Image.asset(
+                        ImageConstant.placeholderImage,
+                        fit: BoxFit.cover,
+                        width: 50,
+                        height: 50,
+                      );
+                    },
+                  ),
+                ),
               ),
             );
           },
@@ -146,6 +166,7 @@ class AllMessagesView extends StatelessWidget {
       }),
     );
   }
+
 
   buildChatList() {
     return Obx(() {
@@ -162,30 +183,43 @@ class AllMessagesView extends StatelessWidget {
         );
       }
       return ListView.builder(
-
         primary: false,
         shrinkWrap: true,
         reverse: true,
         itemCount: allMessagesController.allChatList.length,
         itemBuilder: (context, index) {
           final chat = allMessagesController.allChatList[index];
-          // final user = chat.user;
           final imageUrl = '${ApiEndpoint.baseUrlImage}${chat?.image}';
           return GestureDetector(
-            onTap: () => allMessagesController.goToChatScreen(chat!,index),
+            onTap: () => allMessagesController.goToChatScreen(chat!, index),
             child: Container(
-
               margin: EdgeInsets.symmetric(
                   horizontal: Get.width * 0.0, vertical: Get.height * 0.007),
               padding: EdgeInsets.symmetric(
                   horizontal: Get.width * 0.02, vertical: Get.height * 0.01),
               child: ListTile(
                 leading: CircleAvatar(
-                  radius: 35,
-                  backgroundImage: chat?.image != null
-                      ? NetworkImage(imageUrl)
-                      : AssetImage(
-                      ImageConstant.placeholderImage) as ImageProvider,
+                  radius: 40,
+                  backgroundColor: Colors.transparent,
+                  child: ClipOval(
+                    child: FadeInImage.assetNetwork(
+                      placeholder: ImageConstant.placeholderImage,
+                      image: imageUrl,
+                      fit: BoxFit.cover,
+                      width: 50,
+                      height: 50,
+                      fadeInDuration: Duration(milliseconds: 300),
+                      fadeOutDuration: Duration(milliseconds: 100),
+                      imageErrorBuilder: (context, error, stackTrace) {
+                        return Image.asset(
+                          ImageConstant.placeholderImage,
+                          fit: BoxFit.cover,
+                          width: 50,
+                          height: 50,
+                        );
+                      },
+                    ),
+                  ),
                 ),
                 title: Text(
                   chat?.fName ?? 'User name',
@@ -195,48 +229,31 @@ class AllMessagesView extends StatelessWidget {
                     fontSize: 16,
                   ),
                 ),
-                // subtitle: Obx(() {
-                //   return Text(
-                //    allMessagesController.allLastMessage[index] ?? "",
-                //     style: TextStyle(
-                //       color: ColorLight.white,
-                //       fontWeight: FontWeight.w600,
-                //       fontSize: 13,
-                //     ),
-                //   );
-                // }),
                 subtitle: Text(
-                   chat.lastMessage ?? "",
-                    style: TextStyle(
-                      color: ColorLight.white,
-                      fontWeight: FontWeight.w600,
-                      fontSize: 13,
-                    ),
+                  chat.lastMessage ?? "",
+                  style: TextStyle(
+                    color: ColorLight.white,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 13,
                   ),
-                trailing: Obx(() {
-                  return Column(
+                ),
+                trailing: Column(
                     children: [
-                      allMessagesController.isNewMessage[index]
+                      chat.isNewMessage==1
+                      // allMessagesController.isNewMessage[index]
                           ? Icon(Icons.circle, color: Colors.red, size: 12)
                           : SizedBox.shrink(),
-
                       Text(
-                        formatTime(chat.createdAt.toString())?? "",
+                        convertGMTToLocalCurrentTime(
+                            chat.lastMessageTime.toString()) ?? "",
                         style: TextStyle(
                           color: ColorLight.white,
                           fontWeight: FontWeight.w600,
                           fontSize: 13,
                         ),
                       ),
-                    ],
-                  );
-                }),
+                    ],),
                 contentPadding: EdgeInsets.zero,
-
-
-
-
-
               ),
             ),
           );
@@ -244,11 +261,25 @@ class AllMessagesView extends StatelessWidget {
       );
     });
   }
+
+  String convertGMTToLocalCurrentTime(String gmtTime) {
+    // Step 1: Parse GMT time
+    DateTime gmtDateTime = DateTime.parse(gmtTime);
+
+    // Step 2: Convert to local time
+    DateTime localDateTime = gmtDateTime.toLocal();
+
+    // Step 3: Format current local time
+    String formattedTime = DateFormat('HH:mm').format(localDateTime);
+
+    return formattedTime;
+  }
+
   String formatTime(String dateTime) {
     DateTime parsedDate = DateTime.parse(dateTime);
+    DateTime localDate = parsedDate.toLocal(); // Convert to local time
 
-
-    String formattedTime = DateFormat('hh:mm a').format(parsedDate);
+    String formattedTime = DateFormat('HH:mm').format(localDate);
 
     return '$formattedTime';
   }

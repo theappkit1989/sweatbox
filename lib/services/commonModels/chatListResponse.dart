@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 class ChatListResponse {
   bool? status;
   String? message;
@@ -31,6 +33,7 @@ class Chats {
   int? id;
   String? email;
   String? image;
+  int? isNewMessage;
   String? password;
   String? fName;
   String? lName;
@@ -51,6 +54,7 @@ class Chats {
         this.fName,
         this.lName,
         this.username,
+        this.isNewMessage,
         this.status,
         this.token,
         this.createdAt,
@@ -68,6 +72,7 @@ class Chats {
     lName = json['l_name'];
     username = json['username'];
     status = json['status'];
+    isNewMessage = json['is_new'];
     token = json['token'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
@@ -84,6 +89,7 @@ class Chats {
     data['password'] = this.password;
     data['f_name'] = this.fName;
     data['l_name'] = this.lName;
+    data['is_new'] = this.isNewMessage;
     data['username'] = this.username;
     data['status'] = this.status;
     data['token'] = this.token;

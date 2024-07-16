@@ -84,7 +84,7 @@ class MyProfileController extends GetxController {
   }
 
   void rateApp() async {
-    const url = 'https://play.google.com/store/apps/details?id=com.example.your_app';
+    const url = 'https://play.google.com/store/apps/details?id=com.cc.sweatbox';
     // if (await canLaunch(url)) {
     //   await launch(url);
     // } else {

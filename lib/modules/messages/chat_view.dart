@@ -34,10 +34,10 @@ class ChatView extends StatelessWidget {
     return WillPopScope(
       onWillPop: () {
 
-      //   var homeCont = Get.find<AllMessagesController>();
+        var homeCont = Get.find<AllMessagesController>();
       // homeCont.allChatList.clear();
-      // homeCont.fetchAllChatList();
-      // homeCont.update();
+      homeCont.fetchAllChatList();
+      homeCont.update();
         return Future(() => true);},
       child: Scaffold(
         backgroundColor: Colors.black,
@@ -65,7 +65,7 @@ class ChatView extends StatelessWidget {
       leading: GestureDetector(
           onTap: () {
             var homeCont = Get.find<AllMessagesController>();
-            homeCont.allChatList.clear();
+            // homeCont.allChatList.clear();
             homeCont.fetchAllChatList();
             homeCont.update();
             Get.back();
@@ -301,12 +301,21 @@ class ChatView extends StatelessWidget {
   }
   String formatTime(String dateTime) {
     DateTime parsedDate = DateTime.parse(dateTime);
+    DateTime localDate = parsedDate.toLocal(); // Convert to local time
 
-
-    String formattedTime = DateFormat('hh:mm a').format(parsedDate);
+    String formattedTime = DateFormat('HH:mm').format(localDate);
 
     return '$formattedTime';
   }
+
+  // String formatTime(String dateTime) {
+  //   DateTime parsedDate = DateTime.parse(dateTime);
+  //
+  //
+  //   String formattedTime = DateFormat('hh:mm a').format(parsedDate);
+  //
+  //   return '$formattedTime';
+  // }
   // buildChatWidget() {
   //   return Column(
   //     children: [
