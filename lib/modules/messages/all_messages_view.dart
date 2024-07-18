@@ -213,7 +213,8 @@ class AllMessagesView extends StatelessWidget {
 
         itemBuilder: (context, index) {
           final chat = allMessagesController.allChatList[index];
-          final imageUrl = '${ApiEndpoint.baseUrlImage}${chat?.image}';
+          final imageUrl = '${ApiEndpoint.baseUrlImage}${chat.image}';
+          print('image url is $imageUrl');
           return GestureDetector(
             onTap: () => allMessagesController.goToChatScreen(chat!, index),
             child: Container(
@@ -225,7 +226,14 @@ class AllMessagesView extends StatelessWidget {
                 leading: CircleAvatar(
                   radius: 40,
                   backgroundColor: Colors.transparent,
-                  child: ClipOval(
+                  child: chat.image==null?ClipOval(
+                    child: Image.asset(
+                      ImageConstant.placeholderImage,
+                      fit: BoxFit.cover,
+                      width: 50,
+                      height: 50,
+                    ),
+                  ):ClipOval(
                     child: FadeInImage.assetNetwork(
                       placeholder: ImageConstant.placeholderImage,
                       image: imageUrl,

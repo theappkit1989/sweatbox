@@ -1,6 +1,6 @@
 class ApiEndpoint {
-static String baseUrl = "https://13.50.111.242/api/";
-static String baseUrlImage = "https://13.50.111.242/user/";
+static String baseUrl = "https://admin.sweatboxsoho.com/api/";
+static String baseUrlImage = "https://admin.sweatboxsoho.com/user/";
   static String loginUser = baseUrl+'login';
   static String registerUser = baseUrl+'register';
   static String selectUser = baseUrl+'select_user_type';
@@ -21,7 +21,7 @@ static String baseUrlImage = "https://13.50.111.242/user/";
   static String getUserChat= baseUrl+'message_list';
   static String getChatList= baseUrl+'chat_list_user';
   static String deleteChat= baseUrl+'deleteChat';
-  static String socket= 'http://16.16.199.105';
+  static String socket= 'http://13.60.123.143';
 
   static String propertyList = baseUrl+'listing-properties-type';
   static String basicList = baseUrl+'listing-basic-info';

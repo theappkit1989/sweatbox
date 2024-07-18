@@ -22,12 +22,12 @@ class WebSocketService {
     });
 
     socket.onConnect((_) {
-      print('Connected to socket server');
+      print('Socket: Connected to socket server${socket.id}');
     });
 
-    socket.onDisconnect((_) => print('Disconnected from socket server'));
-    socket.onConnectError((err) => print('Connection Error: $err'));
-    socket.onError((err) => print('Error: $err'));
+    socket.onDisconnect((_) => print('Socket: Disconnected from socket server'));
+    socket.onConnectError((err) => print('Socket: Connection Error: $err'));
+    socket.onError((err) => print('Socket: Error: $err'));
 
     socket.connect();
   }

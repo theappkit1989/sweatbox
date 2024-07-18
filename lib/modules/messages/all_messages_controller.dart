@@ -38,6 +38,7 @@ class AllMessagesController extends GetxController {
     token = storage.read(userToken);
     user_id = storage.read(userid).toString();
     users = storage.read<List<dynamic>>('users')?.toSet().toList() ?? [];
+    print('senders are $users');
     fetchFreshFaces(token);
     fetchAllChatList();
 
@@ -76,6 +77,9 @@ class AllMessagesController extends GetxController {
         // allLastMessage[index] = newMessage.message.toString();
         // allChatList[index].createdAt = newMessage.createdAt.toString();
         allChatList[index].isNewMessage = 1;
+        // var img=allChatList[index].image;
+        // allChatList[index].image='';
+        // allChatList[index].image=img;
         isNewMessage[index] = true;
 
 
