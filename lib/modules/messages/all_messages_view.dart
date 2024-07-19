@@ -269,6 +269,8 @@ class AllMessagesView extends StatelessWidget {
                     fontWeight: FontWeight.w600,
                     fontSize: 13,
                   ),
+                  maxLines: 1, // Limiting to one line
+                  overflow: TextOverflow.ellipsis,
                 ):chat.type=='image'?Row(children: [
                   Icon(Icons.image_rounded, color: Colors.grey, size: 12),
                   SizedBox(width: 5,),

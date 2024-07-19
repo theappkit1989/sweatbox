@@ -300,7 +300,7 @@ class ChatView extends StatelessWidget {
                            decoration: BoxDecoration(
                              border: Border.all(
                                color: isCurrentUser ? appPrimaryColor : greyChat, // Border color
-                               width: 2.0, // Border width
+                               width: 1.0, // Border width
                              ),
                              borderRadius: BorderRadius.circular(15),),
                            child: ClipRRect(
@@ -348,7 +348,7 @@ class ChatView extends StatelessWidget {
                        Container(decoration: BoxDecoration(
                          border: Border.all(
                            color: isCurrentUser ? appPrimaryColor : greyChat, // Border color
-                           width: 2.0, // Border width
+                           width: 1.0, // Border width
                          ),
                          borderRadius: BorderRadius.circular(15),),
                          child: ClipRRect(
