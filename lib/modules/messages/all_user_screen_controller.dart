@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import '../../extras/constant/common_validation.dart';
 import '../../extras/constant/shared_pref_constant.dart';
 import '../../services/commonModels/allUsersResponse.dart';
 import '../../services/commonModels/freshFacesResponse.dart';
@@ -73,6 +74,7 @@ class AllUserScreenCotroller extends GetxController {
     // _showLoadingDialog();
     FocusScope.of(Get.context!).unfocus();
 
+    // if(await isConnected()){
 
     var _response = await ApiController().getAllUsers(user_id, token);
     if (_response.status == true) {
@@ -97,5 +99,8 @@ class AllUserScreenCotroller extends GetxController {
       // _dismissDialog();
       Get.snackbar("Sweatbox", _response.message ?? 'Something went wrong!',colorText: Colors.white);
     }
+    // }else{
+    //   Get.snackbar("Sweatbox", 'No internet connection',colorText: Colors.white);
+    // }
   }
 }

@@ -4,6 +4,7 @@ import 'package:get_storage/get_storage.dart';
 import 'package:s_box/modules/commonWidgets/submitBtn.dart';
 import 'package:s_box/modules/my_profile/edit_profile_controller.dart';
 import 'package:s_box/themes/colors/color_light.dart';
+import '../../extras/constant/AutoCapitalizeTextInputFormatter.dart';
 import '../../extras/constant/app_color.dart';
 import '../../extras/constant/app_constant.dart';
 import '../../extras/constant/app_images.dart';
@@ -194,7 +195,7 @@ class EditProfileView extends StatelessWidget {
                   : editProfileController.userImage.value!=''? DecorationImage(
                   image: NetworkImage("${ApiEndpoint.baseUrlImage+editProfileController.userImage.value}"),
                   fit: BoxFit.cover):DecorationImage(
-                  image: AssetImage(ImageConstant.imgMembership),
+                  image: AssetImage(ImageConstant.placeholderImage),
                   fit: BoxFit.cover),
               border: Border.all(color: ColorLight.white, width: 2.0)),
           alignment: Alignment.center,
@@ -242,6 +243,7 @@ class EditProfileView extends StatelessWidget {
                 }
                 return null;
               },
+              inputFormatters: [AutoCapitalizeTextInputFormatter()],
               decoration: InputDecoration(
                   hintText: strFirstName,
                   filled: true,
@@ -279,6 +281,7 @@ class EditProfileView extends StatelessWidget {
                 }
                 return null;
               },
+              inputFormatters: [AutoCapitalizeTextInputFormatter()],
               decoration: InputDecoration(
                   hintText: strLastName,
                   hintStyle: TextStyle(

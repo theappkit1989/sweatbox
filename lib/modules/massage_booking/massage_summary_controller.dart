@@ -9,6 +9,7 @@ import 'package:s_box/modules/massage_booking/massage_payment_successful_view.da
 import 'package:flutter/material.dart';
 
 import 'package:s_box/modules/my_profile/my_profile_controller.dart';
+import '../../extras/constant/common_validation.dart';
 import '../../extras/constant/shared_pref_constant.dart';
 import '../../services/repo/common_repo.dart';
 import '../../themes/loading_dialofg.dart';
@@ -82,6 +83,9 @@ class MassageSummaryController extends GetxController{
   }
   addService() async {
 
+    // if(await isConnected()){
+
+
         var _response = await ApiController().addService(userId,'Massage',totalAmount.value.toString(),massage.value.date.toString(),
             massage.value.time.toString(),massage.value.duration.toString(),token.toString());
         if (_response.status == true) {
@@ -93,7 +97,9 @@ class MassageSummaryController extends GetxController{
           _dismissDialog();
           Get.snackbar("Sweatbox", _response.message ?? 'Something went wrong!',colorText: Colors.white);
         }
-
+    // }else{
+    //   Get.snackbar("Sweatbox", 'No internet connection',colorText: Colors.white);
+    // }
 
   }
   addMembership() async {
@@ -134,6 +140,7 @@ class MassageSummaryController extends GetxController{
 
     Membership _membership=Membership(title: membership.value.title, user_id: membership.value.user_id, price: totalAmount.value.toInt(), discount: membership.value.discount,activeTime: formattedNow,expireTime: formattedExpireTime);
 
+    // if(await isConnected()){
     var _response = await ApiController().addMembership(
         userId,
         membership.value.title.toString(),
@@ -153,6 +160,9 @@ class MassageSummaryController extends GetxController{
 
       Get.snackbar("Sweatbox", _response.message ?? 'Something went wrong!',colorText: Colors.white);
     }
+    // }else{
+    //   Get.snackbar("Sweatbox", 'No internet connection',colorText: Colors.white);
+    // }
   }
   void _showLoadingDialog() {
     CustomLoadingDialog.showLoadingDialog();

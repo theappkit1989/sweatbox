@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get_rx/get_rx.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:s_box/extras/constant/common_validation.dart';
 import 'package:s_box/modules/messages/socket/WebSocketService.dart';
 import 'package:s_box/services/api/api_endpoint.dart';
 import 'package:s_box/services/commonModels/freshFacesResponse.dart';
@@ -98,6 +99,17 @@ class ChatController extends GetxController {
     );
     if (result != null) {
       File file = File(result.files.single.path!);
+      int fileSizeInBytes = file.lengthSync();
+      int fileSizeInMB = fileSizeInBytes ~/ (1024 * 1024);
+      if (fileSizeInMB > 10) {
+        Get.snackbar(
+          "Error",
+          "File size exceeds 10MB. Please select a smaller file.",
+          colorText: Colors.white,
+          backgroundColor: Colors.red,
+        );
+        return;
+      }
       PlatformFile file2 = result.files.first;
       String fileType = getFileType(file2.extension);
       print("fileType:${fileType}");
@@ -133,6 +145,7 @@ class ChatController extends GetxController {
   sendMedia( File mFile, String type) async {
     FocusScope.of(Get.context!).unfocus();
 
+    // if(await isConnected()){
 
       // print(' id is ${user_id.toString()}');
       var _response = await ApiController().SendMediaInMessage(
@@ -149,6 +162,9 @@ class ChatController extends GetxController {
 
         Get.snackbar("Sweatbox", _response.message ?? 'Something went wrong!',colorText: Colors.white);
       }
+    // }else{
+    //   Get.snackbar("Sweatbox", 'No internet connection',colorText: Colors.white);
+    // }
     }
 
 

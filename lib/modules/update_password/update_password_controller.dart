@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:s_box/modules/new_password/password_updated_view.dart';
 
+import '../../extras/constant/common_validation.dart';
 import '../../services/repo/common_repo.dart';
 import '../../themes/loading_dialofg.dart';
 
@@ -25,6 +26,7 @@ class UpdatePasswordController extends GetxController {
   newPassword() async {
     FocusScope.of(Get.context!).unfocus();
 
+    // if(await isConnected()){
     if (formKey.currentState!.validate()) {
       if (_validatePasswords()) {
         _showLoadingDialog();
@@ -41,6 +43,9 @@ class UpdatePasswordController extends GetxController {
         Get.snackbar("Sweatbox", "Passwords do not match or are less than 8 characters!");
       }
     }
+    // }else{
+    //   Get.snackbar("Sweatbox", 'No internet connection',colorText: Colors.white);
+    // }
   }
 
   bool _validatePasswords() {

@@ -51,6 +51,7 @@ const String defaultGooglePay = '''{
     "allowedPaymentMethods": [
       {
         "type": "CARD",
+     
         "tokenizationSpecification": {
           "type": "PAYMENT_GATEWAY",
           "parameters": {
@@ -65,13 +66,13 @@ const String defaultGooglePay = '''{
           "billingAddressParameters": {
             "format": "FULL",
             "phoneNumberRequired": true
-          }
+          } 
         }
       }
     ],
     "merchantInfo": {
-      "merchantId": "BCR2DN4TWXN6FKA5",
-      "merchantName": "Sweatbox"
+      "merchantId": "5960962",
+      "merchantName": "Sweat Box Soho Ecomm"
     },
     "transactionInfo": {
       "countryCode": "GB",

@@ -296,47 +296,68 @@ class ChatView extends StatelessWidget {
                              ),
                            );
                          },
-                         child: Image.network(
-                           "${message.message}",
-                           width: Get.width / 2,
-                           height: Get.height / 4,
-                           fit: BoxFit.cover,
-                           loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
-                             if (loadingProgress == null) {
-                               return child;
-                             } else {
-                               return  SizedBox(
-                                 width: Get.width/ 2,
-                                 height:Get.height/ 4,
-                                 child: Center(
-                                   child: SizedBox(
-                                     height: 60,
-                                     width: 60,
-                                     child: CircularProgressIndicator(
-                                       value: loadingProgress.expectedTotalBytes != null
-                                           ? loadingProgress.cumulativeBytesLoaded / (loadingProgress.expectedTotalBytes ?? 1)
-                                           : null,
-                                     ),
-                                   ),
-                                 ),
-                               );
-                             }
-                           },
-                           errorBuilder: (context, error, stackTrace) {
-                             // If there is an error loading the network image, show a placeholder image
-                             return Image.asset(
-                               ImageConstant.noImage,
-                               // Provide the path to your placeholder image in assets
+                         child: Container(
+                           decoration: BoxDecoration(
+                             border: Border.all(
+                               color: isCurrentUser ? appPrimaryColor : greyChat, // Border color
+                               width: 2.0, // Border width
+                             ),
+                             borderRadius: BorderRadius.circular(15),),
+                           child: ClipRRect(
+                             borderRadius: BorderRadius.circular(15),
+                             child: Image.network(
+                               "${message.message}",
                                width: Get.width / 2,
                                height: Get.height / 4,
                                fit: BoxFit.cover,
-                             );
-                           },
+                               loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+                                 if (loadingProgress == null) {
+                                   return child;
+                                 } else {
+                                   return  SizedBox(
+                                     width: Get.width/ 2,
+                                     height:Get.height/ 4,
+                                     child: Center(
+                                       child: SizedBox(
+                                         height: 60,
+                                         width: 60,
+                                         child: CircularProgressIndicator(
+                                           value: loadingProgress.expectedTotalBytes != null
+                                               ? loadingProgress.cumulativeBytesLoaded / (loadingProgress.expectedTotalBytes ?? 1)
+                                               : null,
+                                         ),
+                                       ),
+                                     ),
+                                   );
+                                 }
+                               },
+                               errorBuilder: (context, error, stackTrace) {
+                                 // If there is an error loading the network image, show a placeholder image
+                                 return Image.asset(
+                                   ImageConstant.noImage,
+                                   // Provide the path to your placeholder image in assets
+                                   width: Get.width / 2,
+                                   height: Get.height / 4,
+                                   fit: BoxFit.cover,
+                                 );
+                               },
+                             ),
+                           ),
                          ),
                        ):message.type== MyFileType.video.name?
-                       VideoPlayerWidget(
-                         videoUrl:
-                         "${message.message}",
+                       Container(decoration: BoxDecoration(
+                         border: Border.all(
+                           color: isCurrentUser ? appPrimaryColor : greyChat, // Border color
+                           width: 2.0, // Border width
+                         ),
+                         borderRadius: BorderRadius.circular(15),),
+                         child: ClipRRect(
+                           borderRadius: BorderRadius.circular(15),
+                           child: VideoPlayerWidget(
+                             videoUrl:
+                             "${message.message}",
+                           ),
+                         ),
                        ):Container(),
                         Text(
                           formatTime(message.createdAt.toString()),
@@ -445,7 +466,7 @@ class ChatView extends StatelessWidget {
               ),
             ),
         
-            SizedBox(width: 10,),
+
             GestureDetector(
               onTap: () {
                 chatController.selectFile();
@@ -461,7 +482,7 @@ class ChatView extends StatelessWidget {
               //   color: ColorLight.white,
               // ),
             ),
-            SizedBox(width: 10,),
+            SizedBox(width: 5,),
             GestureDetector(
               onTap: () {
                 chatController.sendMessage('text',chatController.textController.value.text);
@@ -473,12 +494,10 @@ class ChatView extends StatelessWidget {
                 Icons.send,
                 color: ColorLight.white,
               ),
-              // Image.asset(
-              //   ImageConstant.sendIcon,
-              //   width: 30,
-              //   color: ColorLight.white,
-              // ),
+
+
             ),
+            SizedBox(width: 10,),
           ],
         ),
       ),

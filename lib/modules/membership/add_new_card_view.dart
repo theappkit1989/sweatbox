@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:s_box/extras/constant/AutoCapitalizeTextInputFormatter.dart';
 import 'package:s_box/extras/constant/app_constant.dart';
 import 'package:s_box/extras/constant/app_images.dart';
 import 'package:s_box/extras/constant/string_constant.dart';
@@ -189,9 +190,10 @@ class AddNewCardView extends StatelessWidget {
           ),
           TextFormField(
             controller: addNewCardController.nameController.value,
+            inputFormatters: [AutoCapitalizeTextInputFormatter()],
             validator: (value) {
               if (value == null || value.trim() == '') {
-                return 'Please Enter value';
+                return 'Please Enter Name';
               }
               return null;
             },

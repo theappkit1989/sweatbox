@@ -9,6 +9,8 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 
+import '../../extras/constant/common_validation.dart';
+
 //import 'package:firebase_auth/firebase_auth.dart';
 
 
@@ -38,6 +40,7 @@ class ForgotController extends GetxController{
   forgotPassword() async {
     FocusScope.of(Get.context!).unfocus();
     // var deviceToken = await FirebaseMessaging.instance.getToken();
+    // if(await isConnected()){
     if (formKey.currentState!.validate()) {
       _showLoadingDialog();
       var _response = await ApiController().forgotPwd(emailCont.value.text);
@@ -55,6 +58,9 @@ class ForgotController extends GetxController{
         Get.snackbar("", _response.message??'Something went wrong!',colorText: Colors.white);
       }
     }
+  // }else{
+  // Get.snackbar("Sweatbox", 'No internet connection',colorText: Colors.white);
+  // }
   }
 
   void _showLoadingDialog() {

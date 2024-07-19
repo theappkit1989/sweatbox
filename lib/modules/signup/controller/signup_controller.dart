@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 
+import '../../../extras/constant/common_validation.dart';
 import '../../../fcmNotification/FirebaseMessaging.dart';
 import '../../home_screen/home_view.dart';
 
@@ -77,6 +78,7 @@ class SignUpController extends GetxController{
   // }
   registerUser() async {
     FocusScope.of(Get.context!).unfocus();
+    // if(await isConnected()){
     if (formKey.currentState!.validate()) {
       _showLoadingDialog();
       try {
@@ -108,6 +110,9 @@ class SignUpController extends GetxController{
         Get.snackbar("Sweatbox", e.toString(),colorText: Colors.white);
       }
     }
+    // }else{
+    //   Get.snackbar("Sweatbox", 'No internet connection',colorText: Colors.white);
+    // }
   }
 
   void _showLoadingDialog() {

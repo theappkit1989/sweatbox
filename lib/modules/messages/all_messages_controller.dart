@@ -6,6 +6,7 @@ import 'package:get_storage/get_storage.dart';
 import 'package:s_box/modules/messages/chat_view.dart';
 import 'package:s_box/modules/messages/socket/WebSocketService.dart';
 
+import '../../extras/constant/common_validation.dart';
 import '../../extras/constant/shared_pref_constant.dart';
 import '../../services/api/api_endpoint.dart';
 import '../../services/commonModels/chatListResponse.dart';
@@ -106,6 +107,7 @@ class AllMessagesController extends GetxController {
 
   void fetchFreshFaces(String token) async {
     FocusScope.of(Get.context!).unfocus();
+    // if(await isConnected()){
     var _response = await ApiController().getFreshFaces(user_id, token);
     if (_response.status == true) {
       if (_response.users!.isNotEmpty) {
@@ -115,10 +117,14 @@ class AllMessagesController extends GetxController {
     } else {
       isloadingFreshfaces.value = false;
     }
+    // }else{
+    //   Get.snackbar("Sweatbox", 'No internet connection',colorText: Colors.white);
+    // }
   }
 
   void fetchAllChatList() async {
     FocusScope.of(Get.context!).unfocus();
+    // if(await isConnected()){
     var _response = await ApiController().getAllChats(token, user_id);
     if (_response.status == true) {
       if (_response.response!.isNotEmpty) {
@@ -136,9 +142,13 @@ class AllMessagesController extends GetxController {
         Get.find<MyProfileController>().logout();
       }
     }
+    // }else{
+    //   Get.snackbar("Sweatbox", 'No internet connection',colorText: Colors.white);
+    // }
   }
   void fetchAllChatListUpdate(MessageData m_data) async {
     FocusScope.of(Get.context!).unfocus();
+    // if(await isConnected()){
     var _response = await ApiController().getAllChats(token, user_id);
     if (_response.status == true) {
       if (_response.response!.isNotEmpty) {
@@ -165,6 +175,9 @@ class AllMessagesController extends GetxController {
         Get.find<MyProfileController>().logout();
       }
     }
+    // }else{
+    //   Get.snackbar("Sweatbox", 'No internet connection',colorText: Colors.white);
+    // }
   }
 
   void goToChatScreen(Chats chat, int index) {

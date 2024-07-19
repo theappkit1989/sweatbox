@@ -6,6 +6,7 @@ import 'package:pay/pay.dart';
 import 'package:s_box/modules/membership/membership_controller.dart';
 import 'package:s_box/modules/membership/payment_successful_view.dart';
 
+import '../../extras/constant/common_validation.dart';
 import '../../extras/constant/shared_pref_constant.dart';
 import '../../services/repo/common_repo.dart';
 import '../../themes/loading_dialofg.dart';
@@ -180,6 +181,7 @@ class MembershipSummaryController extends GetxController {
 
     Membership _membership=Membership(title: membership.value.title, user_id: membership.value.user_id, price: totalAmount.value.toInt(), discount: membership.value.discount,activeTime: formattedNow,expireTime: formattedExpireTime);
 
+    // if(await isConnected()){
     var _response = await ApiController().addMembership(
         userId,
         membership.value.title.toString(),
@@ -199,6 +201,9 @@ class MembershipSummaryController extends GetxController {
       }
       Get.snackbar("Sweatbox", _response.message ?? 'Something went wrong!',colorText: Colors.white);
     }
+    // }else{
+    //   Get.snackbar("Sweatbox", 'No internet connection',colorText: Colors.white);
+    // }
   }
 
   void _showLoadingDialog() {

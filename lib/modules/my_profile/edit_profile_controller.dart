@@ -6,6 +6,7 @@ import 'package:get_storage/get_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:s_box/modules/my_profile/my_profile_view.dart';
 import 'dart:io';
+import '../../extras/constant/common_validation.dart';
 import '../../extras/constant/shared_pref_constant.dart';
 import '../../services/api/api_endpoint.dart';
 import '../../services/repo/common_repo.dart';
@@ -62,6 +63,7 @@ class EditProfileController extends GetxController {
   updateProfile() async {
     FocusScope.of(Get.context!).unfocus();
 
+    // if(await isConnected()){
     if (formKey.currentState!.validate()) {
       _showLoadingDialog();
       // print(' id is ${user_id.toString()}');
@@ -106,6 +108,9 @@ class EditProfileController extends GetxController {
         Get.snackbar("Sweatbox", _response.message ?? 'Something went wrong!',colorText: Colors.white);
       }
     }
+    // }else{
+    //   Get.snackbar("Sweatbox", 'No internet connection',colorText: Colors.white);
+    // }
   }
 
   void _showLoadingDialog() {

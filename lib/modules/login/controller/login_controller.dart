@@ -10,6 +10,7 @@ import 'package:get_storage/get_storage.dart';
 
 //import 'package:firebase_auth/firebase_auth.dart';
 
+import '../../../extras/constant/common_validation.dart';
 import '../../../fcmNotification/FirebaseMessaging.dart';
 import '../../commonWidgets/loading_dialog.dart';
 import '../../home_screen/home_view.dart';
@@ -29,6 +30,7 @@ class LoginController extends GetxController{
   void onInit() {
     // TODO: implement onInit
     super.onInit();
+    // initConnectivity();
     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
       statusBarIconBrightness: Brightness.dark,
@@ -40,28 +42,33 @@ class LoginController extends GetxController{
   loginUser() async {
     FocusScope.of(Get.context!).unfocus();
    // var deviceToken = await FirebaseMessaging.instance.getToken();
-    if (formKey.currentState!.validate()) {
-      _showLoadingDialog();
-      var _response = await ApiController().loginUser(emailCont.value.text,passCont.value.text);
-      if(_response.user!=null ) {
-        _dismissDialog();
-        storage.write(userToken, _response.token);
-        storage.write(userEmail, emailCont.value.text);
-        storage.write(firstName, _response.user!.f_name ?? '');
-        storage.write(lastName, _response.user!.l_name ?? '');
-        storage.write(userName, _response.user!.username ?? '');
-        storage.write(image, _response.user!.image ?? '');
-        storage.write(userid, _response.user!.id.toString() ?? '');
-        NotificationsSubscription.fcmSubscribe(_response.user!.id.toString());
-        Get.offAll(() => HomeScreenView());
-        // storage.write("userType", _response.userData!.userType ?? '');
+   //  if(internetCheck){
+      if (formKey.currentState!.validate()) {
+        _showLoadingDialog();
+        var _response = await ApiController().loginUser(emailCont.value.text,passCont.value.text);
+        if(_response.user!=null ) {
+          _dismissDialog();
+          storage.write(userToken, _response.token);
+          storage.write(userEmail, emailCont.value.text);
+          storage.write(firstName, _response.user!.f_name ?? '');
+          storage.write(lastName, _response.user!.l_name ?? '');
+          storage.write(userName, _response.user!.username ?? '');
+          storage.write(image, _response.user!.image ?? '');
+          storage.write(userid, _response.user!.id.toString() ?? '');
+          NotificationsSubscription.fcmSubscribe(_response.user!.id.toString());
+          Get.offAll(() => HomeScreenView());
+          // storage.write("userType", _response.userData!.userType ?? '');
 
-      } else {
-        _dismissDialog();
-        print("Error ${_response.message}");
-        Get.snackbar("Sweatbox", 'Incorrect Email or Password',colorText: Colors.white);
+        } else {
+          _dismissDialog();
+          print("Error ${_response.message}");
+          Get.snackbar("Sweatbox", 'Incorrect Email or Password',colorText: Colors.white);
+        }
       }
-    }
+    // }else{
+    //   Get.snackbar("Sweatbox", 'No internet connection',colorText: Colors.white);
+    // }
+
   }
 
   void _showLoadingDialog() {

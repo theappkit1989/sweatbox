@@ -8,6 +8,7 @@ import 'package:s_box/modules/commonWidgets/submitBtn.dart';
 import 'package:s_box/modules/massage_booking/add_new_card_controller.dart';
 import 'package:s_box/themes/colors/color_light.dart';
 import 'package:flutter/services.dart';
+import '../../extras/constant/AutoCapitalizeTextInputFormatter.dart';
 import '../../extras/constant/app_color.dart';
 
 class AddNewCardView extends StatelessWidget {
@@ -182,6 +183,7 @@ class AddNewCardView extends StatelessWidget {
           ),
           TextFormField(
             controller: addNewCardController.nameController.value,
+            inputFormatters: [AutoCapitalizeTextInputFormatter()],
             validator: (value) {
               if (value == null || value.trim() == '') {
                 return 'Please Enter value';

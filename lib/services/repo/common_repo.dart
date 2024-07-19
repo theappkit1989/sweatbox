@@ -58,7 +58,7 @@ class ApiController extends BaseRepository {
 
   Future<LoginResponseEntity> loginUser(String email, String password) async {
     var uri = Uri.parse(ApiEndpoint.loginUser).replace(queryParameters: {
-      'email': email,
+      'email': email.trim(),
       'password': password,
     });
 
@@ -346,7 +346,7 @@ class ApiController extends BaseRepository {
         return SendMediaResponse.fromJson(decodedResponse);
       } else if(response.statusCode==413){
         print('Failed to update profile: ${response.body}');
-        return SendMediaResponse(status:false,message: 'please uplaod picture Less than 2 MB');
+        return SendMediaResponse(status:false,message: 'please uplaod file Less than 10 MB');
       }else {
         print('Failed to update profile: ${response.body}');
         return Future.error('Failed to update profile: ${response.statusCode}');
