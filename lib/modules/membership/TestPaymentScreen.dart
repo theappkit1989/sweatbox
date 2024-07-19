@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:crypto/crypto.dart';
 import 'package:http/http.dart' as http;
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
@@ -43,6 +44,58 @@ class PaymentService {
     }
   }
 
+  Future<void> processPayment() async {
+    final String cardNumber = "4000000000000002";
+    final String cardCvc = "123";
+    final String cardExpiryMonth = "05";
+    final String cardExpiryYear = "28";
+    final String orderNumber = "Payment ref D1";
+    final String currency = "GBP";
+    final String amountToCollect = "10.00";
+    final String secretKey = "94b3e285-9de0-450a-a2e5-c3bc96be45df"; // Replace with your actual secret key
+
+    // Concatenate the values based on the required order
+    final String dataToHash = "$cardNumber$cardCvc$cardExpiryMonth$cardExpiryYear";
+
+    // Generate the SHA-512 hash
+    final String sha512Hash = sha512.convert(utf8.encode(dataToHash)).toString();
+
+    final Map<String, dynamic> paymentData = {
+      "type": "Payment",
+      "paymentMethodsToUse": ["creditcard"],
+      // "parameters": {
+      //   "cardNumber": cardNumber,
+      //   "cardCvc": cardCvc,
+      //   "cardExpiryMonth": cardExpiryMonth,
+      //   "cardExpiryYear": cardExpiryYear
+      // },
+      "sha512": sha512Hash,
+
+      "order": {
+        "orderNumber": orderNumber
+      },
+      "currency": currency,
+      "amountToCollect": amountToCollect
+    };
+
+    final url = 'https://gateway-int.cashflows.com/api/gateway/payment-jobs';
+    final response = await http.post(
+      Uri.parse(url),
+      headers: {
+        'Content-Type': 'application/json',
+        'configurationId': '240726100033685504',
+        'Authorization': 'Bearer 94b3e285-9de0-450a-a2e5-c3bc96be45df',
+
+      },
+      body: json.encode(paymentData),
+    );
+
+    if (response.statusCode == 200) {
+      print('Payment successful: ${response.body}');
+    } else {
+      print('Payment failed with status ${response.statusCode}: ${response.body}');
+    }
+  }
 
   String parseException(String exception) {
     try {

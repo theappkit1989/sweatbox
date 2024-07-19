@@ -12,7 +12,10 @@ import 'package:s_box/modules/messages/chat_controller.dart';
 import 'package:s_box/services/commonModels/freshFacesResponse.dart';
 import 'package:s_box/themes/colors/color_light.dart';
 
+import '../../extras/constant/AutoCapitalizeTextInputFormatter.dart';
+import '../../extras/constant/VideoPlayerWidget.dart';
 import '../../extras/constant/app_constant.dart';
+import '../../extras/constant/shared_pref_constant.dart';
 import '../../services/api/api_endpoint.dart';
 import 'all_messages_controller.dart';
 
@@ -238,7 +241,7 @@ class ChatView extends StatelessWidget {
                           ? CrossAxisAlignment.end
                           : CrossAxisAlignment.start,
                       children: [
-                        Container(
+                       message.type==''||message.type=='text'? Container(
                           padding: const EdgeInsets.all(12.0),
                           margin:
                           EdgeInsets.symmetric(vertical: Get.height * 0.01),
@@ -258,13 +261,64 @@ class ChatView extends StatelessWidget {
                           child: Text(
                             message.message ?? '',
                             style: const TextStyle(
-                              fontSize: 13,
+                              fontSize: 14,
                               fontFamily: fontType,
                               color: ColorLight.white,
                               fontWeight: FontWeight.w400,
                             ),
                           ),
-                        ),
+                        ):message.type == MyFileType.image.name?
+                       GestureDetector(
+                         onTap: () {
+                           Navigator.push(
+                             context,
+                             MaterialPageRoute(
+                               builder: (context) => FullScreenImage(imageUrl: message.message.toString()),
+                             ),
+                           );
+                         },
+                         child: Image.network(
+                           "${message.message}",
+                           width: Get.width / 2,
+                           height: Get.height / 4,
+                           fit: BoxFit.cover,
+                           loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+                             if (loadingProgress == null) {
+                               return child;
+                             } else {
+                               return  SizedBox(
+                                 width: Get.width/ 2,
+                                 height:Get.height/ 4,
+                                 child: Center(
+                                   child: SizedBox(
+                                     height: 60,
+                                     width: 60,
+                                     child: CircularProgressIndicator(
+                                       value: loadingProgress.expectedTotalBytes != null
+                                           ? loadingProgress.cumulativeBytesLoaded / (loadingProgress.expectedTotalBytes ?? 1)
+                                           : null,
+                                     ),
+                                   ),
+                                 ),
+                               );
+                             }
+                           },
+                           errorBuilder: (context, error, stackTrace) {
+                             // If there is an error loading the network image, show a placeholder image
+                             return Image.asset(
+                               ImageConstant.noImage,
+                               // Provide the path to your placeholder image in assets
+                               width: Get.width / 2,
+                               height: Get.height / 4,
+                               fit: BoxFit.cover,
+                             );
+                           },
+                         ),
+                       ):message.type== MyFileType.video.name?
+                       VideoPlayerWidget(
+                         videoUrl:
+                         "${message.message}",
+                       ):Container(),
                         Text(
                           formatTime(message.createdAt.toString()),
                           // Ideally, format the actual message timestamp here
@@ -308,108 +362,8 @@ class ChatView extends StatelessWidget {
     return '$formattedTime';
   }
 
-  // String formatTime(String dateTime) {
-  //   DateTime parsedDate = DateTime.parse(dateTime);
-  //
-  //
-  //   String formattedTime = DateFormat('hh:mm a').format(parsedDate);
-  //
-  //   return '$formattedTime';
-  // }
-  // buildChatWidget() {
-  //   return Column(
-  //     children: [
-  //       ListView.builder(
-  //         itemBuilder: (context, index) => index % 2 == 0
-  //             ? Align(
-  //                 alignment: Alignment.centerRight,
-  //                 child: Column(
-  //                   mainAxisAlignment: MainAxisAlignment.start,
-  //                   crossAxisAlignment: CrossAxisAlignment.end,
-  //                   children: [
-  //                     Container(
-  //                       padding: const EdgeInsets.all(12.0),
-  //                       margin:
-  //                           EdgeInsets.symmetric(vertical: Get.height * 0.01),
-  //                       decoration: const BoxDecoration(
-  //                           color: appPrimaryColor,
-  //                           borderRadius: BorderRadius.only(
-  //                               topRight: Radius.circular(20),
-  //                               topLeft: Radius.circular(20),
-  //                               bottomLeft: Radius.circular(20),
-  //                               bottomRight: Radius.zero)),
-  //                       child: const Text(
-  //                         'It is a long established fact that a reader will be distracted by the readable',
-  //                         style: TextStyle(
-  //                           fontSize: 13,
-  //                           fontFamily: fontType,
-  //                           color: ColorLight.white,
-  //                           fontWeight: FontWeight.w400,
-  //                         ),
-  //                       ),
-  //                     ),
-  //                     const Text(
-  //                       '8:50 PM',
-  //                       style: TextStyle(
-  //                           fontWeight: FontWeight.w500,
-  //                           color: ColorLight.white,
-  //                           fontFamily: fontType,
-  //                           fontSize: 11),
-  //                     )
-  //                   ],
-  //                 ),
-  //               )
-  //             : Align(
-  //                 alignment: Alignment.centerLeft,
-  //                 child: Column(
-  //                   mainAxisAlignment: MainAxisAlignment.start,
-  //                   crossAxisAlignment: CrossAxisAlignment.start,
-  //                   children: [
-  //                     Container(
-  //                       padding: const EdgeInsets.all(12.0),
-  //                       margin:
-  //                           EdgeInsets.symmetric(vertical: Get.height * 0.01),
-  //                       decoration: const BoxDecoration(
-  //                           color: greyChat,
-  //                           borderRadius: BorderRadius.only(
-  //                               topRight: Radius.circular(20),
-  //                               topLeft: Radius.circular(20),
-  //                               bottomLeft: Radius.zero,
-  //                               bottomRight: Radius.circular(20))),
-  //                       child: const Text(
-  //                         'It is a long established fact that a reader',
-  //                         style: TextStyle(
-  //                           fontSize: 13,
-  //                           fontFamily: fontType,
-  //                           color: ColorLight.white,
-  //                           fontWeight: FontWeight.w400,
-  //                         ),
-  //                       ),
-  //                     ),
-  //                     const Text(
-  //                       '8:50 PM',
-  //                       style: TextStyle(
-  //                           fontWeight: FontWeight.w400,
-  //                           color: ColorLight.black,
-  //                           fontFamily: fontType,
-  //                           fontSize: 11),
-  //                     )
-  //                   ],
-  //                 ),
-  //               ),
-  //         primary: false,
-  //         shrinkWrap: true,
-  //         itemCount: 10,
-  //       ),
-  //       SizedBox(
-  //         height: Get.height * 0.1,
-  //       ),
-  //     ],
-  //   );
-  // }
 
   buildTextBox() {
-
     return Container(
       color: ColorLight.black,
       padding: EdgeInsets.only(
@@ -419,77 +373,146 @@ class ChatView extends StatelessWidget {
       ),
       child: Container(
         width: Get.width,
-        padding: EdgeInsets.symmetric(
-            horizontal: Get.width * 0.05, vertical: Get.height * 0.005),
-        decoration: BoxDecoration(
-            color: ColorLight.black,
-            borderRadius: BorderRadius.circular(40),
-            border: Border.all(color: Colors.white.withOpacity(0.3))),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            SizedBox(
-              width: Get.width * 0.6,
-              child: Row(
-                children: [
-                  // GestureDetector(
-                  //   onTap: () {
-                  //
-                  //   },
-                  //
-                  //   child: Image.asset(
-                  //     ImageConstant.emojiIcon,
-                  //     width: 30,
-                  //     color: Colors.white,
-                  //   ),
-                  // ),
-                  const SizedBox(
-                    width: 10,
-                  ),
-                  SizedBox(
-                    width: Get.width * 0.45,
-                    child:  TextField(
-                      controller: chatController.textController.value,
-                      textInputAction: TextInputAction.newline,
-                      keyboardType: TextInputType.streetAddress,
 
-                      style: TextStyle(
+        padding: EdgeInsets.all(5),
+        decoration: BoxDecoration(
+          color: ColorLight.black,
+          borderRadius: BorderRadius.circular(40),
+          border: Border.all(color: Colors.white.withOpacity(0.3)),
+        ),
+        child: Expanded(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              SizedBox(
+                width: Get.width * 0.7,
+                child: Row(
+                  children: [
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    Container(
+                      width: Get.width * 0.65,
+                      child: TextField(
+                        controller: chatController.textController.value,
+                        textInputAction: TextInputAction.newline,
+                        keyboardType: TextInputType.multiline,
+                        minLines: 1,  // Minimum lines to display
+                        maxLines: 4,  // Maximum lines to display before scrolling
+                        style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w400,
                           color: ColorLight.white,
-                          fontFamily: fontType),
-                      decoration: InputDecoration(
+                          fontFamily: fontType,
+                        ),
+                        inputFormatters: [
+                          AutoCapitalizeTextInputFormatter(),
+                        ],
+                        decoration: InputDecoration(
                           hintText: strTypeSomething,
                           border: InputBorder.none,
                           hintStyle: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w400,
-                              color: ColorLight.white,
-                              fontFamily: fontType)),
+                            fontSize: 14,
+                            fontWeight: FontWeight.w400,
+                            color: ColorLight.white,
+                            fontFamily: fontType,
+                          ),
+                        ),
+                        scrollController: chatController.scrollController.value,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-            // Image.asset(
-            //   ImageConstant.attachmentIcon,
-            //   width: 30,
-            //   color: ColorLight.white,
-            // ),
-            Spacer(),
-            GestureDetector(
-              onTap: (){
-                chatController.sendMessage();
-              },
-              child: Image.asset(
-                ImageConstant.sendIcon,
-                width: 30,
-                color: ColorLight.white,
+
+              SizedBox(width: 10,),
+              GestureDetector(
+                onTap: () {
+                  chatController.selectFile();
+                },
+                child: const Icon(
+                  Icons.attach_file_rounded,
+                  color: ColorLight.white,
+                ),
+
+                // Image.asset(
+                //   ImageConstant.sendIcon,
+                //   width: 30,
+                //   color: ColorLight.white,
+                // ),
               ),
-            ),
-          ],
+              SizedBox(width: 10,),
+              GestureDetector(
+                onTap: () {
+                  chatController.sendMessage('text',chatController.textController.value.text);
+                },
+                onDoubleTap: (){
+
+                },
+                child: const Icon(
+                  Icons.send,
+                  color: ColorLight.white,
+                ),
+                // Image.asset(
+                //   ImageConstant.sendIcon,
+                //   width: 30,
+                //   color: ColorLight.white,
+                // ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+}
+
+
+class FullScreenImage extends StatelessWidget {
+  final String imageUrl;
+
+  FullScreenImage({required this.imageUrl});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+      ),
+      backgroundColor: Colors.black,
+      body: Center(
+        child: Image.network(
+          imageUrl,
+          fit: BoxFit.contain,
+          loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+            if (loadingProgress == null) {
+              return child;
+            } else {
+              return Center(
+                child: CircularProgressIndicator(
+                  value: loadingProgress.expectedTotalBytes != null
+                      ? loadingProgress.cumulativeBytesLoaded / (loadingProgress.expectedTotalBytes ?? 1)
+                      : null,
+                ),
+              );
+            }
+          },
+          errorBuilder: (context, error, stackTrace) {
+            return Image.asset(
+              'assets/no_image.png',  // Adjust the path to your placeholder image
+              fit: BoxFit.contain,
+            );
+          },
         ),
       ),
     );
   }
 }
+

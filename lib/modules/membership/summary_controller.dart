@@ -10,7 +10,6 @@ import '../../extras/constant/shared_pref_constant.dart';
 import '../../services/repo/common_repo.dart';
 import '../../themes/loading_dialofg.dart';
 import '../massage_booking/payment_declined_view.dart';
-import '../massage_booking/testpaymentService/PaymentService.dart';
 import '../my_profile/my_profile_controller.dart';
 import 'TestPaymentScreen.dart';
 
@@ -27,7 +26,7 @@ class MembershipSummaryController extends GetxController {
   var promoCont = TextEditingController().obs;
   RxDouble discount=0.0.obs;
   RxDouble totalAmount=0.0.obs;
-  final PaymentServiceApplePay paymentService = PaymentServiceApplePay();
+
   var isLoading = false.obs;
   var paymentResult = {}.obs;
   @override
@@ -251,46 +250,9 @@ class MembershipSummaryController extends GetxController {
     return discountAmount;
   }
 
-  void makeApplePayPayment(PaymentItem paymentItem) async {
-    isLoading.value = true;
-    try {
-      final token = await getApplePayToken(paymentItem);
-      final result = await paymentService.makePayment(paymentItem.amount,'USD', 'APPLEPAY', token);
-      paymentResult.value = result;
-      addMembership();
-    } catch (e) {
 
-      Get.snackbar('Error', 'Payment failed: $e',colorText: Colors.white);
-      Get.to(PaymentDeclinedView());
-    } finally {
-      isLoading.value = false;
-    }
-  }
 
-  void makeGooglePayPayment(PaymentItem paymentItem) async {
-    isLoading.value = true;
-    try {
-      final token = await getGooglePayToken(paymentItem);
-      final result = await paymentService.makePayment(paymentItem.amount, 'USD', 'GOOGLEPAY', token);
-      paymentResult.value = result;
-      addMembership();
-    } catch (e) {
-      Get.snackbar('Error', 'Payment failed: $e',colorText: Colors.white);
-      Get.to(PaymentDeclinedView());
-    } finally {
-      isLoading.value = false;
-    }
-  }
 
-  Future<String> getApplePayToken(PaymentItem paymentItem) async {
-    // Implement the method to get Apple Pay token
-    // Refer to the official documentation for details
-    return 'apple_pay_token';
-  }
 
-  Future<String> getGooglePayToken(PaymentItem paymentItem) async {
-    // Implement the method to get Google Pay token
-    // Refer to the official documentation for details
-    return 'google_pay_token';
-  }
+
 }

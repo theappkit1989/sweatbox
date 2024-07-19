@@ -13,3 +13,11 @@ const userEmail = 'useremail';
 const userImage = 'userImage';
 const userType = 'userType';
 
+enum MyFileType{
+  text,
+  audio,
+  video,
+  image,
+  voice,
+  file
+}

@@ -9,6 +9,7 @@ static String baseUrlImage = "https://admin.sweatboxsoho.com/user/";
   static String newPassword = baseUrl+'password';
   static String updatePassword = baseUrl+'changePassword';
   static String updateProfile = baseUrl+'update/user';
+  static String mediaStore = baseUrl+'mediaStore';
   static String addMembership = baseUrl+'storeMembership';
   static String addService = baseUrl+'store/service';
   static String checkSlots = baseUrl+'slot/check';

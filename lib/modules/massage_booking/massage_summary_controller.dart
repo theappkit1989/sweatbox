@@ -7,7 +7,7 @@ import 'package:s_box/modules/massage_booking/massage_controller.dart';
 import 'package:s_box/modules/massage_booking/payment_declined_view.dart';
 import 'package:s_box/modules/massage_booking/massage_payment_successful_view.dart';
 import 'package:flutter/material.dart';
-import 'package:s_box/modules/massage_booking/testpaymentService/PaymentService.dart';
+
 import 'package:s_box/modules/my_profile/my_profile_controller.dart';
 import '../../extras/constant/shared_pref_constant.dart';
 import '../../services/repo/common_repo.dart';
@@ -33,7 +33,7 @@ class MassageSummaryController extends GetxController{
   var promoCont = TextEditingController().obs;
   RxDouble discount=0.0.obs;
   RxDouble totalAmount=0.0.obs;
-  final PaymentServiceApplePay paymentService = PaymentServiceApplePay();
+
   var isLoading = false.obs;
   var paymentResult = {}.obs;
   @override

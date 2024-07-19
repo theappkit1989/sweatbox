@@ -1,7 +1,12 @@
+import 'dart:developer';
+import 'dart:io';
+
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_rx/get_rx.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:s_box/modules/messages/socket/WebSocketService.dart';
 import 'package:s_box/services/api/api_endpoint.dart';
 import 'package:s_box/services/commonModels/freshFacesResponse.dart';
@@ -22,10 +27,12 @@ class ChatController extends GetxController {
   String user_id = '';
   RxList<MessageData> messages = <MessageData>[].obs;
   var textController = TextEditingController().obs;
+  var scrollController = ScrollController().obs;
   RxBool isloading = false.obs;
   String token = '';
   String receiver_socket_id = '';
-
+  Rx<File> selectedFile=File("").obs;
+  var selectedImage = Rx<File?>(null);
   @override
   void onInit() {
     super.onInit();
@@ -43,6 +50,7 @@ class ChatController extends GetxController {
         id: _m_data.id,
         updatedAt: _m_data.updatedAt,
         createdAt: _m_data.createdAt,
+        type:  _m_data.type,
       );
       messages.add(message);
       // var homeCont = Get.find<AllMessagesController>();
@@ -58,19 +66,91 @@ class ChatController extends GetxController {
   void goToMenu(){
     Get.to(MenuView(),arguments:{'user':user.value} );
   }
-  sendMessage() {
-    String message = textController.value.text;
+  sendMessage(String type, String message) {
+    // String message = textController.value.text;
     if (message.isEmpty) return;
     Map messageMap = {
       'token': token,
       'message': message,
       'sender_id': user_id,
       'receiver_id': user.value.id.toString(),
+      'type': type,
     };
     textController.value.clear();
     WebSocketService().emitEvent('send_message_user', messageMap);
     print('send message called');
   }
+  Future<void> pickImage() async {
+    final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      selectedImage.value = File(pickedFile.path);
+    }
+  }
+
+  Future<void> selectFile() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+        type: FileType.custom,
+        allowedExtensions: [
+          'jpg', 'jpeg', 'png',
+          'mp4', 'mov', 'avi', 'mkv',
+          // 'pdf', 'doc', 'docx', 'ppt', 'pptx', 'xls', 'xlsx'
+        ]
+    );
+    if (result != null) {
+      File file = File(result.files.single.path!);
+      PlatformFile file2 = result.files.first;
+      String fileType = getFileType(file2.extension);
+      print("fileType:${fileType}");
+      sendMedia(file,fileType);
+    }
+  }
+  static String getFileType(String? fileExtension) {
+    if (fileExtension == null) {
+      return 'Unknown';
+    }
+
+    // Convert the extension to lowercase for case-insensitive comparison
+    String extension = fileExtension.toLowerCase();
+
+    // Check if the file is an image based on the common image extensions
+    if (['jpg', 'jpeg', 'png'].contains(extension)) {
+      return MyFileType.image.name;
+    }
+
+    // Check if the file is a video based on the common video extensions
+    if (['mp4', 'mov', 'avi', 'mkv'].contains(extension)) {
+      return MyFileType.video.name;
+    }
+
+    // Check if the file is a document based on the common document extensions
+    if (['pdf', 'doc', 'docx', 'ppt', 'pptx', 'xls', 'xlsx'].contains(extension)) {
+      return MyFileType.file.name;
+    }
+
+    // If the extension is not recognized as an image, video, or document, classify it as 'Other'
+    return 'Other';
+  }
+  sendMedia( File mFile, String type) async {
+    FocusScope.of(Get.context!).unfocus();
+
+
+      // print(' id is ${user_id.toString()}');
+      var _response = await ApiController().SendMediaInMessage(
+
+        user_id.toString(),
+          type,
+        token,
+         image:  mFile,
+
+      );
+      if (_response.status == true) {
+        sendMessage(type, _response.path.toString());
+      } else {
+
+        Get.snackbar("Sweatbox", _response.message ?? 'Something went wrong!',colorText: Colors.white);
+      }
+    }
+
 
   Future<void> fetchAllMessages() async {
     FocusScope.of(Get.context!).unfocus();

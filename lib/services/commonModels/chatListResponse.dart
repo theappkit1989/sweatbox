@@ -44,6 +44,7 @@ class Chats {
   String? updatedAt;
   String? socket;
   String? lastMessage;
+  String? type;
   String? lastMessageTime;
 
   Chats(
@@ -61,6 +62,7 @@ class Chats {
         this.updatedAt,
         this.socket,
         this.lastMessage,
+        this.type,
         this.lastMessageTime});
 
   Chats.fromJson(Map<String, dynamic> json) {
@@ -77,6 +79,7 @@ class Chats {
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
     socket = json['socket'];
+    type = json['type'];
     lastMessage = json['last_message'];
     lastMessageTime = json['last_message_time'];
   }
@@ -96,6 +99,7 @@ class Chats {
     data['created_at'] = this.createdAt;
     data['updated_at'] = this.updatedAt;
     data['socket'] = this.socket;
+    data['type'] = this.type;
     data['last_message'] = this.lastMessage;
     data['last_message_time'] = this.lastMessageTime;
     return data;

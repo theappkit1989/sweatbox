@@ -57,6 +57,7 @@ class ImageConstant {
   static const moreIcon = 'assets/icons/more.png';
   static const attachmentIcon = 'assets/icons/attachment 1.png';
   static const sendIcon = 'assets/icons/send.png';
+  static const noImage = 'assets/images/no_image.png';
   static const logoutIcon = 'assets/icons/logout.png';
   static const subscriptions = 'assets/icons/subscriptions.png';
   static const profileBlue = 'assets/icons/profile_blue.png';

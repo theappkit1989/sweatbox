@@ -20,6 +20,7 @@ import 'package:s_box/services/commonModels/userAllData.dart';
 import '../commonModels/LoginResponseEntity.dart';
 import '../commonModels/ServiceDataClass.dart';
 import '../commonModels/checkSlotModal.dart';
+import '../commonModels/sendMediaResponse.dart';
 
 class ApiController extends BaseRepository {
   final String _accessToken = 'OGFjN2E0Yzg4ZmViODM2ZDAxOGZlZDA5OGY0MDAyNWV8VDlTajY4N0NaZzhHaE1TQQ==';
@@ -293,6 +294,66 @@ class ApiController extends BaseRepository {
     } catch (e) {
       print('Error occurred: $e');
       return EditProfileResponse(status:false,message: 'Week Internet Connection');
+    }
+  }
+
+
+  Future<SendMediaResponse> SendMediaInMessage(
+      String sender_id,
+      String type,
+      String token, {
+        File? image,
+      }) async {
+    final url = Uri.parse(ApiEndpoint.mediaStore);
+
+    try {
+      var request = http.MultipartRequest('POST', url);
+
+      request.headers['Authorization'] = 'Bearer $token';
+
+      if (image != null) {
+        request.files.add(
+          await http.MultipartFile.fromPath(
+            'file',
+            image.path,
+          ),
+        );
+      }
+
+
+      request.fields['sender_id'] = sender_id;
+      request.fields['type'] = type;
+
+      print('Sending fields:${request.fields}');
+      // print('id: $userId');
+      // print('f_name: $firstName');
+      // print('l_name: $lastName');
+      // print('username: $userName');
+      // print('email: $userEmail');
+
+      print(request.url);
+      var streamedResponse = await request.send();
+          // .timeout((const Duration(seconds: 10)));
+      print(streamedResponse.statusCode);
+
+
+      var response = await http.Response.fromStream(streamedResponse);
+
+      print(response.body);
+      if (response.statusCode == 200) {
+        final decodedResponse = jsonDecode(response.body);
+        print('response 200: update profile: ${response.body}');
+        return SendMediaResponse.fromJson(decodedResponse);
+      } else if(response.statusCode==413){
+        print('Failed to update profile: ${response.body}');
+        return SendMediaResponse(status:false,message: 'please uplaod picture Less than 2 MB');
+      }else {
+        print('Failed to update profile: ${response.body}');
+        return Future.error('Failed to update profile: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error occurred: $e');
+      return SendMediaResponse(status:false,message: 'Week Internet Connection');
     }
   }
 

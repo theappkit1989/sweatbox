@@ -12,6 +12,7 @@ import '../../services/commonModels/cardModal.dart';
 import '../../themes/colors/color_light.dart';
 import '../massage_booking/payment_declined_view.dart';
 import '../massage_booking/testpaymentService/payment_config.dart';
+import 'TestPaymentScreen.dart';
 
 class SummaryView extends StatelessWidget {
   final summaryController = Get.put(MembershipSummaryController());
@@ -660,6 +661,10 @@ class SummaryView extends StatelessWidget {
       horizontal: Get.width * 0.05,
     ),
     child: customSubmitBtn(
-        text: strBook, voidCallback: () {summaryController.goToPaymentSuccessful();}, width: Get.width),);
+        text: strBook, voidCallback: () async {
+      // final result = await PaymentService().processPayment();
+      // print('payment result are $result');
+          summaryController.goToPaymentSuccessful();
+          }, width: Get.width),);
   }
 }

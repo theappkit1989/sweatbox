@@ -261,14 +261,39 @@ class AllMessagesView extends StatelessWidget {
                     fontSize: 16,
                   ),
                 ),
-                subtitle: Text(
-                  chat.lastMessage ?? "",
+                subtitle: chat.type==''||chat.type=='text'?Text(
+
+                  chat.type==''||chat.type=='text'?chat.lastMessage ?? "":chat.type??"",
                   style: TextStyle(
-                    color: ColorLight.white,
+                    color: chat.type==''||chat.type=='text'?Colors.white:Colors.grey,
                     fontWeight: FontWeight.w600,
                     fontSize: 13,
                   ),
-                ),
+                ):chat.type=='image'?Row(children: [
+                  Icon(Icons.image_rounded, color: Colors.grey, size: 12),
+                  SizedBox(width: 5,),
+                  Text(
+
+                    chat.type??"",
+                    style: TextStyle(
+                      color: Colors.grey,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 13,
+                    ),
+                  )
+                ],):Row(children: [
+                  Icon(Icons.video_camera_back, color: Colors.grey, size: 12),
+                  SizedBox(width: 5,),
+                  Text(
+
+                    chat.type??"",
+                    style: TextStyle(
+                      color: Colors.grey,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 13,
+                    ),
+                  )
+                ],),
                 trailing: Column(
                     children: [
                       chat.isNewMessage==1

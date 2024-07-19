@@ -54,8 +54,8 @@ const String defaultGooglePay = '''{
         "tokenizationSpecification": {
           "type": "PAYMENT_GATEWAY",
           "parameters": {
-            "gateway": "aciworldwide",
-            "gatewayMerchantId": "8ac7a4c88feb836d018fed0b84160266"
+            "gateway": "cashflowsgateway",
+            "gatewayMerchantId": "5960962"
           }
         },
         "parameters": {

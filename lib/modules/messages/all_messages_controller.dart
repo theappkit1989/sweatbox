@@ -56,6 +56,7 @@ class AllMessagesController extends GetxController {
           id: _m_data.id,
           updatedAt: _m_data.updatedAt,
           createdAt: _m_data.createdAt,
+          type: _m_data.type
         );
 
         lastmessage.value = message.message.toString();
