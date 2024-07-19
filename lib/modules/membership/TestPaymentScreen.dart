@@ -63,13 +63,13 @@ class PaymentService {
     final Map<String, dynamic> paymentData = {
       "type": "Payment",
       "paymentMethodsToUse": ["creditcard"],
-      // "parameters": {
-      //   "cardNumber": cardNumber,
-      //   "cardCvc": cardCvc,
-      //   "cardExpiryMonth": cardExpiryMonth,
-      //   "cardExpiryYear": cardExpiryYear
-      // },
-      "sha512": sha512Hash,
+      "parameters": {
+        "cardNumber": cardNumber,
+        "cardCvc": cardCvc,
+        "cardExpiryMonth": cardExpiryMonth,
+        "cardExpiryYear": cardExpiryYear
+      },
+
 
       "order": {
         "orderNumber": orderNumber
@@ -85,7 +85,7 @@ class PaymentService {
         'Content-Type': 'application/json',
         'configurationId': '240726100033685504',
         'Authorization': 'Bearer 94b3e285-9de0-450a-a2e5-c3bc96be45df',
-
+        "sha512": sha512Hash,
       },
       body: json.encode(paymentData),
     );

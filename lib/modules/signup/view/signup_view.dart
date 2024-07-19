@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 
+import '../../../extras/constant/AutoCapitalizeTextInputFormatter.dart';
 import '../../../extras/constant/app_constant.dart';
 import '../../../extras/constant/app_images.dart';
 import '../../../themes/colors/color_light.dart';
@@ -230,10 +231,13 @@ class SignUpView extends StatelessWidget {
               cursorColor: ColorLight.white,
               validator: (value) {
                 if (value == null || value.trim() == '') {
-                  return 'Please Enter Name';
+                  return 'Please Enter First Name';
                 }
                 return null;
               },
+              inputFormatters: [
+                AutoCapitalizeTextInputFormatter(),
+              ],
               decoration: InputDecoration(
                   hintText: strFirstName,
                   filled: true,
@@ -265,9 +269,12 @@ class SignUpView extends StatelessWidget {
                   color: ColorLight.white,
                   fontFamily: fontType),
               controller: signupController.lastNameCont.value,
+              inputFormatters: [
+                AutoCapitalizeTextInputFormatter(),
+              ],
               validator: (value) {
                 if (value == null || value.trim() == '') {
-                  return 'Please Enter Name';
+                  return 'Please Enter Last Name';
                 }
                 return null;
               },
@@ -409,6 +416,9 @@ class SignUpView extends StatelessWidget {
             ),
             Obx(
               () => TextFormField(
+                inputFormatters: [
+                  AutoCapitalizeTextInputFormatter(),
+                ],
                 style: TextStyle(
                     fontSize: Get.height * 0.016,
                     color: ColorLight.white,

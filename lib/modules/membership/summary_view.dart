@@ -10,6 +10,7 @@ import '../../extras/constant/app_constant.dart';
 import '../../extras/constant/string_constant.dart';
 import '../../services/commonModels/cardModal.dart';
 import '../../themes/colors/color_light.dart';
+import '../../extras/constant/AutoCapitalizeTextInputFormatter.dart';
 import '../massage_booking/payment_declined_view.dart';
 import '../massage_booking/testpaymentService/payment_config.dart';
 import 'TestPaymentScreen.dart';
@@ -505,6 +506,9 @@ class SummaryView extends StatelessWidget {
               ),
               Expanded(
                 child: TextField(
+                  inputFormatters: [
+                    AutoCapitalizeTextInputFormatter(),
+                  ],
                   controller: summaryController.promoCont.value,
                   style: TextStyle(
                     color: ColorLight.white,
@@ -662,9 +666,9 @@ class SummaryView extends StatelessWidget {
     ),
     child: customSubmitBtn(
         text: strBook, voidCallback: () async {
-      // final result = await PaymentService().processPayment();
+      final result = await PaymentService().processPayment();
       // print('payment result are $result');
-          summaryController.goToPaymentSuccessful();
+      //     summaryController.goToPaymentSuccessful();
           }, width: Get.width),);
   }
 }

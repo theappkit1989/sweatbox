@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 
+import '../../../extras/constant/AutoCapitalizeTextInputFormatter.dart';
 import '../../commonWidgets/common_validations.dart';
 
 class LoginView extends StatelessWidget {
@@ -158,6 +159,9 @@ class LoginView extends StatelessWidget {
             ),
             Obx(
               () => TextFormField(
+                inputFormatters: [
+                  AutoCapitalizeTextInputFormatter(),
+                ],
                 controller: loginController.passCont.value,
                 style: TextStyle(
                     fontSize: Get.height * 0.017,

@@ -15,6 +15,7 @@ import 'package:s_box/modules/massage_booking/payment_declined_view.dart';
 import 'package:s_box/modules/massage_booking/massage_summary_controller.dart';
 
 import 'package:s_box/modules/massage_booking/testpaymentService/payment_config.dart';
+import '../../extras/constant/AutoCapitalizeTextInputFormatter.dart';
 import '../../extras/constant/app_constant.dart';
 import '../../extras/constant/string_constant.dart';
 import '../../extras/constant/string_constant.dart';
@@ -543,6 +544,9 @@ class MassageSummaryView extends StatelessWidget {
               ),
               Expanded(
                 child: TextField(
+                  inputFormatters: [
+                    AutoCapitalizeTextInputFormatter(),
+                  ],
                   controller: summaryController.promoCont.value,
                   style: TextStyle(
                     color: ColorLight.white,

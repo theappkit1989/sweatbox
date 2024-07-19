@@ -82,17 +82,36 @@ class ChatView extends StatelessWidget {
           Stack(
             children: [
               Container(
-                  width: Get.width * 0.12,
-                  height: kToolbarHeight,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    image: user.image != null ? DecorationImage(
-                      image: NetworkImage(imageUrl),
-                      fit: BoxFit.cover,
-                    ) : DecorationImage(
-                        image: AssetImage(ImageConstant.placeholderImage),
-                        fit: BoxFit.cover),
-                  )
+                  // width: Get.width * 0.12,
+                  // height: kToolbarHeight,
+                  // decoration: BoxDecoration(
+                  //   shape: BoxShape.circle,
+                  //   image: user.image != null ? DecorationImage(
+                  //     image: NetworkImage(imageUrl),
+                  //     fit: BoxFit.cover,
+                  //   ) : DecorationImage(
+                  //       image: AssetImage(ImageConstant.placeholderImage),
+                  //       fit: BoxFit.cover),
+                  // )
+       child:  ClipOval(
+      child: FadeInImage.assetNetwork(
+      placeholder: ImageConstant.placeholderImage,
+        image: imageUrl,
+        fit: BoxFit.cover,
+        width: 40,
+        height: 40,
+        fadeInDuration: Duration(milliseconds: 300),
+        fadeOutDuration: Duration(milliseconds: 100),
+        imageErrorBuilder: (context, error, stackTrace) {
+          return Image.asset(
+            ImageConstant.placeholderImage,
+            fit: BoxFit.cover,
+            width: 40,
+            height: 40,
+          );
+        },
+      ),
+    ),
               ),
               // Container(
               //   width: 10,
@@ -374,17 +393,17 @@ class ChatView extends StatelessWidget {
       child: Container(
         width: Get.width,
 
-        padding: EdgeInsets.all(5),
+        padding: EdgeInsets.only(top: 5,bottom: 5,left: 5),
         decoration: BoxDecoration(
           color: ColorLight.black,
           borderRadius: BorderRadius.circular(40),
           border: Border.all(color: Colors.white.withOpacity(0.3)),
         ),
-        child: Expanded(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              SizedBox(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Expanded(
+              child: SizedBox(
                 width: Get.width * 0.7,
                 child: Row(
                   children: [
@@ -424,43 +443,43 @@ class ChatView extends StatelessWidget {
                   ],
                 ),
               ),
-
-              SizedBox(width: 10,),
-              GestureDetector(
-                onTap: () {
-                  chatController.selectFile();
-                },
-                child: const Icon(
-                  Icons.attach_file_rounded,
-                  color: ColorLight.white,
-                ),
-
-                // Image.asset(
-                //   ImageConstant.sendIcon,
-                //   width: 30,
-                //   color: ColorLight.white,
-                // ),
+            ),
+        
+            SizedBox(width: 10,),
+            GestureDetector(
+              onTap: () {
+                chatController.selectFile();
+              },
+              child: const Icon(
+                Icons.attach_file_rounded,
+                color: ColorLight.white,
               ),
-              SizedBox(width: 10,),
-              GestureDetector(
-                onTap: () {
-                  chatController.sendMessage('text',chatController.textController.value.text);
-                },
-                onDoubleTap: (){
-
-                },
-                child: const Icon(
-                  Icons.send,
-                  color: ColorLight.white,
-                ),
-                // Image.asset(
-                //   ImageConstant.sendIcon,
-                //   width: 30,
-                //   color: ColorLight.white,
-                // ),
+        
+              // Image.asset(
+              //   ImageConstant.sendIcon,
+              //   width: 30,
+              //   color: ColorLight.white,
+              // ),
+            ),
+            SizedBox(width: 10,),
+            GestureDetector(
+              onTap: () {
+                chatController.sendMessage('text',chatController.textController.value.text);
+              },
+              onDoubleTap: (){
+        
+              },
+              child: const Icon(
+                Icons.send,
+                color: ColorLight.white,
               ),
-            ],
-          ),
+              // Image.asset(
+              //   ImageConstant.sendIcon,
+              //   width: 30,
+              //   color: ColorLight.white,
+              // ),
+            ),
+          ],
         ),
       ),
     );
