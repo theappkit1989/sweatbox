@@ -108,7 +108,7 @@ class MyHttpOverrides extends HttpOverrides{
       ..badCertificateCallback = (X509Certificate cert, String host, int port)=> true;
   }
 }
-
+GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 void main() async {
   await GetStorage.init();
   WidgetsFlutterBinding.ensureInitialized();
@@ -142,13 +142,18 @@ class Controller extends GetxController {
 }
 
 class MyApp extends StatefulWidget {
+  static GlobalKey<NavigatorState> getNavigatorKey() {
+    return navigatorKey;
+  }
   @override
   State<MyApp> createState() => _MyAppState();
 }
 
 class _MyAppState extends State<MyApp> {
+
   @override
   void initState() {
+
     // TODO: implement initState
     super.initState();
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(

@@ -82,9 +82,44 @@ class ChatController extends GetxController {
     print('send message called');
   }
   Future<void> pickImage() async {
-    final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
+    final pickedFile = await ImagePicker().pickMedia();
     if (pickedFile != null) {
+
+        File file =  File(pickedFile.path);
+        int fileSizeInBytes = file.lengthSync();
+        int fileSizeInMB = fileSizeInBytes ~/ (1024 * 1024);
+        if (fileSizeInMB > 10) {
+          Get.snackbar(
+            "Error",
+            "File size exceeds 10MB. Please select a smaller file.",
+            colorText: Colors.white,
+            backgroundColor: Colors.red,
+          );
+          return;
+        }
+
+        String fileType = getFileTypenew(pickedFile.path);
+        print("fileType:${fileType}");
+        sendMedia(file,fileType);
+
       selectedImage.value = File(pickedFile.path);
+    }
+  }
+  String getFileTypenew(String filePath) {
+    String extension = filePath.split('.').last.toLowerCase();
+    switch (extension) {
+      case 'jpg':
+      case 'jpeg':
+      case 'png':
+      case 'gif':
+        return 'image';
+      case 'mp4':
+      case 'avi':
+      case 'mov':
+        return 'video';
+    // Add more cases for other file types as needed
+      default:
+        return 'unknown';
     }
   }
 
