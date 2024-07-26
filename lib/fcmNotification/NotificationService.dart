@@ -6,10 +6,15 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:get/get.dart';
+import 'package:s_box/modules/home_screen/home_view.dart';
+
+import '../main.dart';
+import '../modules/home_screen/home_controller.dart';
 
 
 
-enum NotificationType { job, chat, profile }
+enum NotificationType {  chat}
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
@@ -67,9 +72,9 @@ class NotificationService{
         log("Notification: ${message.notification?.toMap()}");
         print('notification received');
 
-        if (notification != null && android != null) {
-          log("Notification Show  '${message.data}'");
-          log("Notification notificationType  '${message.data['notificationType']}'");
+        if (notification != null) {
+          print("Notification Show  '${message.data}'");
+          print("Notification notificationType  '${message.data['notificationType']}'");
 
           _fltNotification.show(
               notification.hashCode,
@@ -93,15 +98,15 @@ class NotificationService{
 
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
       if (message.notification != null) {
-        log("Notification onMessageOpenedApp Show  '${message.data}");
-        if (message.data['notificationType'] == NotificationType.job.name || message.data['notificationType'] == NotificationType.profile.name) {
-          jobClickHandle(message.data);
-          return;
-        }
-        if (message.data['notificationType'] == NotificationType.chat.name ) {
+        print("Notification onMessageOpenedApp Show  '${message.data}");
+        // if (message.data['notificationType'] == NotificationType.job.name || message.data['notificationType'] == NotificationType.profile.name) {
+        //   jobClickHandle(message.data);
+        //   return;
+        // }
+        // if (message.data['notificationType'] == NotificationType.chat.name ) {
           chatClickHandle(message.data);
-          return;
-        }
+          // return;
+        // }
 
       }
     });
@@ -118,11 +123,12 @@ class NotificationService{
       Map<String, dynamic> valueMap = jsonDecode(payload);
       String notificationType = valueMap['notificationType'];
 
-      if (notificationType == NotificationType.job.name || notificationType == NotificationType.profile.name) {
-        jobClickHandle(valueMap);
-        return;
-      }
-     else  if (notificationType == NotificationType.chat.name) {
+      // if (notificationType == NotificationType.job.name || notificationType == NotificationType.profile.name) {
+      //   jobClickHandle(valueMap);
+      //   return;
+      // }
+     // else
+       if (notificationType == NotificationType.chat.name) {
         chatClickHandle(valueMap);
         return;
       }
@@ -145,8 +151,10 @@ class NotificationService{
     // UserModel receiver = UserModel.fromJson(receiverMap);
     // print("${receiver.toJson()}-->conversationID:${conversationId}"); // Access receiver's properties
     //
-    // MyApp.getNavigatorKey().currentState?.push(MaterialPageRoute(builder: (context) =>(PersonalChat(mUserModel: receiver,
-    //     mConverstaionId: conversationId, mJobId: ""))));
+    var homecont= Get.find<MainScreenController>();
+    homecont.tabIndex.value=2;
+    homecont.update();
+    MyApp.getNavigatorKey().currentState?.push(MaterialPageRoute(builder: (context) =>(HomeScreenView())));
 
   }
 

@@ -36,6 +36,7 @@ class ChatView extends StatelessWidget {
 
     return WillPopScope(
       onWillPop: () {
+        FocusScope.of(Get.context!).unfocus();
 
         var homeCont = Get.find<AllMessagesController>();
       // homeCont.allChatList.clear();
@@ -67,6 +68,7 @@ class ChatView extends StatelessWidget {
       backgroundColor: ColorLight.black,
       leading: GestureDetector(
           onTap: () {
+            FocusScope.of(Get.context!).unfocus();
             var homeCont = Get.find<AllMessagesController>();
             // homeCont.allChatList.clear();
             homeCont.fetchAllChatList();
@@ -300,7 +302,7 @@ class ChatView extends StatelessWidget {
                            decoration: BoxDecoration(
                              border: Border.all(
                                color: isCurrentUser ? appPrimaryColor : greyChat, // Border color
-                               width: 2.0, // Border width
+                               width: 1.0, // Border width
                              ),
                              borderRadius: BorderRadius.circular(15),),
                            child: ClipRRect(
@@ -348,7 +350,7 @@ class ChatView extends StatelessWidget {
                        Container(decoration: BoxDecoration(
                          border: Border.all(
                            color: isCurrentUser ? appPrimaryColor : greyChat, // Border color
-                           width: 2.0, // Border width
+                           width: 1.0, // Border width
                          ),
                          borderRadius: BorderRadius.circular(15),),
                          child: ClipRRect(
@@ -469,10 +471,10 @@ class ChatView extends StatelessWidget {
 
             GestureDetector(
               onTap: () {
-                chatController.selectFile();
+                chatController.pickImage();
               },
               child: const Icon(
-                Icons.attach_file_rounded,
+                Icons.camera_alt_rounded,
                 color: ColorLight.white,
               ),
         

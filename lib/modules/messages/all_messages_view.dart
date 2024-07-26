@@ -269,12 +269,13 @@ class AllMessagesView extends StatelessWidget {
                     fontWeight: FontWeight.w600,
                     fontSize: 13,
                   ),
+                  maxLines: 1, // Limiting to one line
+                  overflow: TextOverflow.ellipsis,
                 ):chat.type=='image'?Row(children: [
-                  Icon(Icons.image_rounded, color: Colors.grey, size: 12),
-                  SizedBox(width: 5,),
+                  // Icon(Icons.image_rounded, color: Colors.grey, size: 12),SizedBox(width: 5,),
                   Text(
 
-                    chat.type??"",
+                    "sent you an image",
                     style: TextStyle(
                       color: Colors.grey,
                       fontWeight: FontWeight.w600,
@@ -282,11 +283,11 @@ class AllMessagesView extends StatelessWidget {
                     ),
                   )
                 ],):Row(children: [
-                  Icon(Icons.video_camera_back, color: Colors.grey, size: 12),
-                  SizedBox(width: 5,),
+                  // Icon(Icons.video_camera_back, color: Colors.grey, size: 12),
+
                   Text(
 
-                    chat.type??"",
+                    "sent you a video",
                     style: TextStyle(
                       color: Colors.grey,
                       fontWeight: FontWeight.w600,
