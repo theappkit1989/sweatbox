@@ -1,10 +1,10 @@
 import 'dart:convert';
+
 import 'package:crypto/crypto.dart';
 import 'package:http/http.dart' as http;
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
 class PaymentService {
   final String _accessToken = 'OGFjN2E0Yzg4ZmViODM2ZDAxOGZlZDA5OGY0MDAyNWV8VDlTajY4N0NaZzhHaE1TQQ==';
@@ -43,28 +43,26 @@ class PaymentService {
       throw Exception('Failed to make payment ${response.body}');
     }
   }
-
   Future<void> processPayment() async {
-    final String cardNumber = "4000000000000002";
-    final String cardCvc = "123";
-    final String cardExpiryMonth = "05";
-    final String cardExpiryYear = "28";
-    final String orderNumber = "Payment ref D1";
+    final String cardNumber = "5590490202169114";
+    final String CardHolderName = "Muhammad Yasir Shahzad";
+    final String cardCvc = "467";
+    final String cardExpiryMonth = "07";
+    final String cardExpiryYear = "27";
+    final String orderNumber = "Payment ref D13";
     final String currency = "GBP";
-    final String amountToCollect = "10.00";
-    final String secretKey = "94b3e285-9de0-450a-a2e5-c3bc96be45df"; // Replace with your actual secret key
+    final String amountToCollect = "0.5";
+    final String secretKey = "ad3defe8-2c6a-4e0e-a866-6f67dfdfc1d6"; // Replace with your actual secret key
 
-    // Concatenate the values based on the required order
-    final String dataToHash = "$cardNumber$cardCvc$cardExpiryMonth$cardExpiryYear";
-
-    // Generate the SHA-512 hash
-    final String sha512Hash = sha512.convert(utf8.encode(dataToHash)).toString();
 
     final Map<String, dynamic> paymentData = {
       "type": "Payment",
-      "paymentMethodsToUse": ["creditcard"],
+      "paymentMethodsToUse": ["debitcard"],
       "parameters": {
+
         "cardNumber": cardNumber,
+        "CardHolderName": CardHolderName,
+
         "cardCvc": cardCvc,
         "cardExpiryMonth": cardExpiryMonth,
         "cardExpiryYear": cardExpiryYear
@@ -78,24 +76,63 @@ class PaymentService {
       "amountToCollect": amountToCollect
     };
 
-    final url = 'https://gateway-int.cashflows.com/api/gateway/payment-jobs';
+    // Convert paymentData to JSON string
+    final String jsonBody = json.encode(paymentData);
+
+    // Concatenate the secret key and the JSON body
+    final String dataToHash = secretKey + jsonBody;
+
+    // Generate the SHA-512 hash
+    final String sha512Hash = sha512.convert(utf8.encode(dataToHash)).toString();
+
+    final url = 'https://gateway.cashflows.com/api/gateway/payment-jobs';
     final response = await http.post(
       Uri.parse(url),
       headers: {
         'Content-Type': 'application/json',
-        'configurationId': '240726100033685504',
-        'Authorization': 'Bearer 94b3e285-9de0-450a-a2e5-c3bc96be45df',
-        "sha512": sha512Hash,
+        'configurationId': '240726117314217984',
+        'Hash': sha512Hash,
       },
-      body: json.encode(paymentData),
+      body: jsonBody,
     );
 
-    if (response.statusCode == 200) {
+    print(response.statusCode);
+    if (response.statusCode == 201) {
+
+      final responseData = json.decode(response.body);
+      final actionUrl = responseData['links']['action']['url'];
+      final returnUrlSuccess = responseData['data']['payments'][0]['attributes']['returnUrlSuccess'];
+      final returnUrlFailed = responseData['data']['payments'][0]['attributes']['returnUrlFailed'];
+      final returnUrlCancelled = responseData['data']['payments'][0]['attributes']['returnUrlCancelled'];
+      print('action url is $actionUrl');
+      Get.to(PaymentWebView(url: actionUrl, urlSuccess: returnUrlSuccess, urlFailed: returnUrlFailed, urlCancelled: returnUrlCancelled,));
+      // SuccessPayment(actionUrl);
       print('Payment successful: ${response.body}');
+
     } else {
       print('Payment failed with status ${response.statusCode}: ${response.body}');
     }
   }
+
+
+  Future<void> SuccessPayment(String url) async{
+
+    final response = await http.get(
+      Uri.parse(url),
+      headers: {
+        'Content-Type': "text/html",
+      },
+      
+    );
+
+    print(response.statusCode);
+    if (response.statusCode == 200) {
+      print('Payment successful action url: ${response.body}');
+    } else {
+      print('Payment failed with status action url ${response.statusCode}: ${response.body}');
+    }
+  }
+
 
   String parseException(String exception) {
     try {
@@ -165,6 +202,15 @@ class PaymentController extends GetxController {
   }
 }
 
+ enum PaymentJobParameter
+{
+  Sha512,
+  CardNumber,
+  CardCvc,
+  CardExpiryMonth,
+  CardExpiryYear
+  // Add other parameters as necessary
+}
 
 class PaymentScreen extends StatelessWidget {
   final PaymentController paymentController = Get.put(PaymentController());
@@ -238,6 +284,93 @@ class PaymentScreen extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+
+class PaymentWebView extends StatefulWidget {
+  final String url;
+  final String urlSuccess;
+  final String urlFailed;
+  final String urlCancelled;
+
+  PaymentWebView({required this.url,required this.urlSuccess,required this.urlFailed,required this.urlCancelled});
+
+  @override
+  State<PaymentWebView> createState() => _PaymentWebViewState();
+}
+
+class _PaymentWebViewState extends State<PaymentWebView> {
+  WebViewController webViewController = WebViewController();
+
+  setWebController(){
+    webViewController = WebViewController()
+      ..setJavaScriptMode(JavaScriptMode.unrestricted)
+      ..setBackgroundColor(const Color(0x00000000))
+      ..setNavigationDelegate(
+        NavigationDelegate(
+          onProgress: (int progress) {
+            // Update loading bar.
+            print(progress);
+          },
+          onPageStarted: (String url) {},
+            onPageFinished: (url) {
+              // You can handle actions here after the page is finished loading
+              // For example, you might check for success indicators in the URL
+              print("page finished url is $url");
+              if (url==widget.urlSuccess) {
+                // Navigator.of(context).pushReplacementNamed('/payment-success');
+                print("payment successful at last");
+              } else if (url==widget.urlFailed) {
+                print("payment failed at last");
+                // Navigator.of(context).pushReplacementNamed('/payment-failed');
+              }else if (url==widget.urlCancelled) {
+                print("payment cancelled at last");
+                // Navigator.of(context).pushReplacementNamed('/payment-failed');
+              }else  {
+                print("payment Error occoured");
+                // Navigator.of(context).pushReplacementNamed('/payment-failed');
+              }
+            },
+          onWebResourceError: (WebResourceError error) {},
+          onNavigationRequest: (NavigationRequest request) {
+            if (request.url.startsWith('https://www.youtube.com/')) {
+              return NavigationDecision.prevent;
+            }
+            return NavigationDecision.navigate;
+          },
+        ),
+      )
+      ..loadRequest(Uri.parse(widget.url));
+  }
+  @override
+  void initState() {
+
+    super.initState();
+    setWebController();
+  }
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Payment Confirmation'),
+      ),
+      body:WebViewWidget(
+          controller: webViewController)
+      // WebView(
+      //   initialUrl: url,
+      //   javascriptMode: JavascriptMode.unrestricted,
+      //   onPageFinished: (url) {
+      //     // You can handle actions here after the page is finished loading
+      //     // For example, you might check for success indicators in the URL
+      //     if (url.contains('success')) {
+      //       Navigator.of(context).pushReplacementNamed('/payment-success');
+      //     } else if (url.contains('error')) {
+      //       Navigator.of(context).pushReplacementNamed('/payment-failed');
+      //     }
+      //   },
+      // ),
     );
   }
 }

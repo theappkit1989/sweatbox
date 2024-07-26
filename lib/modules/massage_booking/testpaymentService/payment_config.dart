@@ -71,8 +71,8 @@ const String defaultGooglePay = '''{
       }
     ],
     "merchantInfo": {
-      "merchantId": "5960962",
-      "merchantName": "Sweat Box Soho Ecomm"
+      "merchantId": "BCR2DN4T6WCOX4CE",
+      "merchantName": "GYM Spa Soho LTd, Sweatbox  "
     },
     "transactionInfo": {
       "countryCode": "GB",
