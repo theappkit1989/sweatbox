@@ -100,7 +100,7 @@ class ApiController extends BaseRepository {
 
 
   Future<CommonResponseEntity> registerUser(
-      String f_name,String l_name, String username, String email, String password) async {
+      String f_name,String l_name, String username, String email, String password, String dob) async {
     var apiResponse = await http.post(Uri.parse(ApiEndpoint.registerUser),
         headers: {
           'Content-Type': 'application/json',
@@ -111,6 +111,7 @@ class ApiController extends BaseRepository {
           'username': username,
           'email': email,
           'password': password,
+          'dob': dob,
 
         }));
     {

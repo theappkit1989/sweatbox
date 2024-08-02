@@ -8,8 +8,10 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 
 import '../../../extras/constant/common_validation.dart';
+import '../../../extras/constant/string_constant.dart';
 import '../../../fcmNotification/FirebaseMessaging.dart';
 import '../../home_screen/home_view.dart';
+import '../terms_and_condition.dart';
 
 
 class SignUpController extends GetxController{
@@ -21,6 +23,7 @@ class SignUpController extends GetxController{
   var nameCont = TextEditingController().obs;
   var lastNameCont = TextEditingController().obs;
   var usernameCont = TextEditingController().obs;
+  var dobCont = TextEditingController().obs;
   var emailCont = TextEditingController().obs;
   var passCont = TextEditingController().obs;
   var cPassCont = TextEditingController().obs;
@@ -28,6 +31,8 @@ class SignUpController extends GetxController{
   var passFocus = FocusNode();
   var cPassFocus = FocusNode();
   var storage = GetStorage();
+  var hasAcceptedTerms = false.obs;
+  var hasAcceptedSexualEtiquette = false.obs;
 
   @override
   void onInit() {
@@ -47,7 +52,28 @@ class SignUpController extends GetxController{
       }
     });
   }
+  void showTermsAndConditionsScreen() {
+    if (!hasAcceptedTerms.value) {
+      Get.to(() => TermsAndConditionsScreen(
+        onProceed:() {
+          Get.back;
+          Future.delayed(Duration(milliseconds: 400) , () {
+            showSexualEtiquetteScreen();
+          });
+          }
+      ));
+    }
+  }
 
+  void showSexualEtiquetteScreen() {
+    if (!hasAcceptedSexualEtiquette.value) {
+      Get.to(() => SexualEtiquetteScreen(
+        onProceed: () {
+          hasAcceptedSexualEtiquette.value = true;
+        },
+      ));
+    }
+  }
   void goToLoginPage(){
     Get.offAll(LoginView());
   }
@@ -79,7 +105,7 @@ class SignUpController extends GetxController{
   registerUser() async {
     FocusScope.of(Get.context!).unfocus();
     // if(await isConnected()){
-    if (formKey.currentState!.validate()) {
+    if (formKey.currentState!.validate()&&hasAcceptedTerms.value==true) {
       _showLoadingDialog();
       try {
         var response = await ApiController().registerUser(
@@ -88,6 +114,7 @@ class SignUpController extends GetxController{
           usernameCont.value.text,
           emailCont.value.text,
           passCont.value.text,
+          dobCont.value.text,
         );
 
         if (response.status == true) {
@@ -99,6 +126,7 @@ class SignUpController extends GetxController{
           storage.write(firstName, nameCont.value.text);
           storage.write(lastName, lastNameCont.value.text);
           storage.write(userToken, response.accessToken);
+          storage.write(userdob, dobCont.value.text);
           NotificationsSubscription.fcmSubscribe( response.user?.id.toString());
           Get.offAll(() => HomeScreenView());
         } else {

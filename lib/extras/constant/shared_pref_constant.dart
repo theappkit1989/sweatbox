@@ -3,6 +3,7 @@ const userData = "userData";
 const ntCount = "ntCount";
 const isProfileComplete = "profileComplete";
 const userToken = "userToken";
+const userdob = "userdob";
 const image = "image";
 const savedCards = "savedCards";
 const firstName = "f_name";

@@ -1,5 +1,6 @@
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/widgets.dart';
 import 'package:s_box/extras/constant/app_color.dart';
 import 'package:s_box/extras/constant/string_constant.dart';
 import 'package:s_box/modules/commonWidgets/edit_widget.dart';
@@ -14,6 +15,7 @@ import '../../../extras/constant/app_constant.dart';
 import '../../../extras/constant/app_images.dart';
 import '../../../themes/colors/color_light.dart';
 import '../../commonWidgets/common_validations.dart';
+import '../DobScreen.dart';
 
 class SignUpView extends StatelessWidget {
   final signupController = Get.put(SignUpController());
@@ -21,6 +23,9 @@ class SignUpView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      signupController.showTermsAndConditionsScreen();
+    });
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).requestFocus(FocusNode());
@@ -91,7 +96,7 @@ class SignUpView extends StatelessWidget {
                 children: [
                   buildForm(),
                   SizedBox(
-                    height: Get.height * 0.03,
+                    height: Get.height * 0.01,
                   ),
                   GestureDetector(
                     onTap: (){
@@ -336,6 +341,54 @@ class SignUpView extends StatelessWidget {
                 enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(30.0),
                     borderSide: const BorderSide(color: Colors.black12)),
+              ),
+            ),
+            SizedBox(
+              height: Get.height * 0.025,
+            ),
+            GestureDetector(
+              onTap: () async {
+                var result = await Get.to(DobScreen());
+                if (result != null) {
+                  signupController.dobCont.value.text = result;
+                }
+              },
+              child: AbsorbPointer(
+                child: TextFormField(
+                  style: TextStyle(
+                      fontSize: Get.height * 0.017,
+                      color: ColorLight.white,
+                      fontFamily: fontType),
+                  controller: signupController.dobCont.value,
+                  validator: (value) {
+                    if (value == null || value.trim() == '') {
+                      return 'Please Enter Date of birth';
+                    }
+                    return null;
+                  },
+                  decoration: InputDecoration(
+                
+                    hintText: strDateofbirth,
+                    hintStyle: TextStyle(
+                        fontFamily: fontType,
+                        fontSize: Get.height * 0.017,
+                        fontWeight: FontWeight.w500,
+                        color: ColorLight.white),
+                    contentPadding: EdgeInsets.symmetric(
+                        horizontal: Get.width * 0.07, vertical: Get.height * 0.018),
+                    fillColor: textFieldColor,
+                    filled: true,
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(30.0),
+                        borderSide: const BorderSide(color: Colors.black12)),
+                    focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(30.0),
+                        borderSide: const BorderSide(color: Colors.black12)),
+                    enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(30.0),
+                        borderSide: const BorderSide(color: Colors.black12)),
+                  ),
+                ),
               ),
             ),
             // TextFormField(
