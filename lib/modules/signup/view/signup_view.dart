@@ -362,7 +362,7 @@ class SignUpView extends StatelessWidget {
                   controller: signupController.dobCont.value,
                   validator: (value) {
                     if (value == null || value.trim() == '') {
-                      return 'Please Enter Date of birth';
+                      return 'Please Enter Date of Birth';
                     }
                     return null;
                   },

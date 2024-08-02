@@ -62,7 +62,8 @@ class _DobScreenState extends State<DobScreen> {
       backgroundColor: ColorLight.black,
       appBar: AppBar(
         title: Text(''),
-        backgroundColor: ColorLight.white,
+        backgroundColor: Colors.black, // Set background color to black
+        foregroundColor: Colors.white,
       ),
       body: Column(
         children: [
@@ -150,7 +151,8 @@ class _DobScreenState extends State<DobScreen> {
               if (dayController.text.isNotEmpty &&
                   monthController.text.isNotEmpty &&
                   yearController.text.isNotEmpty &&
-                  validateYear()&&validateDate()) {
+                  validateYear()&&validateDate()&&
+                  isAtLeast18YearsOld()) {
                 String formattedDate = formatDateString(
                   dayController.text,
                   monthController.text,
@@ -174,6 +176,19 @@ class _DobScreenState extends State<DobScreen> {
         ],
       ),
     );
+  }
+  bool isAtLeast18YearsOld() {
+    try {
+      DateTime birthDate = DateTime.parse('${yearController.text}-${monthController.text.padLeft(2, '0')}-${dayController.text.padLeft(2, '0')}');
+      DateTime today = DateTime.now();
+      int age = today.year - birthDate.year;
+      if (today.month < birthDate.month || (today.month == birthDate.month && today.day < birthDate.day)) {
+        age--;
+      }
+      return age >= 18;
+    } catch (e) {
+      return false;
+    }
   }
   bool validateDate() {
     try {

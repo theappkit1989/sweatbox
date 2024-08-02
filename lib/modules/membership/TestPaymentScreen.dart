@@ -92,6 +92,7 @@ class PaymentService {
       },
       "billingAddress" : {
         "firstName" : holder,
+        "lastName" : '',
       },
       "currency": currency,
       "amountToCollect": amountToCollect
@@ -178,6 +179,7 @@ class PaymentService {
         "orderNumber":orderNumber,
         "billingAddress" : {
           "firstName" : holder,
+          "lastName" : '',
 
         },
 

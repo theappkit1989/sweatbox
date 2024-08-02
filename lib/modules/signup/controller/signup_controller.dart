@@ -63,6 +63,8 @@ class SignUpController extends GetxController{
           });
           }
       ));
+    }else{
+      showSexualEtiquetteScreen();
     }
   }
 
@@ -117,6 +119,7 @@ class SignUpController extends GetxController{
           passCont.value.text,
           dobCont.value.text,
         );
+        print(dobCont.value.text);
 
         if (response.status == true) {
           _dismissDialog();

@@ -35,14 +35,7 @@ class TermsAndConditionsScreen extends StatelessWidget {
                 title: Text('Accept Terms and Conditions'),
                 content: Text('Do you accept the terms and conditions?'),
                 actions: [
-                  TextButton(
-                    onPressed: () {
-                      Get.back(); // Close the dialog
-                      Get.back(); // Close the Terms and Conditions screen
-                      onProceed();
-                    },
-                    child: Text('Accept'),
-                  ),
+
                   TextButton(
                     onPressed: () {
                       Get.back(); // Close the dialog
@@ -50,6 +43,14 @@ class TermsAndConditionsScreen extends StatelessWidget {
                       Get.back();// Close the Terms and Conditions screen
                     },
                     child: Text('Decline'),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      Get.back(); // Close the dialog
+                      Get.back(); // Close the Terms and Conditions screen
+                      onProceed();
+                    },
+                    child: Text('Accept',style: TextStyle(fontWeight: FontWeight.w900),),
                   ),
                 ],
               ),
@@ -95,14 +96,7 @@ class SexualEtiquetteScreen extends StatelessWidget {
                 title: Text('Accept Sexual Etiquette'),
                 content: Text('Do you accept the sexual etiquette?'),
                 actions: [
-                  TextButton(
-                    onPressed: () {
-                      Get.back(); // Close the dialog
-                      Get.back(); // Close the Sexual Etiquette screen
-                      onProceed();
-                    },
-                    child: Text('Accept'),
-                  ),
+
                   TextButton(
                     onPressed: () {
                       Get.back(); // Close the dialog
@@ -110,6 +104,14 @@ class SexualEtiquetteScreen extends StatelessWidget {
                       Get.back();// Close the Sexual Etiquette screen
                     },
                     child: Text('Decline'),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      Get.back(); // Close the dialog
+                      Get.back(); // Close the Sexual Etiquette screen
+                      onProceed();
+                    },
+                    child: Text('Accept',style: TextStyle(fontWeight: FontWeight.w900),),
                   ),
                 ],
               ),
