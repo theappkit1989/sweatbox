@@ -56,6 +56,7 @@ class SignUpController extends GetxController{
     if (!hasAcceptedTerms.value) {
       Get.to(() => TermsAndConditionsScreen(
         onProceed:() {
+          hasAcceptedTerms.value=true;
           Get.back;
           Future.delayed(Duration(milliseconds: 400) , () {
             showSexualEtiquetteScreen();
