@@ -60,8 +60,9 @@ class PaymentMethodView extends StatelessWidget {
                 buildCreditCardSection(),
                 buildOtherPaymentMethod(),
                 SizedBox(
-                  height: Get.height * 0.3,
+                  height: Get.height * 0.4,
                 ),
+
                 customSubmitBtn(
                   text: strConfirmPayment,
                   voidCallback: () {paymentMethodController.goToSummary();},

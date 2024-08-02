@@ -4,6 +4,7 @@ import 'package:crypto/crypto.dart';
 import 'package:http/http.dart' as http;
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class PaymentService {
@@ -43,19 +44,36 @@ class PaymentService {
       throw Exception('Failed to make payment ${response.body}');
     }
   }
-  Future<void> processPayment() async {
-    final String cardNumber = "5590490202169114";
-    final String CardHolderName = "Muhammad Yasir Shahzad";
-    final String cardCvc = "467";
-    final String cardExpiryMonth = "07";
-    final String cardExpiryYear = "27";
-    final String orderNumber = "Payment ref D13";
+  String getCurrentDateTime() {
+    DateTime now = DateTime.now();
+    // Format the date and time using intl package
+    DateFormat formatter = DateFormat('yyyy-MM-dd HH:mm:ss');
+    String formatted = formatter.format(now);
+    return formatted;
+  }
+  Future<int> processPayment(String orderRef,String amount, String currency, String paymentBrand, String cardNumber, String holder, String expiryMonth, String expiryYear, String cvv) async {
+    // final String cardNumber = "5590490202169114";
+    // final String CardHolderName = "Muhammad Yasir Shahzad";
+    // final String cardCvc = "467";
+    // final String cardExpiryMonth = "07";
+    // final String cardExpiryYear = "27";
+    // final String orderNumber = "Payment ref D13";
+    // final String currency = "GBP";
+    // final String amountToCollect = "0.5";
+    // final String secretKey = "ad3defe8-2c6a-4e0e-a866-6f67dfdfc1d6"; // Replace with your actual secret key
+ final String cardNumberP = cardNumber;
+    final String CardHolderName = holder;
+    final String cardCvc = cvv;
+    final String cardExpiryMonth = expiryMonth;
+    final String cardExpiryYear = expiryYear;
+    final String orderNumber = "${orderRef} ${getCurrentDateTime()}"  ;
     final String currency = "GBP";
-    final String amountToCollect = "0.5";
+    final String amountToCollect = amount;
     final String secretKey = "ad3defe8-2c6a-4e0e-a866-6f67dfdfc1d6"; // Replace with your actual secret key
 
 
-    final Map<String, dynamic> paymentData = {
+    final Map<String, dynamic> paymentData =
+    {
       "type": "Payment",
       "paymentMethodsToUse": ["debitcard"],
       "parameters": {
@@ -71,6 +89,9 @@ class PaymentService {
 
       "order": {
         "orderNumber": orderNumber
+      },
+      "billingAddress" : {
+        "firstName" : holder,
       },
       "currency": currency,
       "amountToCollect": amountToCollect
@@ -105,33 +126,140 @@ class PaymentService {
       final returnUrlFailed = responseData['data']['payments'][0]['attributes']['returnUrlFailed'];
       final returnUrlCancelled = responseData['data']['payments'][0]['attributes']['returnUrlCancelled'];
       print('action url is $actionUrl');
-      Get.to(PaymentWebView(url: actionUrl, urlSuccess: returnUrlSuccess, urlFailed: returnUrlFailed, urlCancelled: returnUrlCancelled,));
+      _dismissDialog();
+      final paymentResult = await Get.to(PaymentWebView(url: actionUrl, urlSuccess: returnUrlSuccess, urlFailed: returnUrlFailed, urlCancelled: returnUrlCancelled,));
       // SuccessPayment(actionUrl);
-      print('Payment successful: ${response.body}');
+      if (paymentResult == 'success') {
+        return 200;
+        Get.snackbar('Success', 'Payment was successful');
+      } else if (paymentResult == 'failed') {
+        Get.snackbar('Failed', 'Payment failed');
+        return 250;
+      } else if (paymentResult == 'cancel') {
+        return 260;
+        Get.snackbar('Cancelled', 'Payment was cancelled');
+      }
 
-    } else {
+
+      return 0;
+    } else
+      _dismissDialog();
       print('Payment failed with status ${response.statusCode}: ${response.body}');
+ return response.statusCode;
+
     }
-  }
+  Future<int> processPaymentApplepay(String orderRef,String amount, String currency, String paymentBrand, String cardNumber, String holder, String expiryMonth, String expiryYear, String cvv) async {
+    // final String cardNumber = "5590490202169114";
+    // final String CardHolderName = "Muhammad Yasir Shahzad";
+    // final String cardCvc = "467";
+    // final String cardExpiryMonth = "07";
+    // final String cardExpiryYear = "27";
+    // final String orderNumber = "Payment ref D13";
+    // final String currency = "GBP";
+    // final String amountToCollect = "0.5";
+    // final String secretKey = "ad3defe8-2c6a-4e0e-a866-6f67dfdfc1d6"; // Replace with your actual secret key
+ final String cardNumberP = cardNumber;
+    final String CardHolderName = holder;
+    final String cardCvc = cvv;
+    final String cardExpiryMonth = expiryMonth;
+    final String cardExpiryYear = expiryYear;
+    final String orderNumber = "${orderRef} ${getCurrentDateTime()}"  ;
+    final String currency = "GBP";
+    final String amountToCollect = amount;
+    final String secretKey = "ad3defe8-2c6a-4e0e-a866-6f67dfdfc1d6"; // Replace with your actual secret key
 
 
-  Future<void> SuccessPayment(String url) async{
+    final Map<String, dynamic> paymentData =
+    {"amountToCollect": amountToCollect,
+      "currency": "GBP",
 
-    final response = await http.get(
+      "locale": "en_GB",
+      "order": {
+        "orderNumber":orderNumber,
+        "billingAddress" : {
+          "firstName" : holder,
+
+        },
+
+      }
+    };
+    // {
+    //   "type": "Payment",
+    //   "paymentMethodsToUse": ["debitcard"],
+    //   "parameters": {
+    //
+    //     "cardNumber": cardNumber,
+    //     "CardHolderName": CardHolderName,
+    //
+    //     "cardCvc": cardCvc,
+    //     "cardExpiryMonth": cardExpiryMonth,
+    //     "cardExpiryYear": cardExpiryYear
+    //   },
+    //
+    //
+    //   "order": {
+    //     "orderNumber": orderNumber
+    //   },
+    //   "currency": currency,
+    //   "amountToCollect": amountToCollect
+    // };
+
+    // Convert paymentData to JSON string
+    final String jsonBody = json.encode(paymentData);
+
+    // Concatenate the secret key and the JSON body
+    final String dataToHash = secretKey + jsonBody;
+
+    // Generate the SHA-512 hash
+    final String sha512Hash = sha512.convert(utf8.encode(dataToHash)).toString();
+
+    final url = 'https://gateway.cashflows.com/api/gateway/payment-jobs';
+    final response = await http.post(
       Uri.parse(url),
       headers: {
-        'Content-Type': "text/html",
+        'Content-Type': 'application/json',
+        'configurationId': '240726117314217984',
+        'Hash': sha512Hash,
       },
-      
+      body: jsonBody,
     );
 
     print(response.statusCode);
-    if (response.statusCode == 200) {
-      print('Payment successful action url: ${response.body}');
-    } else {
-      print('Payment failed with status action url ${response.statusCode}: ${response.body}');
+    if (response.statusCode == 201) {
+
+      final responseData = json.decode(response.body);
+      final actionUrl = responseData['links']['action']['url'];
+      final returnUrlSuccess = responseData['data']['payments'][0]['attributes']['returnUrlSuccess'];
+      final returnUrlFailed = responseData['data']['payments'][0]['attributes']['returnUrlFailed'];
+      final returnUrlCancelled = responseData['data']['payments'][0]['attributes']['returnUrlCancelled'];
+      print('action url is $actionUrl');
+      _dismissDialog();
+      final paymentResult = await Get.to(PaymentWebView(url: actionUrl, urlSuccess: returnUrlSuccess, urlFailed: returnUrlFailed, urlCancelled: returnUrlCancelled,));
+      // SuccessPayment(actionUrl);
+      if (paymentResult == 'success') {
+        return 200;
+        Get.snackbar('Success', 'Payment was successful');
+      } else if (paymentResult == 'failed') {
+        Get.snackbar('Failed', 'Payment failed');
+        return 250;
+      } else if (paymentResult == 'cancelled') {
+        return 260;
+        Get.snackbar('Cancelled', 'Payment was cancelled');
+      }
+
+
+      return 0;
+    } else
+      _dismissDialog();
+      print('Payment failed with status ${response.statusCode}: ${response.body}');
+ return response.statusCode;
+
     }
   }
+void _dismissDialog() {
+  Navigator.of(Get.overlayContext!).pop();
+}
+
 
 
   String parseException(String exception) {
@@ -165,7 +293,7 @@ class PaymentService {
     }
   }
 
-}
+
 
 
 class PaymentController extends GetxController {
@@ -319,18 +447,15 @@ class _PaymentWebViewState extends State<PaymentWebView> {
               // You can handle actions here after the page is finished loading
               // For example, you might check for success indicators in the URL
               print("page finished url is $url");
-              if (url==widget.urlSuccess) {
-                // Navigator.of(context).pushReplacementNamed('/payment-success');
-                print("payment successful at last");
-              } else if (url==widget.urlFailed) {
-                print("payment failed at last");
-                // Navigator.of(context).pushReplacementNamed('/payment-failed');
-              }else if (url==widget.urlCancelled) {
-                print("payment cancelled at last");
-                // Navigator.of(context).pushReplacementNamed('/payment-failed');
-              }else  {
-                print("payment Error occoured");
-                // Navigator.of(context).pushReplacementNamed('/payment-failed');
+              if (url.contains('https://admin.sweatboxsoho.com/success')) {
+                Navigator.pop(context, 'success'); // Pass success status
+              } else if (url.contains('https://admin.sweatboxsoho.com/failed')) {
+                Navigator.pop(context, 'failed'); // Pass failure status
+              } else if (url.contains("https://admin.sweatboxsoho.com/cancel")) {
+                Navigator.pop(context, 'cancelled'); // Pass cancelled status
+              } else {
+                print("Unknown status URL: $url");
+                // Navigator.pop(context, 'failed');
               }
             },
           onWebResourceError: (WebResourceError error) {},
@@ -357,7 +482,8 @@ class _PaymentWebViewState extends State<PaymentWebView> {
         title: Text('Payment Confirmation'),
       ),
       body:WebViewWidget(
-          controller: webViewController)
+          controller: webViewController,
+      )
       // WebView(
       //   initialUrl: url,
       //   javascriptMode: JavascriptMode.unrestricted,

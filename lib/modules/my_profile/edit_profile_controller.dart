@@ -98,10 +98,12 @@ class EditProfileController extends GetxController {
         // print("object${Get.find<MainScreenController>().tabIndex.value}");
         // Get.close(0);
 
+if(_response.user?.image!=null){
+  MyProfileController homeCont = Get.find<MyProfileController>();
+  homeCont.imagee.value='${ApiEndpoint.baseUrlImage + _response.user!.image!}';
+  log('umar test ');
+}
 
-        MyProfileController homeCont = Get.find<MyProfileController>();
-        homeCont.imagee.value='${ApiEndpoint.baseUrlImage + _response.user!.image!}';
-        log('umar test ');
         Get.back();
       } else {
         _dismissDialog();

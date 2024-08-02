@@ -238,8 +238,8 @@ class MassagePaymentSuccessfulView extends StatelessWidget {
         alignment: Alignment.center,
         children: [
           Container(
-            width: Get.width * 0.7,
-            height: Get.height * 0.3,
+            width: Get.width * 0.5,
+            height: Get.height * 0.29,
             padding: EdgeInsets.all(10),
             decoration: BoxDecoration(
                 color: Colors.white,

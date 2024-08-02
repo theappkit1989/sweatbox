@@ -15,6 +15,7 @@ import 'package:s_box/modules/massage_booking/payment_declined_view.dart';
 import 'package:s_box/modules/massage_booking/massage_summary_controller.dart';
 
 import 'package:s_box/modules/massage_booking/testpaymentService/payment_config.dart';
+import '../../extras/constant/ApplePayButton.dart';
 import '../../extras/constant/AutoCapitalizeTextInputFormatter.dart';
 import '../../extras/constant/app_constant.dart';
 import '../../extras/constant/string_constant.dart';
@@ -122,59 +123,10 @@ class MassageSummaryView extends StatelessWidget {
                 SizedBox(
                   height: Get.height * 0.05,
                 ),
-                paymentType == 'Apple Pay' ? Obx(() {
-                  return    Container(
-                    width: Get.width*0.5,
-                    height: Get.width*0.13,
-                    child: ApplePayButton(
+                paymentType == 'Apple Pay' ?
+                GestureDetector(
+                    onTap:(){summaryController.goToPaymentSuccessfulApplepay();},child: CustomApplePayButton()):
 
-
-                      paymentItems: [
-                        PaymentItem(
-                          label: '1',
-                          type: PaymentItemType.total,
-                          amount: summaryController.totalAmount.value.toStringAsFixed(2),
-                          status: PaymentItemStatus.final_price,
-                        )
-                      ],
-                      style: ApplePayButtonStyle.whiteOutline,
-                      type: ApplePayButtonType.inStore,
-
-                      margin: const EdgeInsets.only(top: 15.0),
-                      onPaymentResult: (result) {
-
-                        print(result);
-                        if (result['token'] != {}) {
-                          // Payment was successful
-                          print('Payment failed or cancelled');
-                          summaryController.addMembership();
-                          // You can perform further actions here, such as updating UI or backend
-                        } else {
-
-                          print('Payment successful');
-                          summaryController.addService();
-
-                          // Handle error or show appropriate message to the user
-                        }
-                      },
-                      // {
-                      //   summaryController.makeApplePayPayment(PaymentItem(
-                      //     label: 'Total',
-                      //     amount: summaryController.totalAmount.value.toStringAsFixed(2),
-                      //     status: PaymentItemStatus.final_price,
-                      //   ));
-                      // },
-                      onError: (e){
-                        Get.snackbar("Sweatbox", e.toString());
-                        Get.to(PaymentDeclinedView());
-                      },
-                      loadingIndicator: const Center(
-                        child: CircularProgressIndicator(),
-                      ),  paymentConfiguration: PaymentConfiguration.fromJsonString(
-                        defaultApplePay),
-                    ),
-                  );
-                }) :
                 paymentType == 'Google Pay' ?
                 Obx(() {
                   return

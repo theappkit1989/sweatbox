@@ -52,11 +52,11 @@ class MassageSummaryController extends GetxController{
     _showLoadingDialog();
     print("payment data is ${massage.value.price.toString()}\n${cardNumber.value.replaceAll(' ', '').toString()}\n${cardName.toString()}\n${cardExpiryMonth.toString()}\n${cardCvv.toString()}\n${cardExpiryYear.toString()}");
  try{
-    final result = await PaymentService().makePayment((totalAmount.value.round()).toString(), "GBP", "VISA", cardNumber.value.replaceAll(' ', '').toString(), cardName.value.toString(),
+    final result = await PaymentService().processPayment(massage.value.title,(totalAmount.value).toString(), "GBP", "VISA", cardNumber.value.replaceAll(' ', '').toString(), cardName.value.toString(),
         cardExpiryMonth.value.toString(), cardExpiryYear.value.toString(), cardCvv.value.toString());
     print("payment result is $result");
     if(result==200){
-      _dismissDialog();
+      // _dismissDialog();
 
       print('massage type is $massageType');
       if(massageType=='2'){
@@ -68,12 +68,45 @@ class MassageSummaryController extends GetxController{
 
     }else{
       Get.to(PaymentDeclinedView());
-      _dismissDialog();
+      // _dismissDialog();
     }
   } catch (e) {
    _dismissDialog();
    print(e);
-   final errorMessage = PaymentService().parseException(e.toString());
+   // final errorMessage = PaymentService().parseException(e.toString());
+   // Get.snackbar('Error', 'Payment failed: ${errorMessage}',colorText: Colors.white);
+   Get.to(PaymentDeclinedView());
+
+
+  }
+    // Get.to(PaymentSuccessfulView());
+  }
+  Future<void> goToPaymentSuccessfulApplepay() async {
+    _showLoadingDialog();
+    print("payment data is ${massage.value.price.toString()}\n${cardNumber.value.replaceAll(' ', '').toString()}\n${cardName.toString()}\n${cardExpiryMonth.toString()}\n${cardCvv.toString()}\n${cardExpiryYear.toString()}");
+ try{
+    final result = await PaymentService().processPaymentApplepay(massage.value.title,(totalAmount.value).toString(), "GBP", "VISA", cardNumber.value.replaceAll(' ', '').toString(), cardName.value.toString(),
+        cardExpiryMonth.value.toString(), cardExpiryYear.value.toString(), cardCvv.value.toString());
+    print("payment result is $result");
+    if(result==200){
+      // _dismissDialog();
+
+      print('massage type is $massageType');
+      if(massageType=='2'){
+
+        addMembership();
+      }else{
+        addService();
+      }
+
+    }else{
+      Get.to(PaymentDeclinedView());
+      // _dismissDialog();
+    }
+  } catch (e) {
+   _dismissDialog();
+   print(e);
+   // final errorMessage = PaymentService().parseException(e.toString());
    // Get.snackbar('Error', 'Payment failed: ${errorMessage}',colorText: Colors.white);
    Get.to(PaymentDeclinedView());
 

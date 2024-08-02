@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:s_box/modules/bookings/all_bookings_controller.dart';
 import 'package:s_box/modules/bookings/order_details_controller.dart';
+import 'package:s_box/modules/my_profile/my_profile_controller.dart';
 import 'package:s_box/services/commonModels/userAllData.dart';
 import 'package:ticket_widget/ticket_widget.dart';
 
@@ -14,6 +15,7 @@ import '../../extras/constant/app_images.dart';
 import '../../extras/constant/shared_pref_constant.dart';
 import '../../extras/constant/string_constant.dart';
 import '../../themes/colors/color_light.dart';
+import '../commonWidgets/common.dart';
 
 class OrderDetailsView extends StatelessWidget {
   final orderDetailsController = Get.put(OrderDetailsController());
@@ -28,6 +30,7 @@ class OrderDetailsView extends StatelessWidget {
     final arguments = Get.arguments as Map<String, dynamic>;
     // final MembershipDataclass membership = arguments['membership'];
     final BookingItem selectedService =arguments['service'];
+    // orderDetailsController.bookingItem.value=selectedService;
     String qrData = '''
       Title: ${selectedService.name}
       User ID: ${_userid}
@@ -158,8 +161,8 @@ class OrderDetailsView extends StatelessWidget {
             alignment: Alignment.center,
             children: [
               Container(
-                  width: Get.width * 0.6,
-                  height: Get.height * 0.3,
+                  width: Get.width * 0.5,
+                  height: Get.height * 0.29,
                   padding: EdgeInsets.symmetric(
                       horizontal: Get.width * 0.03,
                       vertical: Get.height * 0.03),
@@ -324,30 +327,73 @@ class OrderDetailsView extends StatelessWidget {
         SizedBox(
           height: Get.height * 0.02,
         ),
-        Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
+        Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const Text(
-              strServices,
-              style: TextStyle(
-                  fontSize: 13,
-                  fontFamily: fontType,
-                  color: ColorLight.white,
-                  fontWeight: FontWeight.w400),
-            ),
-            SizedBox(
-              height: Get.height * 0.01,
-            ),
-             Text(
-              selectedService.type=='membership'?'Membership':'Full Body Massage',
-              style: TextStyle(
-                  fontSize: 13,
-                  fontFamily: fontType,
-                  color: ColorLight.white,
-                  fontWeight: FontWeight.w700),
-            ),
-          ],
+            Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                strServices,
+                style: TextStyle(
+                    fontSize: 13,
+                    fontFamily: fontType,
+                    color: ColorLight.white,
+                    fontWeight: FontWeight.w400),
+              ),
+              SizedBox(
+                height: Get.height * 0.01,
+              ),
+               Text(
+                selectedService.type=='membership'?'Membership':'Full Body Massage',
+                style: TextStyle(
+                    fontSize: 13,
+                    fontFamily: fontType,
+                    color: ColorLight.white,
+                    fontWeight: FontWeight.w700),
+              ),
+            ],
+          ),
+            // selectedService.type=='membership'?Container(
+            //
+            //   child: Column(
+            //     mainAxisAlignment: MainAxisAlignment.start,
+            //     crossAxisAlignment: CrossAxisAlignment.start,
+            //     children: [
+            //       text(
+            //           text: "${selectedService.name}",
+            //           size: 15,
+            //           fontWeight: FontWeight.w700,
+            //           color: ColorLight.white),
+            //
+            //       Row(
+            //         mainAxisAlignment: MainAxisAlignment.start,
+            //         crossAxisAlignment: CrossAxisAlignment.center,
+            //         children: [
+            //
+            //           Obx(() {
+            //             var homeCont = Get.find<MyProfileController>();
+            //
+            //             return text(
+            //                 text:orderDetailsController.remainingTime.value.toString(),
+            //                 size: 12,
+            //                 fontWeight: FontWeight.w400,
+            //                 color: ColorLight.white);
+            //           }),
+            //           SizedBox(
+            //             width: Get.width * 0.03,
+            //           ),
+            //
+            //         ],
+            //       ),
+            //       SizedBox(height: 10,),
+            //
+            //
+            //     ],
+            //   ),
+            // ):Container(),
+          ]
         ),
         SizedBox(
           height: Get.height * 0.02,

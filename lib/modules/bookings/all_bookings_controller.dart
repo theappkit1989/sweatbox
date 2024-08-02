@@ -98,14 +98,14 @@ class AllBookingsController extends GetxController {
         membershipList.value = _response.membership!;
       } else {
         // Handle error
-        Get.snackbar('Error', _response.message ?? 'Unknown error occurred',colorText: Colors.white);
+        // Get.snackbar('Error', _response.message ?? 'Unknown error occurred',colorText: Colors.white);
       }
     } else {
       if(_response.message=='The selected id is invalid.'){
         Get.find<MyProfileController>().logout();
       }
       // _dismissDialog();
-      Get.snackbar("Sweatbox", _response.message ?? 'Something went wrong!',colorText: Colors.white);
+      // Get.snackbar("Sweatbox", _response.message ?? 'Something went wrong!',colorText: Colors.white);
     }
   }
 }

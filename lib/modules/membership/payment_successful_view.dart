@@ -271,8 +271,8 @@ class PaymentSuccessfulView extends StatelessWidget {
         alignment: Alignment.center,
         children: [
           Container(
-            width: Get.width * 0.7,
-            height: Get.height * 0.32,
+            width: Get.width * 0.5,
+            height: Get.height * 0.29,
 
             decoration: BoxDecoration(
               color: Colors.white,

@@ -6,6 +6,7 @@ import 'package:s_box/extras/constant/app_images.dart';
 import 'package:s_box/modules/commonWidgets/submitBtn.dart';
 import 'package:s_box/modules/membership/membership_controller.dart';
 import 'package:s_box/modules/membership/summary_controller.dart';
+import '../../extras/constant/ApplePayButton.dart';
 import '../../extras/constant/app_constant.dart';
 import '../../extras/constant/string_constant.dart';
 import '../../services/commonModels/cardModal.dart';
@@ -98,57 +99,61 @@ class SummaryView extends StatelessWidget {
                   SizedBox(
                     height: Get.height * 0.05,
                   ),
-                  paymentType == 'Apple Pay' ? Obx(() {
-                    return    Container(
-                      width: Get.width*0.5,
-                      height: Get.width*0.13,
-                      child: ApplePayButton(
+                  paymentType == 'Apple Pay' ?    Container(
 
-                        paymentItems: [
-                          PaymentItem(
-                            label: 'Sweatbox',
-                            amount: summaryController.totalAmount.value.toStringAsFixed(2),
-                            status: PaymentItemStatus.final_price,
-                          )
-                        ],
-                        style: ApplePayButtonStyle.whiteOutline,
-                        type: ApplePayButtonType.inStore,
-
-                        margin: const EdgeInsets.only(top: 15.0),
-
-                        onPaymentResult: (result) {
-
-                          print(result);
-                          if (result['token'] != {}) {
-                            // Payment was successful
-                            print('Payment failed or cancelled');
-                            summaryController.addMembership();
-                            // You can perform further actions here, such as updating UI or backend
-                          } else {
-                            Get.to(PaymentDeclinedView());
-                            print('Payment successful');
-
-                            // Handle error or show appropriate message to the user
-                          }
-                        },
-                        // {
-                        //   summaryController.makeApplePayPayment(PaymentItem(
-                        //     label: 'Total',
-                        //     amount: summaryController.totalAmount.value.toStringAsFixed(2),
-                        //     status: PaymentItemStatus.final_price,
-                        //   ));
-                        // },
-                        onError: (e){
-                          Get.snackbar("Sweatbox", e.toString(),colorText: Colors.white);
-                          Get.to(PaymentDeclinedView());
-                        },
-                        loadingIndicator: const Center(
-                          child: CircularProgressIndicator(),
-                        ),  paymentConfiguration: PaymentConfiguration.fromJsonString(
-                          defaultApplePay),
-                      ),
-                    );
-                  }) :
+                      child:
+                      GestureDetector(
+                          onTap:(){
+                            summaryController.goToPaymentSuccessfulApplepay();
+                          },child: CustomApplePayButton())
+                      // ApplePayButton(
+                      //
+                      //   paymentItems: [
+                      //     PaymentItem(
+                      //       label: 'Sweatbox',
+                      //       // amount: summaryController.totalAmount.value.toStringAsFixed(2),
+                      //       amount: "1",
+                      //       status: PaymentItemStatus.final_price,
+                      //     )
+                      //   ],
+                      //   style: ApplePayButtonStyle.whiteOutline,
+                      //   type: ApplePayButtonType.inStore,
+                      //
+                      //   margin: const EdgeInsets.only(top: 15.0),
+                      //
+                      //   onPaymentResult: (result) {
+                      //
+                      //     print(result);
+                      //     if (result['token'] != {}) {
+                      //       // Payment was successful
+                      //       print('Payment failed or cancelled');
+                      //       summaryController.addMembership();
+                      //       // You can perform further actions here, such as updating UI or backend
+                      //     } else {
+                      //       Get.to(PaymentDeclinedView());
+                      //       print('Payment successful');
+                      //
+                      //       // Handle error or show appropriate message to the user
+                      //     }
+                      //   },
+                      //   // {
+                      //   //   summaryController.makeApplePayPayment(PaymentItem(
+                      //   //     label: 'Total',
+                      //   //     amount: summaryController.totalAmount.value.toStringAsFixed(2),
+                      //   //     status: PaymentItemStatus.final_price,
+                      //   //   ));
+                      //   // },
+                      //   onError: (e){
+                      //     Get.snackbar("Sweatbox", e.toString(),colorText: Colors.white);
+                      //     Get.to(PaymentDeclinedView());
+                      //   },
+                      //   loadingIndicator: const Center(
+                      //     child: CircularProgressIndicator(),
+                      //   ),  paymentConfiguration: PaymentConfiguration.fromJsonString(
+                      //     defaultApplePay),
+                      // ),
+                    )
+                   :
                   paymentType == 'Google Pay' ?
                   Obx(() {
                     return
@@ -666,9 +671,9 @@ class SummaryView extends StatelessWidget {
     ),
     child: customSubmitBtn(
         text: strBook, voidCallback: () async {
-      final result = await PaymentService().processPayment();
+      // final result = await PaymentService().processPayment();
       // print('payment result are $result');
-      //     summaryController.goToPaymentSuccessful();
+          summaryController.goToPaymentSuccessful();
           }, width: Get.width),);
   }
 }

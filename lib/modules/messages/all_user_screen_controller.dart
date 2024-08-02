@@ -97,7 +97,7 @@ class AllUserScreenCotroller extends GetxController {
         Get.find<MyProfileController>().logout();
       }
       // _dismissDialog();
-      Get.snackbar("Sweatbox", _response.message ?? 'Something went wrong!',colorText: Colors.white);
+      // Get.snackbar("Sweatbox", _response.message ?? 'Something went wrong!',colorText: Colors.white);
     }
     // }else{
     //   Get.snackbar("Sweatbox", 'No internet connection',colorText: Colors.white);
