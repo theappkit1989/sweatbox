@@ -61,7 +61,7 @@ class _DobScreenState extends State<DobScreen> {
     return Scaffold(
       backgroundColor: ColorLight.black,
       appBar: AppBar(
-        title: Text(''),
+        title: Text(' '),
         backgroundColor: Colors.black, // Set background color to black
         foregroundColor: Colors.white,
       ),
