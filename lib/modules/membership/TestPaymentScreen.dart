@@ -185,7 +185,6 @@ class PaymentService {
 
       }
     };
-
     // {
     //   "type": "Payment",
     //   "paymentMethodsToUse": ["debitcard"],
