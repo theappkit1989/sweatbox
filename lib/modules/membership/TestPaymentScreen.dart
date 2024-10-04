@@ -41,7 +41,7 @@ class PaymentService {
       return response.statusCode;
     } else {
 
-      throw Exception('Failed to make payment ${response.body}');
+      throw Exception('Failed to make  payment ${response.body}');
     }
   }
   String getCurrentDateTime() {
