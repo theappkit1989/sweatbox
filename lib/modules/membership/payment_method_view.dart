@@ -50,31 +50,35 @@ class PaymentMethodView extends StatelessWidget {
         ),
       ),
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: Get.width * 0.05),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                buildCreditCardSection(),
-                buildOtherPaymentMethod(),
-                SizedBox(
-                  height: Get.height * 0.4,
+        child: Column(
+          children: [
+            Expanded(
+              child: SingleChildScrollView(
+                padding: EdgeInsets.symmetric(horizontal: Get.width * 0.05),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    buildCreditCardSection(),
+                    buildOtherPaymentMethod(),
+                  ],
                 ),
-
-                customSubmitBtn(
-                  text: strConfirmPayment,
-                  voidCallback: () {paymentMethodController.goToSummary();},
-                  width: Get.width,
-                ),
-              ],
+              ),
             ),
-          ),
+            customSubmitBtn(
+              text: strConfirmPayment,
+              voidCallback: () {
+                paymentMethodController.goToSummary();
+              },
+              width: Get.width,
+            ),
+            SizedBox(height: 20,)
+          ],
         ),
       ),
     );
   }
+
 
   Widget buildCreditCardSection() {
     return Column(

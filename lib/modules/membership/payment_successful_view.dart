@@ -95,14 +95,14 @@ class PaymentSuccessfulView extends StatelessWidget {
                       ),
                     ),
                     Container(
-                      width: Get.width,
-                      padding: EdgeInsets.symmetric(
-                          horizontal: Get.width * 0.05, vertical: Get.height * 0.02),
+                        width: Get.width,
+                        padding: EdgeInsets.symmetric(
+                            horizontal: Get.width * 0.05),
 
-                      decoration: BoxDecoration(
-                        color: ColorLight.black,
-
-                      ),child:
+                        decoration: BoxDecoration(
+                          color: ColorLight.black,
+                          borderRadius: BorderRadius.only(bottomRight: Radius.circular(25),bottomLeft: Radius.circular(25)),
+                        ),child:
                     buildQrCode(username,qrData),),
                     TicketWidget(
                       color: Colors.black,
@@ -208,7 +208,7 @@ class PaymentSuccessfulView extends StatelessWidget {
 
                 if (Get.find<MainScreenController>().tabIndex.value == 3) {
                   // Navigate to HomeScreenView with AllBookingsView already visible
-                  Get.close(2);
+                  Get.close(3);
                   // Get.offAll(() => HomeScreenView(), transition: Transition.fade, arguments: 2);
                 } else {
                   // Navigate to HomeScreenView

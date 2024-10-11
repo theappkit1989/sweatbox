@@ -117,16 +117,7 @@ class MembershipSummaryController extends GetxController {
     print(
         "payment data is ${membership.value.price.toString()}\n${cardNumber.toString()}\n${cardName.toString()}\n${cardExpiryMonth.toString()}\n${cardCvv.toString()}\n${cardExpiryYear.toString()}");
     try {
-      // final result = await PaymentService().processPayment(membership.value.title,(totalAmount.value).toString(),
-      //     "GBP",
-      //     "VISA",
-      //     cardNumber.replaceAll(' ', '').toString(),
-      //     cardName.toString(),
-      //     cardExpiryMonth.toString(),
-      //     cardExpiryYear.toString(),
-      //     cardCvv.toString());
-      final result = await PaymentService().makePayment(
-          (totalAmount.value.round()).toString(),
+      final result = await PaymentService().processPayment(membership.value.title,(totalAmount.value).toString(),
           "GBP",
           "VISA",
           cardNumber.replaceAll(' ', '').toString(),
@@ -134,16 +125,25 @@ class MembershipSummaryController extends GetxController {
           cardExpiryMonth.toString(),
           cardExpiryYear.toString(),
           cardCvv.toString());
+      // final result = await PaymentService().makePayment(
+      //     (totalAmount.value.round()).toString(),
+      //     "GBP",
+      //     "VISA",
+      //     cardNumber.replaceAll(' ', '').toString(),
+      //     cardName.toString(),
+      //     cardExpiryMonth.toString(),
+      //     cardExpiryYear.toString(),
+      //     cardCvv.toString());
       print("payment result is $result");
       if (result == 200) {
-        _dismissDialog();
+        // _dismissDialog();
         addMembership();
       } else {
         Get.to(PaymentDeclinedView());
-        _dismissDialog();
+        // _dismissDialog();
       }
     } catch (e) {
-      _dismissDialog();
+      // _dismissDialog();
       Get.to(PaymentDeclinedView());
       print('Payment failed: ${e}');
       // final errorMessage = PaymentService().parseException(e.toString());
@@ -237,11 +237,11 @@ class MembershipSummaryController extends GetxController {
         _membership.expireTime.toString(),
         token);
     if (_response.status == true) {
-      _dismissDialog();
+      // _dismissDialog();
 
       Get.to(PaymentSuccessfulView(), arguments: {'membership': _response});
     } else {
-      _dismissDialog();
+      // _dismissDialog();
       if(_response.message=='The Selected appuserid is invalid '){
         Get.find<MyProfileController>().logout();
       }

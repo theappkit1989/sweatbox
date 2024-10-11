@@ -64,33 +64,38 @@ class MassagePaymentMethodView extends StatelessWidget {
         ),
       ),
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: Get.width * 0.05),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                buildCreditCardSection(),
-                buildOtherPaymentMethod(),
-                SizedBox(
-                  height: Get.height * 0.3,
+        child: Column(
+          children: [
+            Expanded(
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: Get.width * 0.05),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      buildCreditCardSection(),
+                      buildOtherPaymentMethod(),
+                      SizedBox(
+                        height: Get.height * 0.3, // This can be removed if not needed
+                      ),
+                    ],
+                  ),
                 ),
-                customSubmitBtn(
-                  text: strConfirmPayment,
-                  voidCallback: () {
-                    paymentMethodController.goToSummary();
-                  },
-                  width: Get.width,
-                ),
-              ],
+              ),
             ),
-          ),
+            customSubmitBtn(
+              text: strConfirmPayment,
+              voidCallback: () {
+                paymentMethodController.goToSummary();
+              },
+              width: Get.width,
+            ),
+          ],
         ),
       ),
     );
   }
-
   Widget buildCreditCardSection() {
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,

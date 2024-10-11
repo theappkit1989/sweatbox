@@ -603,7 +603,7 @@ class SummaryView extends StatelessWidget {
               ),
             ),
            Text(
-                '£${summaryController.discount}0',
+                '£${summaryController.discount.toStringAsFixed(2)}',
                 style: TextStyle(
                   color: ColorLight.white,
                   fontWeight: FontWeight.w700,
@@ -647,10 +647,10 @@ class SummaryView extends StatelessWidget {
                 fontSize: 14,
               ),
             ),
+
             Obx(() {
               return Text(
-
-                '£${summaryController.totalAmount}0',
+              summaryController.totalAmount % 1 == 0 ?'£${summaryController.totalAmount}0':'£${summaryController.totalAmount.toStringAsFixed(2)}',
                 style: TextStyle(
                   color: ColorLight.white,
                   fontWeight: FontWeight.w700,
