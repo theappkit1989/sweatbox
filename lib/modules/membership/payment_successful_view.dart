@@ -208,7 +208,7 @@ class PaymentSuccessfulView extends StatelessWidget {
 
                 if (Get.find<MainScreenController>().tabIndex.value == 3) {
                   // Navigate to HomeScreenView with AllBookingsView already visible
-                  Get.close(3);
+                  Get.close(2);
                   // Get.offAll(() => HomeScreenView(), transition: Transition.fade, arguments: 2);
                 } else {
                   // Navigate to HomeScreenView

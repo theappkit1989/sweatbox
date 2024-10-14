@@ -51,7 +51,7 @@ class PaymentService {
     String formatted = formatter.format(now);
     return formatted;
   }
-  Future<int> processPayment(String orderRef,String amount, String currency, String paymentBrand, String cardNumber, String holder, String expiryMonth, String expiryYear, String cvv) async {
+  Future<int> processPayment(String orderRef,String amount, String currency, String paymentBrand, String cardNumber, String holder, String holderlName, String expiryMonth, String expiryYear, String cvv) async {
     // final String cardNumber = "5590490202169114";
     // final String CardHolderName = "Muhammad Yasir Shahzad";
     // final String cardCvc = "467";
@@ -92,7 +92,7 @@ class PaymentService {
       },
       "billingAddress" : {
         "firstName" : holder,
-        "lastName" : '',
+        "lastName" : holderlName,
       },
       "currency": currency,
       "amountToCollect": amountToCollect
@@ -126,9 +126,12 @@ class PaymentService {
       final returnUrlSuccess = responseData['data']['payments'][0]['attributes']['returnUrlSuccess'];
       final returnUrlFailed = responseData['data']['payments'][0]['attributes']['returnUrlFailed'];
       final returnUrlCancelled = responseData['data']['payments'][0]['attributes']['returnUrlCancelled'];
+      final paymentJobReference = responseData['data']['reference'];
+      final paymentReference = responseData['data']['payments'][0]['reference'];
+
       print('action url is $actionUrl');
       _dismissDialog();
-      final paymentResult = await Get.to(PaymentWebView(url: actionUrl, urlSuccess: returnUrlSuccess, urlFailed: returnUrlFailed, urlCancelled: returnUrlCancelled,));
+      final paymentResult = await Get.to(PaymentWebView(url: actionUrl, urlSuccess: returnUrlSuccess, urlFailed: returnUrlFailed, urlCancelled: returnUrlCancelled,jobReference: paymentJobReference,paymentReference: paymentReference));
       // SuccessPayment(actionUrl);
       if (paymentResult == 'success') {
         return 200;
@@ -149,7 +152,7 @@ class PaymentService {
  return response.statusCode;
 
     }
-  Future<int>  processPaymentApplepay(String orderRef,String amount, String currency, String paymentBrand, String cardNumber, String holder, String expiryMonth, String expiryYear, String cvv) async {
+  Future<int>  processPaymentApplepay(String orderRef,String amount, String currency, String paymentBrand, String cardNumber, String holder, String holderlname, String expiryMonth, String expiryYear, String cvv) async {
     // final String cardNumber = "5590490202169114";
     // final String CardHolderName = "Muhammad Yasir Shahzad";
     // final String cardCvc = "467";
@@ -180,7 +183,7 @@ class PaymentService {
         "orderNumber":orderNumber,
         "billingAddress" : {
           "firstName" : holder,
-          "lastName" : '',
+          "lastName" : holderlname,
 
         },
 
@@ -235,9 +238,11 @@ class PaymentService {
       final returnUrlSuccess = responseData['data']['payments'][0]['attributes']['returnUrlSuccess'];
       final returnUrlFailed = responseData['data']['payments'][0]['attributes']['returnUrlFailed'];
       final returnUrlCancelled = responseData['data']['payments'][0]['attributes']['returnUrlCancelled'];
+      final paymentJobReference = responseData['data']['reference'];
+      final paymentReference = responseData['data']['payments'][0]['reference'];
       print('action url is $actionUrl');
       _dismissDialog();
-      final paymentResult = await Get.to(PaymentWebView(url: actionUrl, urlSuccess: returnUrlSuccess, urlFailed: returnUrlFailed, urlCancelled: returnUrlCancelled,));
+      final paymentResult = await Get.to(PaymentWebView(url: actionUrl, urlSuccess: returnUrlSuccess, urlFailed: returnUrlFailed, urlCancelled: returnUrlCancelled,jobReference: paymentJobReference,paymentReference: paymentReference, ));
       // SuccessPayment(actionUrl);
       if (paymentResult == 'success') {
         return 200;
@@ -425,8 +430,11 @@ class PaymentWebView extends StatefulWidget {
   final String urlSuccess;
   final String urlFailed;
   final String urlCancelled;
+  final String jobReference;
+  final String paymentReference;
 
-  PaymentWebView({required this.url,required this.urlSuccess,required this.urlFailed,required this.urlCancelled});
+
+  PaymentWebView({required this.url,required this.urlSuccess,required this.urlFailed,required this.urlCancelled,required this.jobReference,required this.paymentReference});
 
   @override
   State<PaymentWebView> createState() => _PaymentWebViewState();
@@ -434,6 +442,7 @@ class PaymentWebView extends StatefulWidget {
 
 class _PaymentWebViewState extends State<PaymentWebView> {
   WebViewController webViewController = WebViewController();
+
 
   setWebController(){
     webViewController = WebViewController()
@@ -446,7 +455,17 @@ class _PaymentWebViewState extends State<PaymentWebView> {
             print(progress);
           },
           onPageStarted: (String url) {},
-            onPageFinished: (url) {
+            onPageFinished: (url) async{
+
+              final String secretKey = "ad3defe8-2c6a-4e0e-a866-6f67dfdfc1d6";
+              // Convert paymentData to JSON string
+              // final String jsonBody = json.encode(paymentData);
+
+              // Concatenate the secret key and the JSON body
+              final String dataToHash = secretKey ;
+
+              // Generate the SHA-512 hash
+              final String sha512Hash = sha512.convert(utf8.encode(dataToHash)).toString();
               // You can handle actions here after the page is finished loading
               // For example, you might check for success indicators in the URL
               print("page finished url is $url");
@@ -457,6 +476,31 @@ class _PaymentWebViewState extends State<PaymentWebView> {
               } else if (url.contains("https://admin.sweatboxsoho.com/cancel")) {
                 Navigator.pop(context, 'cancelled'); // Pass cancelled status
               } else {
+                final url = 'https://gateway.cashflows.com/api/gateway/payment-jobs/${widget.jobReference}/payments/${widget.paymentReference}';
+                final response = await http.get(
+                  Uri.parse(url),
+                  headers: {
+                    'Content-Type': 'application/json',
+                    'configurationId': '240726117314217984',
+                    'Hash': sha512Hash,
+                  },
+
+                );
+                print("responce code ${response.body}");
+                if(response.statusCode==200){
+
+                  final responseData = json.decode(response.body);
+                  final paymentStatus = responseData['data']['status'];
+                  if(paymentStatus=="Paid"){
+                    print("paid called");
+                    Navigator.pop(context, 'success');
+                  }else if(paymentStatus=="Pending"){
+                    print("pending called");
+                  }else{
+                    print("else called");
+                    Navigator.pop(context, 'failed');
+                  }
+                }
                 print("Unknown status URL: $url");
                 // Navigator.pop(context, 'failed');
               }

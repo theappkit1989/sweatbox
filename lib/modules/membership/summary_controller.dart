@@ -24,6 +24,8 @@ class MembershipSummaryController extends GetxController {
   final RxString cardCvv = ''.obs;
   String token = '';
   String userId = '';
+  String userFirstName = '';
+  String userLastName = '';
   var promoCont = TextEditingController().obs;
   RxDouble discount=0.0.obs;
   RxDouble totalAmount=0.0.obs;
@@ -37,6 +39,8 @@ class MembershipSummaryController extends GetxController {
     storage.writeIfNull(userid, '');
     token = storage.read(userToken);
     userId = storage.read(userid).toString();
+    userFirstName = storage.read(firstName).toString();
+    userLastName = storage.read(lastName).toString();
 
   }
   static const String defaultApplePay = '''{
@@ -121,7 +125,8 @@ class MembershipSummaryController extends GetxController {
           "GBP",
           "VISA",
           cardNumber.replaceAll(' ', '').toString(),
-          cardName.toString(),
+          userFirstName,
+          userLastName,
           cardExpiryMonth.toString(),
           cardExpiryYear.toString(),
           cardCvv.toString());
@@ -159,7 +164,8 @@ class MembershipSummaryController extends GetxController {
           "GBP",
           "VISA",
           cardNumber.replaceAll(' ', '').toString(),
-          cardName.toString(),
+          userFirstName.toString(),
+          userLastName.toString(),
           cardExpiryMonth.toString(),
           cardExpiryYear.toString(),
           cardCvv.toString());

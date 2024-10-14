@@ -31,6 +31,8 @@ class MassageSummaryController extends GetxController{
   var membership = Membership(title: '', user_id: '', price: 0, discount: '').obs;
   String token='';
   String userId='';
+  String userFirstName = '';
+  String userLastName = '';
   var promoCont = TextEditingController().obs;
   RxDouble discount=0.0.obs;
   RxDouble totalAmount=0.0.obs;
@@ -45,6 +47,9 @@ class MassageSummaryController extends GetxController{
     storage.writeIfNull(userid, '');
     token = storage.read(userToken);
     userId = storage.read(userid).toString();
+    userFirstName = storage.read(firstName).toString();
+    userLastName = storage.read(lastName).toString();
+
     // print("token is $isLoggedIn and id is $id");
 
   }
@@ -52,7 +57,8 @@ class MassageSummaryController extends GetxController{
     _showLoadingDialog();
     print("payment data is ${massage.value.price.toString()}\n${cardNumber.value.replaceAll(' ', '').toString()}\n${cardName.toString()}\n${cardExpiryMonth.toString()}\n${cardCvv.toString()}\n${cardExpiryYear.toString()}");
  try{
-    final result = await PaymentService().processPayment(massage.value.title,(totalAmount.value).toString(), "GBP", "VISA", cardNumber.value.replaceAll(' ', '').toString(), cardName.value.toString(),
+    final result = await PaymentService().processPayment(massage.value.title,(totalAmount.value).toString(), "GBP", "VISA", cardNumber.value.replaceAll(' ', '').toString(),  userFirstName,
+        userLastName,
         cardExpiryMonth.value.toString(), cardExpiryYear.value.toString(), cardCvv.value.toString());
     print("payment result is $result");
     if(result==200){
@@ -85,7 +91,8 @@ class MassageSummaryController extends GetxController{
     _showLoadingDialog();
     print("payment data is ${massage.value.price.toString()}\n${cardNumber.value.replaceAll(' ', '').toString()}\n${cardName.toString()}\n${cardExpiryMonth.toString()}\n${cardCvv.toString()}\n${cardExpiryYear.toString()}");
  try{
-    final result = await PaymentService().processPaymentApplepay(massage.value.title,(totalAmount.value).toString(), "GBP", "VISA", cardNumber.value.replaceAll(' ', '').toString(), cardName.value.toString(),
+    final result = await PaymentService().processPaymentApplepay(massage.value.title,(totalAmount.value).toString(), "GBP", "VISA", cardNumber.value.replaceAll(' ', '').toString(), userFirstName,
+        userLastName,
         cardExpiryMonth.value.toString(), cardExpiryYear.value.toString(), cardCvv.value.toString());
     print("payment result is $result");
     if(result==200){
